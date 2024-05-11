@@ -19,7 +19,7 @@ Or to install via ``requirements-dev.txt``
 ```bash
 python -m pip install -r requirements-dev.txt
 ```
-
+Please create your own branch and then merge change with ``main`` branch
 ## What is this Software about?
 
 Sp-editor covers the following exciting features:
