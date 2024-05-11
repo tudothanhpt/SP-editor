@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+src/SP-editor/__init__.py
+src/SP-editor/main.py
+src/Sp_editor.egg-info/PKG-INFO
+src/Sp_editor.egg-info/SOURCES.txt
+src/Sp_editor.egg-info/dependency_links.txt
+src/Sp_editor.egg-info/requires.txt
+src/Sp_editor.egg-info/top_level.txt
+tests/test_main.py

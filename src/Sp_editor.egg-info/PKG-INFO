@@ -1,0 +1,50 @@
+Metadata-Version: 2.1
+Name: Sp-editor
+Version: 0.1.0
+Summary: A shear wall design software that make connection between ETABS and SpColumn
+Author-email: Thanh Tu <tado@thorntontomasetti.com>, Bui Mark <abui@thorntontomasetti.com>
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Requires-Python: <3.13,>=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: pyside6==6.7.0
+Requires-Dist: ezdxf==1.3.0
+Requires-Dist: pandas==2.2.2
+Requires-Dist: numpy==1.26.4
+Requires-Dist: matplotlib==3.8.4
+Requires-Dist: seaborn==0.13.2
+Requires-Dist: openpyxl==3.1.2
+Requires-Dist: pyqtgraph==0.13.7
+Provides-Extra: dev
+Requires-Dist: sphinx==7.3.7; extra == "dev"
+Requires-Dist: sphinxcontrib-plantuml==0.29; extra == "dev"
+Requires-Dist: pip-tools==7.4.1; extra == "dev"
+Provides-Extra: test
+Requires-Dist: pytest==8.2.0; extra == "test"
+Requires-Dist: tox==4.15.0; extra == "test"
+Requires-Dist: behave==1.2.6; extra == "test"
+
+# SP-editor
+
+Empowering Structural Engineers with Seamless Communication Between SpColumn and ETABS
+## Installation
+
+This isn't installed with PIP. Instead,
+checkout the GitHub repository.
+
+After checkout, use the ``requirements-dev.txt``
+to install the needed development components.
+
+```bash
+python -m pip install -r requirements-dev.txt
+```
+## What is this Software about?
+Sp-editor covers the following exciting features:
+*
+
+## Demonstration
+
+## Testing
+
+## Documentation
