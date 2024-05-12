@@ -1,5 +1,9 @@
-from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QLineEdit, QFileDialog
 import sys
+
+from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QLineEdit, QFileDialog
+
+from . import _version
+
 import ezdxf
 
 
