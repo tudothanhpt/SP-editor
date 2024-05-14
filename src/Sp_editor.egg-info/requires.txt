@@ -6,6 +6,7 @@ matplotlib==3.8.4
 seaborn==0.13.2
 openpyxl==3.1.2
 pyqtgraph==0.13.7
+pyinstaller==6.6.0
 
 [dev]
 sphinx==7.3.7

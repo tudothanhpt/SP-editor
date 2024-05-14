@@ -8,6 +8,7 @@ Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python
 Requires-Python: <3.13,>=3.10
 Description-Content-Type: text/markdown
+License-File: LICENSE
 Requires-Dist: pyside6==6.7.0
 Requires-Dist: ezdxf==1.3.0
 Requires-Dist: pandas==2.2.2
@@ -16,6 +17,7 @@ Requires-Dist: matplotlib==3.8.4
 Requires-Dist: seaborn==0.13.2
 Requires-Dist: openpyxl==3.1.2
 Requires-Dist: pyqtgraph==0.13.7
+Requires-Dist: pyinstaller==6.6.0
 Provides-Extra: dev
 Requires-Dist: sphinx==7.3.7; extra == "dev"
 Requires-Dist: sphinxcontrib-plantuml==0.29; extra == "dev"
@@ -46,12 +48,23 @@ Or to install via ``requirements-dev.txt``
 ```bash
 python -m pip install -r requirements-dev.txt
 ```
+Please add any installed packages to ``pyproject.toml``in **_dependencies[]_** section
+then re-run .
 
+```bash
+ pip-compile --extra=dev --output-file=requirements-dev.txt
+```
+
+Please create your own branch and then merge change with ``main`` branch
 ## What is this Software about?
 
 Sp-editor covers the following exciting features:
 
-*
+* Extract wall pier geometry defined in Etabs and transform to (X, Y) coordinates
+* Extract pier design forces from Etabs and convert to SpColumn format
+* Get user input of reinforcement pattern
+* Run Batch processing and export demand capacity ratio results and PMM chart
+* Provide complete SpColumn file for detailed design at later phases(ie., 100DD or CD).
 
 ## Demonstration
 

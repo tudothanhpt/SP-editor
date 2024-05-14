@@ -1,7 +1,10 @@
+LICENSE
 README.md
 pyproject.toml
 src/SP-editor/__init__.py
+src/SP-editor/_version.py
 src/SP-editor/main.py
+src/SP-editor/widgets/__init__.py
 src/Sp_editor.egg-info/PKG-INFO
 src/Sp_editor.egg-info/SOURCES.txt
 src/Sp_editor.egg-info/dependency_links.txt

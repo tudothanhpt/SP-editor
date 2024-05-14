@@ -31,7 +31,11 @@ Please create your own branch and then merge change with ``main`` branch
 
 Sp-editor covers the following exciting features:
 
-*
+* Extract wall pier geometry defined in Etabs and transform to (X, Y) coordinates
+* Extract pier design forces from Etabs and convert to SpColumn format
+* Get user input of reinforcement pattern
+* Run Batch processing and export demand capacity ratio results and PMM chart
+* Provide complete SpColumn file for detailed design at later phases(ie., 100DD or CD).
 
 ## Demonstration
 
