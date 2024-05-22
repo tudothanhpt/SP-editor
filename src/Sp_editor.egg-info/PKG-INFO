@@ -18,6 +18,7 @@ Requires-Dist: seaborn==0.13.2
 Requires-Dist: openpyxl==3.1.2
 Requires-Dist: pyqtgraph==0.13.7
 Requires-Dist: pyinstaller==6.6.0
+Requires-Dist: comtypes==1.4.2
 Provides-Extra: dev
 Requires-Dist: sphinx==7.3.7; extra == "dev"
 Requires-Dist: sphinxcontrib-plantuml==0.29; extra == "dev"

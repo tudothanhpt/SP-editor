@@ -1,13 +1,14 @@
 import sys
 
-from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QLineEdit, QFileDialog
-
-from . import _version
+import sys
+from PySide6 import QtCore as qtc
+from PySide6 import QtWidgets as qtw
+from PySide6 import QtGui as qtg
 
 import ezdxf
 
 
-class MainWindow(QWidget):
+class MainWindow(qtw.QWidget):
     def __init__(self):
         super().__init__()
         self.create_autocad_file()
@@ -26,6 +27,6 @@ class MainWindow(QWidget):
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
+    app = qtw.QApplication(sys.argv)
     ex = MainWindow()
     sys.exit(app.exec())
