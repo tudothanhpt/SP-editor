@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>12</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>33</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="action_New"/>
+    <addaction name="action_Open"/>
+    <addaction name="separator"/>
+    <addaction name="action_Save"/>
+    <addaction name="separator"/>
+    <addaction name="action_Quit"/>
+   </widget>
+   <widget class="QMenu" name="menu_Define">
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>&amp;Define</string>
+    </property>
+    <widget class="QMenu" name="menuMaterial">
+     <property name="title">
+      <string>&amp;Properties</string>
+     </property>
+     <addaction name="actionConcrete"/>
+     <addaction name="actionStell"/>
+     <addaction name="separator"/>
+     <addaction name="actionReduction_Factor"/>
+     <addaction name="separator"/>
+     <addaction name="actionBar_Set"/>
+    </widget>
+    <addaction name="actionGeneral_information"/>
+    <addaction name="menuMaterial"/>
+    <addaction name="separator"/>
+    <addaction name="actionGroups"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_Define"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_New">
+   <property name="icon">
+    <iconset theme="document-new"/>
+   </property>
+   <property name="text">
+    <string>&amp;New</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="action_Open">
+   <property name="icon">
+    <iconset theme="document-open"/>
+   </property>
+   <property name="text">
+    <string>&amp;Open</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="action_Save">
+   <property name="icon">
+    <iconset theme="document-save"/>
+   </property>
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="action_Quit">
+   <property name="icon">
+    <iconset theme="window-close"/>
+   </property>
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="actionGeneral_information">
+   <property name="text">
+    <string>&amp;General information</string>
+   </property>
+  </action>
+  <action name="actionBarset">
+   <property name="text">
+    <string>&amp;Bar set</string>
+   </property>
+  </action>
+  <action name="actionGroups">
+   <property name="text">
+    <string>&amp;Groups</string>
+   </property>
+  </action>
+  <action name="actionConcrete">
+   <property name="text">
+    <string>Concrete</string>
+   </property>
+  </action>
+  <action name="actionStell">
+   <property name="text">
+    <string>Reinforcing Steel</string>
+   </property>
+  </action>
+  <action name="actionReduction_Factor">
+   <property name="text">
+    <string>Reduction Factor</string>
+   </property>
+  </action>
+  <action name="actionBar_Set">
+   <property name="text">
+    <string>Bar Set</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
