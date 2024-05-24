@@ -265,7 +265,7 @@
      <normaloff>:/Btn/Calculation_Case.png</normaloff>:/Btn/Calculation_Case.png</iconset>
    </property>
    <property name="text">
-    <string>Cases</string>
+    <string>Load Cases</string>
    </property>
   </action>
   <action name="a_GetAllForce">
@@ -274,7 +274,7 @@
      <normaloff>:/Btn/Force.png</normaloff>:/Btn/Force.png</iconset>
    </property>
    <property name="text">
-    <string>Get All Force</string>
+    <string>Get Forces</string>
    </property>
   </action>
   <action name="a_MakeSPcolumn">
@@ -283,7 +283,7 @@
      <normaloff>:/Btn/spcolumn-icon.png</normaloff>:/Btn/spcolumn-icon.png</iconset>
    </property>
    <property name="text">
-    <string>Make SpColumn</string>
+    <string>Generate SpCol Files</string>
    </property>
   </action>
   <action name="a_BatchProcessor">
