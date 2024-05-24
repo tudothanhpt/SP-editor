@@ -23,16 +23,23 @@ class ImportEtabs_Dialog(qtw.QDialog, Ui_d_ImportEtabs):
         # TODO: Import and add attach to instance function to connect to etabs
         model_is_open = True
         etabs_model = connect_to_etabs(self, model_is_open)
+        qtw.QMessageBox.information(self, "Etabs Imported", "File imported successfully",
+                                qtw.QMessageBox.StandardButton.Ok)
         self.connected_etabs.emit()
         self.close()
 
     @qtc.Slot()
     def open_etabs_file(self):
         model_is_open = False
-        etabs_model = connect_to_etabs(self, model_is_open)
+        try:
+            etabs_model = connect_to_etabs(self, model_is_open)
+            self.connected_etabs.emit()
+            self.close()
+        except:
+            qtw.QMessageBox.warning(self, "File not found", "No such file or directory",
+                                    qtw.QMessageBox.StandardButton.Ok)
 
-        self.connected_etabs.emit()
-        self.close()
+
 
 
 if __name__ == '__main__':
