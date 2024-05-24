@@ -14,6 +14,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
 
         # Setup action
         self.a_ImportEtabs.triggered.connect(self.open_import_etabs)
+        self
 
     @qtc.Slot()
     def open_import_etabs(self):

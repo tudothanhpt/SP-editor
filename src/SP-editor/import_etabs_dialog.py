@@ -24,7 +24,7 @@ class ImportEtabs_Dialog(qtw.QDialog, Ui_d_ImportEtabs):
         model_is_open = True
         etabs_model = connect_to_etabs(self, model_is_open)
         qtw.QMessageBox.information(self, "Etabs Imported", "File imported successfully",
-                                qtw.QMessageBox.StandardButton.Ok)
+                                    qtw.QMessageBox.StandardButton.Ok)
         self.connected_etabs.emit()
         self.close()
 
@@ -38,8 +38,6 @@ class ImportEtabs_Dialog(qtw.QDialog, Ui_d_ImportEtabs):
         except:
             qtw.QMessageBox.warning(self, "File not found", "No such file or directory",
                                     qtw.QMessageBox.StandardButton.Ok)
-
-
 
 
 if __name__ == '__main__':
