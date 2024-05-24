@@ -27,16 +27,3 @@ if __name__ == '__main__':
     ex = MainWindow()
     ex.show()
     sys.exit(app.exec())
-
-#Test HelloHello
-def testGit():
-    """
-    This is a test function to see if docstrings work
-
-    Args:
-        a (Any): A parameter that is not used in the function
-
-    Returns:
-        None: The function returns None
-    """
-    return None
