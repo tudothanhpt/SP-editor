@@ -2,6 +2,7 @@ import math
 from typing import Any
 import read_acad
 import connect_etabs
+from classes.CTIUserOptions import UserOptions
 
 class CTIfile:
     """
@@ -50,7 +51,7 @@ class CTIfile:
         self.__InvestigationRunFlag: int = 15  # DEFAULT
         self.__DesignRunFlag: int = 0
         self.__SlendernessFlag: int = 31  # DEFAULT
-        self.__UserOptions: str = ""
+        self.UserOptions: str = "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0"
         self.__IrregularOptions: str = ""
         self.__Ties: str = ""
         self.__InvestigationReinforcement: str = ""
@@ -104,7 +105,73 @@ class CTIfile:
         """
         self.__Engineer = name
 
-    def set_user_options(self,numforceCombos: int)-> None:
+    def set_user_options1(self)-> None:
+        """
+        Sets the user options based on the provided number of force combinations.
+
+        Args:
+            numforceCombos (int): The number of force combinations.
+        """
+        # Option 1: 0-Investigation Mode; 1-Design Mode (Run Option in Project left panel | Run Options)
+        option1 = 0
+        # Option 2: 0-English Unit; 1-Metric Units (Unit system in Project left panel | General)
+        option2 = 0
+        # Option 3: 0-ACI 318-02; 1-CSA A23.3-94; 2-ACI 318-05; 3-CSA A23.3-04; 4-ACI 318-08; 5-ACI 318-11; 6-ACI 318-14; 7-CSA A23.3-14; 8-ACI 318-19; 9-CSA A23.3-19 (Design Code in Project left panel | General)
+        option3 = 8
+        # Option 4: 0-X Axis Run; 1-Y Axis Run; 2-Biaxial Run (Run Axis in Project left panel | Run Options)
+        option4 = 2
+        # Option 5: Reserved. Do not edit
+        option5 = 0
+        # Option 6: 0-Slenderness is not considered; 1-Slenderness in considered (Consider Slenderness in Project left panel | Run Options)
+        option6 = 0
+        # Option 7: 0-Design for minimum number of bars; 1-Design for minimum area of reinforcement (Bar selection in Definitions dialog | Properties | Design Criteria | Reinforcement Bars)
+        option7 = 0
+        # Option 8: Reserved. Do not edit
+        option8 = 0
+        # Option 9: 0-Rectangular Column Section; 1-Circular Column Section; 2-Irregular Column Section (Section left panel)
+        option9 = 2
+        # Option 10: 0-Rectangular reinforcing bar layout; 1-Circular reinforcing bar layout (Layout in Section left panel | Rect. Or Cir. | Bar Arrangement - when Type is All Sides Equal)
+        option10 = 0
+        # Option 11: 0-Structural Column Section; 1-Architectural Column Section; 2-User Defined Column Section (Column Type in Definitions dialog | Properties | Design Criteria)
+        option11 = 0
+        # Option 12: 0-Tied Confinement; 1-Spiral Confinement; 2-Other Confinement (Confinement in Definitions dialog | Properties | Reduction Factors | Confinement)
+        option12 = 0
+        # Option 13: Load type for investigation mode: 0-Factored; 1-Service; 2-Control Points; 3-Axial Loads (Loads dialog)
+        option13 = 0
+        # Option 14: Load type for design mode: 0-Factored; 1-Service; 2-Control Points; 3-Axial Loads (Loads dialog)
+        option14 = 0
+        # Option 15: Reinforcement layout for investigation mode: 0-All Side Equal; 1-Equal Spacing; 2-Sides Different; 3-Irregular Pattern (Layout in Section left panel | Rect. Or Cir. Bar Arrangement)
+        option15 = 3
+        # Option 16: Reinforcement layout for design mode: 0-All Side Equal; 1-Equal Spacing; 2-Sides Different; 3-Irregular Pattern (Layout in Section left panel | Rect. Or Cir. Bar Arrangement)
+        option16 = 0
+        # Option 17: Reserved. Do not edit for regular bars. No of bars for irregular bars
+        option17 = 0
+        # Option 18: Number of factored loads (Factored Loads in Loads dialog | Loads)
+        option18 = 0
+        # Option 19: Number of service loads (Service Loads in Loads dialog | Loads)
+        option19 = 0
+        # Option 20: If there is only one exterior column section then Number of points on exterior column section. If there are more than one exterior column sections then 0
+        option20 = 0
+        # Option 21: If there is only one interior section opening then Number of points on the interior section opening. If there are more than one interior section openings then 0
+        option21 = 9
+        # Option 22: Reserved. Do not edit
+        option22 = 0
+        # Option 23: Reserved. Do not edit
+        option23 = 0
+        # Option 24: Cover type for investigation mode: 0-To transverse bar; 1-To longitudinal bar (Clear cover to in Section left panel | Rect. Or Cir. | Cover Type)
+        option24 = 0
+        # Option 25: Cover type for design mode: 0-To transverse bar; 1-To longitudinal bar (Clear cover to in Section left panel | Rect. Or Cir. | Cover Type)
+        option25 = 0
+        # Option 26: Number of load combinations; (Load combinations in Definitions dialog | Load Case/Combo)
+        option26 = 13
+        # Option 27: Section capacity: 0-Moment capacity method; 1-Critical Capacity method (Section capacity in Project left panel | General)
+        option27 = 1
+
+        options = [option1, option2, option3, option4, option5, option6, option7, option8, option9, option10, option11, option12, option13, option14, option15, option16, option17, option18, option19, option20, option21, option22, option23, option24, option25, option26, option27]
+
+        self.UserOptions = ','.join(map(str, options))
+
+    def set_user_options2(self,numforceCombos: int)-> None:
         """
         Sets the user options based on the provided number of force combinations.
 
@@ -168,7 +235,7 @@ class CTIfile:
 
         options = [option1, option2, option3, option4, option5, option6, option7, option8, option9, option10, option11, option12, option13, option14, option15, option16, option17, option18, option19, option20, option21, option22, option23, option24, option25, option26, option27]
 
-        self.__UserOptions = ','.join(map(str, options))
+        self.UserOptions = ','.join(map(str, options))
 
     def set_irregular_options(self)-> None:
         """Set options related to irregular sections."""
@@ -512,9 +579,9 @@ class CTIfile:
         acaddoc = read_acad.open_autocad_file(acadPath)
         rebar=read_acad.get_rebarinfo_fromCAD(acaddoc)
         rebar_spColFormat=read_acad.format_rebar_info_for_spcolumn(rebar)
-        parts = self.__UserOptions.split(',')
+        parts = self.UserOptions.split(',')
         parts[16] = str(len(rebar))
-        self.__UserOptions=','.join(parts)
+        self.UserOptions=','.join(parts)
         self.__ReinforcementBars = rebar_spColFormat
 
     def set_factored_loads(self,forceSet)-> None:
@@ -792,7 +859,7 @@ class CTIfile:
                f"[Investigation Run Flag]\n{self.__InvestigationRunFlag}\n" \
                f"[Design Run Flag]\n{self.__DesignRunFlag}\n" \
                f"[Slenderness Flag]\n{self.__SlendernessFlag}\n" \
-               f"[User Options]\n{self.__UserOptions}\n" \
+               f"[User Options]\n{self.UserOptions}\n" \
                f"[Irregular Options]\n{self.__IrregularOptions}\n" \
                f"[Ties]\n{self.__Ties}\n" \
                f"[Investigation Reinforcement]\n{self.__InvestigationReinforcement}\n" \
@@ -835,5 +902,9 @@ def ab():
     return None    
 
 if __name__ == "__main__":
-    ab()
-    main()
+    CTIUserOptions = UserOptions()
+    CTIUserOptions.option1 = 1
+    newCTIfile = CTIfile()
+    print(newCTIfile.UserOptions)
+    newCTIfile.UserOptions = CTIUserOptions.set_user_options_CTIformat()
+    print(newCTIfile.UserOptions)

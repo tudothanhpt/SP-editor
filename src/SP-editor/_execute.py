@@ -30,7 +30,7 @@ def main_multi(excelPath):
         CTIfile.set_project_name("Name")
         CTIfile.set_column_id(spcolumn_filenames[i])
         CTIfile.set_engineer("ABui")
-        CTIfile.set_user_options(numForceCombo[i])
+        #CTIfile.set_user_options(numForceCombo[i])
         CTIfile.set_material_properties(lst_fc[i]/1000,lst_ec[i],lst_fy[i],lst_es[i])
         print(".........READING AUTOCADS.........")
         CTIfile.set_external_points_cad(acad_paths[i])
