@@ -41,17 +41,10 @@ def confirm(parent, title, msg):
     return True if rv == qtw.QMessageBox.Yes else False
 
 def write_to_csv(data, csv_filename):
-    """
-    Write data to a CSV file.
-    
-    Args:
-        data: The data to be written to the CSV file.
-        csv_filename (str): The filename for the CSV file.
-    """
-    # Write data to CSV
-    with open(csv_filename, "w", newline="") as csv_file:
-        writer = csv.writer(csv_file)
-        writer.writerows(data)
+    with open(csv_filename, 'w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(data)
+
 
 def select_csv_file() -> [str]:
     app = qtw.QApplication(sys.argv)
