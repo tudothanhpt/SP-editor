@@ -2,6 +2,8 @@ import sys
 import os
 import comtypes.client
 import errno
+import csv
+import pandas as pd
 
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
@@ -37,3 +39,22 @@ def confirm(parent, title, msg):
     rv = qtw.QMessageBox.question(parent, title, msg, qtw.QMessageBox.Yes, qtw.QMessageBox.No)
 
     return True if rv == qtw.QMessageBox.Yes else False
+
+def write_to_csv(data, csv_filename):
+    with open(csv_filename, 'w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(data)
+
+
+def select_csv_file() -> [str]:
+    app = qtw.QApplication(sys.argv)
+    dialog = qtw.QFileDialog()
+    dialog.setNameFilter("CSV files (*.csv)")
+    dialog.setViewMode(dialog.List)
+    dialog.setFileMode(dialog.ExistingFile)
+    
+    if dialog.exec_():
+        file_paths = dialog.selectedFiles()
+        if file_paths:
+            return file_paths[0]  # Return the first selected file path
+    return None
