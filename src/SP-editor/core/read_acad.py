@@ -6,9 +6,10 @@ import read_excel
 import time
 import math
 
+
 def get_active_ACADdocument():
     try:
-        time.sleep(2) #Voodoo line of BM's magic
+        time.sleep(2)  # Voodoo line of BM's magic
         acad = comtypes.client.GetActiveObject("AutoCAD.Application")
         return acad.ActiveDocument
     except Exception as e:
@@ -27,6 +28,7 @@ def is_file_open(acad, file_path):
             return True  # File is already open
     return False  # File is not open
 
+
 def open_autocad_file(file_path: str) -> Union[object, None]:
     """
     Open an AutoCAD file.
@@ -38,11 +40,11 @@ def open_autocad_file(file_path: str) -> Union[object, None]:
     - acaddoc (object or None): The active AutoCAD document object if successful, otherwise None.
     """
     try:
-    # Try to get a running instance of AutoCAD
+        # Try to get a running instance of AutoCAD
         acad = comtypes.client.GetActiveObject("AutoCAD.Application")
     except:
         acad = comtypes.client.CreateObject("AutoCAD.Application", dynamic=True)
-    
+
     # Create an instance of the AutoCAD application
     acad.visible = True
     # Check if the file is already open
@@ -53,6 +55,7 @@ def open_autocad_file(file_path: str) -> Union[object, None]:
         acad.Documents.Open(file_path)
         acaddoc = get_active_ACADdocument()
     return acaddoc
+
 
 def getVerticesList_fromCAD(acaddoc: Any) -> List[List[Tuple[float, float]]]:
     """
@@ -65,11 +68,11 @@ def getVerticesList_fromCAD(acaddoc: Any) -> List[List[Tuple[float, float]]]:
         List[List[Tuple[float, float]]]: A list of vertices for each polyline found.
     """
     ACADLAYER_POLYLINE = "PL"
-    ACADOBJECTNAME_POLYLINE="AcDbPolyline"
-    
+    ACADOBJECTNAME_POLYLINE = "AcDbPolyline"
+
     while acaddoc is None:
         acaddoc = get_active_ACADdocument()
-    print("READING: "+acaddoc.Name)
+    print("READING: " + acaddoc.Name)
     modelspace = acaddoc.ModelSpace  # Model space of the CAD document
     vertices = []  # List to store vertices for each polyline
     num_polyline = 0  # Counter for the number of polylines found
@@ -81,13 +84,14 @@ def getVerticesList_fromCAD(acaddoc: Any) -> List[List[Tuple[float, float]]]:
             # Extract coordinates of the polyline
             a = list(entity.coordinates)
             # Group coordinates into pairs to represent vertices
-            pairs = [(a[i],a[i + 1]) for i in range(0, len(a), 2)]
+            pairs = [(a[i], a[i + 1]) for i in range(0, len(a), 2)]
             vertices.append(pairs)  # Append the vertices to the list
             num_polyline += 1  # Increment the counter for each polyline found
 
     # If only one polyline is found, return its vertices directly
     acaddoc.close()
     return vertices
+
 
 def format_vertices_for_spcolumn(coordinates: List[List[Tuple[float, float]]]) -> str:
     """
@@ -120,6 +124,7 @@ def format_vertices_for_spcolumn(coordinates: List[List[Tuple[float, float]]]) -
 
     return formatted_output_str
 
+
 def get_rebarinfo_fromCAD(acaddoc) -> List[Tuple[float, float, float]]:
     """
     Extract rebar information from an AutoCAD DXF file.
@@ -137,14 +142,14 @@ def get_rebarinfo_fromCAD(acaddoc) -> List[Tuple[float, float, float]]:
                                            center X, and center Y coordinates of each circle.
     """
     ACADLAYER_CIRCLE = "Rebar"
-    ACADOBJECTNAME_CIRCLE="AcDbCircle"
-    
+    ACADOBJECTNAME_CIRCLE = "AcDbCircle"
+
     # while acaddoc is None:
     #     acaddoc = get_active_ACADdocument()
-            
+
     modelspace = acaddoc.ModelSpace
     list_rebarinfo: List[Tuple[float, float, float]] = []
-    
+
     for entity in modelspace:
         if entity.ObjectName == ACADOBJECTNAME_CIRCLE and entity.layer == ACADLAYER_CIRCLE:
             center_coor: Tuple[float, float, float] = entity.Center
@@ -155,8 +160,9 @@ def get_rebarinfo_fromCAD(acaddoc) -> List[Tuple[float, float, float]]:
             temp_rebarinfo = (area, center_x, center_y)
             list_rebarinfo.append(temp_rebarinfo)
     acaddoc.close()
-    return list_rebarinfo  
-    
+    return list_rebarinfo
+
+
 def format_rebar_info_for_spcolumn(list_rebarinfo: List[Tuple[float, float, float]]) -> str:
     """
     Format the rebar information for an SPColumn CTI file.
@@ -176,18 +182,20 @@ def format_rebar_info_for_spcolumn(list_rebarinfo: List[Tuple[float, float, floa
         str: A formatted string containing the rebar information for an SPColumn CTI file.
     """
     if list_rebarinfo is None:
-        formatted_output_str=0
-    else:   
+        formatted_output_str = 0
+    else:
         formatted_output_str: str = str(len(list_rebarinfo))
-        
+
         for rebar_info in list_rebarinfo:
             each_rebar_str: str = ",".join(str(coordinate) for coordinate in rebar_info)
             formatted_output_str += "\n" + each_rebar_str
-    
+
     return formatted_output_str
+
 
 def main():
     return True
-    
-if __name__ == "__main__": 
+
+
+if __name__ == "__main__":
     main()

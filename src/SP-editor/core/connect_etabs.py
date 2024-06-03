@@ -13,14 +13,14 @@ def connect_to_etabs() -> tuple:
     """
     # attach to a running instance of ETABS
     try:
-        #get the active ETABS object
+        # get the active ETABS object
         EtabsObject = comtypes.client.GetActiveObject("CSI.ETABS.API.ETABSObject")
     except (OSError, comtypes.COMError):
         print("No running instance of the program found or failed to attach.")
         sys.exit(-1)
-    #create SapModel object
+    # create SapModel object
     SapModel = EtabsObject.SapModel
-    #setEtabsUnits()
+    # setEtabsUnits()
     return SapModel, EtabsObject;
 
 
@@ -36,34 +36,34 @@ def get_sdshape_pierPolygon() -> lst_PierSDShape:
     """
     SapModel, EtabsObject = connect_to_etabs()
 
-    #get the table
+    # get the table
     table_key: str = 'Section Designer Shapes - Concrete Polygon';
 
-    #get the database table
+    # get the database table
     sdshapes_db = SapModel.DatabaseTables.GetTableForDisplayArray(table_key, GroupName='');
     lst_tblHeader: list = sdshapes_db[2]
     lst_tblValues: list = sdshapes_db[4]
     lst_Data: list[list] = [lst_tblValues[i:i + len(lst_tblHeader)] for i in
                             range(0, len(lst_tblValues), len(lst_tblHeader))]
 
-    #Create DataFrame of concrete polygon
+    # Create DataFrame of concrete polygon
     df_SD: pd.DataFrame = pd.DataFrame(lst_Data, columns=lst_tblHeader)
 
-    #get lst of unique SD shapes
+    # get lst of unique SD shapes
     lst_unique_SDshape_names = df_SD['SectionName'].unique()
 
-    #Create list of Piers' dictionary
+    # Create list of Piers' dictionary
     lst_PierSDShape: list = []
     for str_SDsectionname in lst_unique_SDshape_names:
-        #Create a "sub" dataframe for section name    
+        # Create a "sub" dataframe for section name
         df_sectionname = df_SD[df_SD['SectionName'] == str_SDsectionname]
 
-        #Gather the corresponding list of [X,Y] forming the closed boundary. 
+        # Gather the corresponding list of [X,Y] forming the closed boundary.
         X_Y_pairs: list[list[float]] = df_sectionname[['X', 'Y']].astype(float).values.tolist()
-        #Create a dictionary defining each section
+        # Create a dictionary defining each section
         dict_Section: dict[str, list[list[float]]] = {str_SDsectionname: X_Y_pairs}
 
-        #Create a list of PierSDshape
+        # Create a list of PierSDshape
         lst_PierSDShape.append(dict_Section)
 
     return lst_PierSDShape;

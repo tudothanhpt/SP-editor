@@ -1,7 +1,7 @@
 from sqlmodel import Field, Relationship, SQLModel
 
 
-class GeneralInfor(SQLModel):
+class GeneralInfor(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     design_code: str
     unit_system: str
@@ -10,7 +10,7 @@ class GeneralInfor(SQLModel):
     section_capacity: str
 
 
-class ConcreteMaterial(SQLModel):
+class ConcreteMaterial(SQLModel, table=True):
     """
     Concrete material properties
     """
@@ -22,7 +22,7 @@ class ConcreteMaterial(SQLModel):
     ultimate_stain_Eu: str
 
 
-class SteelMaterial(SQLModel):
+class SteelMaterial(SQLModel, table=True):
     """
     Steel material properties
     """
@@ -32,7 +32,7 @@ class SteelMaterial(SQLModel):
     ultimate_stain_Ety: str = Field(default="0.0021")
 
 
-class LevelGroup(SQLModel):
+class LevelGroup(SQLModel, table=True):
     """
     Level group with each level name contain all pier force infor related to that level
     """
@@ -41,7 +41,7 @@ class LevelGroup(SQLModel):
     levels: list["PierForce"] = Relationship(back_populates="level")
 
 
-class PierForce(SQLModel):
+class PierForce(SQLModel, table=True):
     """
     Store data from etabs input Pier force table
     """

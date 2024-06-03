@@ -4,9 +4,11 @@ from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 
-from utils import  write_to_csv
+from utils import write_to_csv, get_new_filename
 from widgets.generalInfor_dialog import Ui_d_GeneralInfor
-from core.global_variables import DesignCode, BarGroupType,UnitSystem,ConfinementType,SectionCapacityMethod
+from core.global_variables import DesignCode, BarGroupType, UnitSystem, ConfinementType, SectionCapacityMethod
+from crud.general_infor_crud import create_infor, update_infor
+from database.database import create_db_and_tables
 
 
 class GeneralInfor_Dialog(qtw.QDialog, Ui_d_GeneralInfor):
@@ -23,15 +25,21 @@ class GeneralInfor_Dialog(qtw.QDialog, Ui_d_GeneralInfor):
         self.cb_Confinement.addItems(list(str(cf) for cf in ConfinementType))
         self.cb_SectionCapacity.clear()
         self.cb_SectionCapacity.addItems(list(str(sc) for sc in SectionCapacityMethod))
-    
+
         self.pb_Cancel.clicked.connect(self.close)
         self.pb_OK.clicked.connect(self.update_general_infor)
 
     @qtc.Slot()
     def update_general_infor(self):
-        datalist = [self.cb_DesignCode.currentText(),self.cb_UnitSystem.currentText(),self.cb_BarSet.currentText(),self.cb_Confinement.currentText(),self.cb_SectionCapacity.currentText()]
-        write_to_csv(datalist,"user_data.csv")
-        qtw.QMessageBox.information(self, "Information", "User information written successfully, please find the CSV file",)
+        extensions = "SP-editor file (*.spe)"
+
+        data_list = [self.cb_DesignCode.currentText(), self.cb_UnitSystem.currentText(), self.cb_BarSet.currentText(),
+                     self.cb_Confinement.currentText(), self.cb_SectionCapacity.currentText()]
+        new_file = get_new_filename(extensions)
+        print(new_file)
+        engine = create_db_and_tables(new_file)
+        infor = create_infor(engine, data_list)
+        print(infor.design_code)
         self.close()
 
 

@@ -8,9 +8,8 @@ requires = ["setuptools", "wheel"]  # PEP 508 specifications.
 name = "Sp-editor"
 version = "0.1.0"
 authors = [
-    {name = "Thanh Tu", email = "tado@thorntontomasetti.com"},
-    {name = "Bui Mark", email = "abui@thorntontomasetti.com"},
-
+    { name = "Thanh Tu", email = "tado@thorntontomasetti.com" },
+    { name = "Bui Mark", email = "abui@thorntontomasetti.com" },
 ]
 description = "A shear wall design software that make connection between ETABS and SpColumn"
 readme = "README.md"
@@ -33,7 +32,6 @@ dependencies = [
     "pyqtgraph == 0.13.7",
     "pyinstaller==6.6.0",
     "comtypes==1.1.14",
-    "pytabs==0.2.1",
     "sqlmodel==0.0.18,
 ]
 [project.optional-dependencies]

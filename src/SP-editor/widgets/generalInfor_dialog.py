@@ -57,9 +57,6 @@ class Ui_d_GeneralInfor(object):
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label)
 
         self.cb_DesignCode = QComboBox(self.groupBox)
-        self.cb_DesignCode.addItem("")
-        self.cb_DesignCode.addItem("")
-        self.cb_DesignCode.addItem("")
         self.cb_DesignCode.setObjectName(u"cb_DesignCode")
 
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.cb_DesignCode)
@@ -70,8 +67,6 @@ class Ui_d_GeneralInfor(object):
         self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_2)
 
         self.cb_UnitSystem = QComboBox(self.groupBox)
-        self.cb_UnitSystem.addItem("")
-        self.cb_UnitSystem.addItem("")
         self.cb_UnitSystem.setObjectName(u"cb_UnitSystem")
 
         self.formLayout.setWidget(1, QFormLayout.FieldRole, self.cb_UnitSystem)
@@ -82,9 +77,6 @@ class Ui_d_GeneralInfor(object):
         self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label_3)
 
         self.cb_BarSet = QComboBox(self.groupBox)
-        self.cb_BarSet.addItem("")
-        self.cb_BarSet.addItem("")
-        self.cb_BarSet.addItem("")
         self.cb_BarSet.setObjectName(u"cb_BarSet")
 
         self.formLayout.setWidget(2, QFormLayout.FieldRole, self.cb_BarSet)
@@ -95,8 +87,6 @@ class Ui_d_GeneralInfor(object):
         self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_4)
 
         self.cb_Confinement = QComboBox(self.groupBox)
-        self.cb_Confinement.addItem("")
-        self.cb_Confinement.addItem("")
         self.cb_Confinement.setObjectName(u"cb_Confinement")
 
         self.formLayout.setWidget(3, QFormLayout.FieldRole, self.cb_Confinement)
@@ -107,8 +97,6 @@ class Ui_d_GeneralInfor(object):
         self.formLayout.setWidget(4, QFormLayout.LabelRole, self.label_5)
 
         self.cb_SectionCapacity = QComboBox(self.groupBox)
-        self.cb_SectionCapacity.addItem("")
-        self.cb_SectionCapacity.addItem("")
         self.cb_SectionCapacity.setObjectName(u"cb_SectionCapacity")
 
         self.formLayout.setWidget(4, QFormLayout.FieldRole, self.cb_SectionCapacity)
@@ -116,6 +104,12 @@ class Ui_d_GeneralInfor(object):
 
         self.gridLayout.addWidget(self.groupBox, 0, 0, 1, 3)
 
+        QWidget.setTabOrder(self.cb_DesignCode, self.cb_UnitSystem)
+        QWidget.setTabOrder(self.cb_UnitSystem, self.cb_BarSet)
+        QWidget.setTabOrder(self.cb_BarSet, self.cb_Confinement)
+        QWidget.setTabOrder(self.cb_Confinement, self.cb_SectionCapacity)
+        QWidget.setTabOrder(self.cb_SectionCapacity, self.pb_OK)
+        QWidget.setTabOrder(self.pb_OK, self.pb_Cancel)
 
         self.retranslateUi(d_GeneralInfor)
 
@@ -128,26 +122,9 @@ class Ui_d_GeneralInfor(object):
         self.pb_Cancel.setText(QCoreApplication.translate("d_GeneralInfor", u"Cancel", None))
         self.groupBox.setTitle(QCoreApplication.translate("d_GeneralInfor", u"General", None))
         self.label.setText(QCoreApplication.translate("d_GeneralInfor", u"Design code", None))
-        self.cb_DesignCode.setItemText(0, QCoreApplication.translate("d_GeneralInfor", u"ACI 318-19", None))
-        self.cb_DesignCode.setItemText(1, QCoreApplication.translate("d_GeneralInfor", u"ACI 318-14", None))
-        self.cb_DesignCode.setItemText(2, QCoreApplication.translate("d_GeneralInfor", u"ACI 318-11", None))
-
         self.label_2.setText(QCoreApplication.translate("d_GeneralInfor", u"Unit system", None))
-        self.cb_UnitSystem.setItemText(0, QCoreApplication.translate("d_GeneralInfor", u"English", None))
-        self.cb_UnitSystem.setItemText(1, QCoreApplication.translate("d_GeneralInfor", u"Metric", None))
-
         self.label_3.setText(QCoreApplication.translate("d_GeneralInfor", u"Bar set", None))
-        self.cb_BarSet.setItemText(0, QCoreApplication.translate("d_GeneralInfor", u"ASTM A615", None))
-        self.cb_BarSet.setItemText(1, QCoreApplication.translate("d_GeneralInfor", u"ASTM A615M", None))
-        self.cb_BarSet.setItemText(2, QCoreApplication.translate("d_GeneralInfor", u"prEN 10080", None))
-
         self.label_4.setText(QCoreApplication.translate("d_GeneralInfor", u"Confinement", None))
-        self.cb_Confinement.setItemText(0, QCoreApplication.translate("d_GeneralInfor", u"Tied", None))
-        self.cb_Confinement.setItemText(1, QCoreApplication.translate("d_GeneralInfor", u"Spiral", None))
-
         self.label_5.setText(QCoreApplication.translate("d_GeneralInfor", u"Section capacity", None))
-        self.cb_SectionCapacity.setItemText(0, QCoreApplication.translate("d_GeneralInfor", u"Critical capacity", None))
-        self.cb_SectionCapacity.setItemText(1, QCoreApplication.translate("d_GeneralInfor", u"Moment capacity", None))
-
     # retranslateUi
 
