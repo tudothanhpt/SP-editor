@@ -6,7 +6,7 @@ from PySide6 import QtGui as qtg
 
 from utils import  write_to_csv
 from widgets.generalInfor_dialog import Ui_d_GeneralInfor
-from classes.global_variables import DesignCode, BarGroupType,UnitSystem,ConfinementType,SectionCapacityMethod
+from core.global_variables import DesignCode, BarGroupType,UnitSystem,ConfinementType,SectionCapacityMethod
 
 
 class GeneralInfor_Dialog(qtw.QDialog, Ui_d_GeneralInfor):

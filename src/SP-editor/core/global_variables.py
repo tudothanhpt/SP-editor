@@ -1,6 +1,5 @@
 from enum import Enum
 
-from enum import Enum
 
 class DesignCode(Enum):
     ACI_318_02 = 0
