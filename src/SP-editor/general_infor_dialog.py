@@ -12,6 +12,8 @@ from database.database import create_db_and_tables
 
 
 class GeneralInfor_Dialog(qtw.QDialog, Ui_d_GeneralInfor):
+    new_file = qtc.Signal()
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -36,9 +38,8 @@ class GeneralInfor_Dialog(qtw.QDialog, Ui_d_GeneralInfor):
         data_list = [self.cb_DesignCode.currentText(), self.cb_UnitSystem.currentText(), self.cb_BarSet.currentText(),
                      self.cb_Confinement.currentText(), self.cb_SectionCapacity.currentText()]
         new_file = get_new_filename(extensions)
-        print(new_file)
-        engine = create_db_and_tables(new_file)
-        infor = create_infor(engine, data_list)
+        self.engine = create_db_and_tables(new_file)
+        infor = create_infor(self.engine, data_list)
         print(infor.design_code)
         self.close()
 

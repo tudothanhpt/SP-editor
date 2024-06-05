@@ -15,6 +15,7 @@ class ConcreteMaterial(SQLModel, table=True):
     Concrete material properties
     """
     id: int | None = Field(default=None, primary_key=True)
+    name: str
     strength_fc: str
     elasticity_Ec: str
     max_stress_fc: str
@@ -27,7 +28,19 @@ class SteelMaterial(SQLModel, table=True):
     Steel material properties
     """
     id: int | None = Field(default=None, primary_key=True)
+    name: str
     strength_fy: str
+    elasticity_Es: str
+    ultimate_stain_Ety: str = Field(default="0.0021")
+
+
+class BarSet(SQLModel, table=True):
+    """
+    Bar set material properties
+    """
+    id: int | None = Field(default=None, primary_key=True)
+    size: str
+    diameter: str
     elasticity_Es: str
     ultimate_stain_Ety: str = Field(default="0.0021")
 

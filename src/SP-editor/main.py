@@ -6,20 +6,25 @@ from PySide6 import QtGui as qtg
 from widgets.main_window import Ui_mw_Main
 from import_etabs_dialog import ImportEtabs_Dialog
 from general_infor_dialog import GeneralInfor_Dialog
-from utils import select_csv_file
+from open_file_dialog import OpenFile_Dialog
 
-from database.database import create_db_and_tables
+from utils import select_csv_file, get_open_filename
+
+from database.database import create_db_and_tables, connect_db_and_tables
+from crud.general_infor_crud import get_infor
 
 
 class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def __init__(self):
         super().__init__()
+        self.engine = None
         self.setupUi(self)
 
         # Setup action
         self.a_ImportEtabs.triggered.connect(self.open_import_etabs)
-        self.action_New.triggered.connect(self.set_general_infor)
-        self.action_Open.triggered.connect(self.get_general_infor)
+        self.action_New.triggered.connect(self.new_file)
+        self.action_Open.triggered.connect(self.open_file)
+        self.a_GeneralInfor.triggered.connect(self.set_general_infor)
 
         # The `@qtc.Slot()` decorator in this code snippet is used to define a slot method in a
 
@@ -28,28 +33,31 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     # slot that can be connected to signals.
     # @qtc.Slot()
     def open_import_etabs(self):
-        self.dialog = ImportEtabs_Dialog()
-        self.dialog.exec()
-        self.dialog.connected_etabs.connect(self.a_ImportEtabs.setEnabled(False))
+        self.dialog_import_etabs = ImportEtabs_Dialog()
+        self.dialog_import_etabs.exec()
+        self.dialog_import_etabs.connected_etabs.connect(self.a_ImportEtabs.setEnabled(False))
+
+    @qtc.Slot()
+    def new_file(self):
+        pass
+        # self.dialog_new = new_file_dialog()
+        # self.dialog_new = GeneralInfor_Dialog()
+        # self.dialog_new.exec()
+
+    @qtc.Slot()
+    def open_file(self):
+        self.dialog_open = OpenFile_Dialog(self)
+        self.dialog_open.path_open.connect(self.update_message)
 
     @qtc.Slot()
     def set_general_infor(self):
         self.dialog_new = GeneralInfor_Dialog()
         self.dialog_new.exec()
 
-    @qtc.Slot()
-    def get_general_infor(self):
-        pass
-        # self.dialog_open = qtw.QFileDialog()
-        # self.dialog.setNameFilter("CSV files (*.csv)")
-        # self.dialog.setViewMode(qtw.QFileDialog.List)
-        # self.dialog.setFileMode(qtw.QFileDialog.ExistingFile)
-        # if self.dialog.exec():
-        #     file_paths = self.dialog.selectedFiles()
-        #     if file_paths:
-        #         csv_file_path = file_paths[0]
-        #         print(csv_file_path)
-        #         return csv_file_path
+    @qtc.Slot(str)
+    def update_message(self, message):
+        self.statusbar.showMessage(message)
+        print(message)
 
 
 if __name__ == '__main__':

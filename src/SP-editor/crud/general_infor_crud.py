@@ -40,5 +40,4 @@ def update_infor(engine, params: list[str]) -> Type[GeneralInfor] | None:
 def get_infor(engine) -> Type[GeneralInfor] | None:
     with Session(engine) as session:
         infor = session.get(GeneralInfor, 1)
-        print("infor", infor)
         return infor
