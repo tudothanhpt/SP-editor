@@ -10,7 +10,7 @@ from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 
 
-def get_new_filename(suffix):
+def get_new_filename(suffix) -> str:
     rv, _ = qtw.QFileDialog.getSaveFileName(caption="New File", filter=suffix)
     if rv != '' and not rv.endswith(suffix): rv
 

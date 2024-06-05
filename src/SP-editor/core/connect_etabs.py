@@ -1,27 +1,52 @@
 # -*- coding: utf-8 -*-
+from typing import Any
+
 import comtypes.client
 import sys
 import pandas as pd
 import numpy as np
 
 
-def connect_to_etabs() -> tuple:
+def connect_to_etabs(model_is_open: bool, file_path: str | None = None) -> tuple:
     """
-    Return Values:
-    SapModel (type cOAPI pointer)
-    EtabsObject (type cOAPI pointer)
+    Connect to an instance of ETABS and return the SapModel and EtabsObject.
+
+    Parameters:
+    model_is_open (bool): Indicates if a model is already open.
+    file_path (str | None): The path to the ETABS file to open if a new instance is needed.
+
+    Returns:
+    tuple: SapModel and EtabsObject.
     """
-    # attach to a running instance of ETABS
-    try:
-        # get the active ETABS object
-        EtabsObject = comtypes.client.GetActiveObject("CSI.ETABS.API.ETABSObject")
-    except (OSError, comtypes.COMError):
-        print("No running instance of the program found or failed to attach.")
-        sys.exit(-1)
-    # create SapModel object
+    # Create API helper object
+    helper = comtypes.client.CreateObject('ETABSv1.Helper')
+    helper = helper.QueryInterface(comtypes.gen.ETABSv1.cHelper)
+
+    if model_is_open:
+        try:
+            # Get the active ETABS object
+            EtabsObject = helper.GetObject("CSI.ETABS.API.ETABSObject")
+        except (OSError, comtypes.COMError):
+            print("No running instance of the program found or failed to attach.")
+            sys.exit(-1)
+    else:
+        try:
+            # Start a new instance of ETABS
+            EtabsObject = helper.CreateObjectProgID("CSI.ETABS.API.ETABSObject")
+        except (OSError, comtypes.COMError):
+            print("Cannot start a new instance of the program.")
+            sys.exit(-1)
+        EtabsObject.ApplicationStart()
+
     SapModel = EtabsObject.SapModel
-    # setEtabsUnits()
-    return SapModel, EtabsObject;
+    if file_path:
+        # Open the specified file
+        ret = SapModel.File.OpenFile(file_path)
+        if ret != 0:
+            print(f"Failed to open file: {file_path}")
+            sys.exit(-1)
+
+    return SapModel, EtabsObject
 
 
 lst_PierSDShape = list[dict[str, list[list[float]]]]
