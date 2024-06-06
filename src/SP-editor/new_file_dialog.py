@@ -10,7 +10,7 @@ from widgets.generalInfor_dialog import Ui_d_GeneralInfor
 
 from sqlalchemy.engine.base import Engine
 from core.global_variables import DesignCode, BarGroupType, UnitSystem, ConfinementType, SectionCapacityMethod
-from crud.general_infor_crud import create_infor, update_infor, get_infor
+from crud.cr_general_infor import create_infor, update_infor, get_infor
 from database.database import create_db_and_tables
 
 

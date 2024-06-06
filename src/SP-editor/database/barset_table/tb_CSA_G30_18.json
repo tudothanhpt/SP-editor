@@ -1,0 +1,58 @@
+[
+  {
+    "No": 1,
+    "Size": "#10",
+    "Diameter": 11.3,
+    "Area": 100,
+    "Weight": 0.785
+  },
+  {
+    "No": 2,
+    "Size": "#15",
+    "Diameter": 16,
+    "Area": 200,
+    "Weight": 1.57
+  },
+  {
+    "No": 3,
+    "Size": "#20",
+    "Diameter": 19.5,
+    "Area": 300,
+    "Weight": 2.356
+  },
+  {
+    "No": 4,
+    "Size": "#25",
+    "Diameter": 25.2,
+    "Area": 500,
+    "Weight": 3.925
+  },
+  {
+    "No": 5,
+    "Size": "#30",
+    "Diameter": 29.9,
+    "Area": 700,
+    "Weight": 5.495
+  },
+  {
+    "No": 6,
+    "Size": "#35",
+    "Diameter": 35.7,
+    "Area": 1000,
+    "Weight": 7.85
+  },
+  {
+    "No": 7,
+    "Size": "#45",
+    "Diameter": 43.7,
+    "Area": 1500,
+    "Weight": 11.775
+  },
+  {
+    "No": 8,
+    "Size": "#55",
+    "Diameter": 56.4,
+    "Area": 2500,
+    "Weight": 19.625
+  }
+]

@@ -41,8 +41,8 @@ class BarSet(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     size: str
     diameter: str
-    elasticity_Es: str
-    ultimate_stain_Ety: str = Field(default="0.0021")
+    area: str
+    weight: str
 
 
 class LevelGroup(SQLModel, table=True):
