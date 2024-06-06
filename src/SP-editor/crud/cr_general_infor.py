@@ -1,11 +1,13 @@
 from typing import Type
 
 from sqlmodel import Session, select
+from sqlalchemy.engine.base import Engine
+
 from database.models import GeneralInfor
 from database.database import create_db_and_tables
 
 
-def create_infor(engine, params: list[str]) -> GeneralInfor:
+def create_infor(engine: Engine, params: list[str]) -> GeneralInfor:
     d_code, u_sys, b_set, confi, s_capacity = params
     with Session(engine) as session:
         infor = GeneralInfor(
@@ -21,7 +23,7 @@ def create_infor(engine, params: list[str]) -> GeneralInfor:
         return infor
 
 
-def update_infor(engine, params: list[str]) -> Type[GeneralInfor] | None:
+def update_infor(engine: Engine, params: list[str]) -> Type[GeneralInfor] | None:
     d_code, u_sys, b_set, confi, s_capacity = params
     with Session(engine) as session:
         infor = session.get(GeneralInfor, 1)
@@ -37,7 +39,7 @@ def update_infor(engine, params: list[str]) -> Type[GeneralInfor] | None:
         return infor
 
 
-def get_infor(engine) -> Type[GeneralInfor] | None:
+def get_infor(engine: Engine) -> Type[GeneralInfor] | None:
     with Session(engine) as session:
         infor = session.get(GeneralInfor, 1)
         return infor

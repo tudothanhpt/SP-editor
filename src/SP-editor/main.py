@@ -10,6 +10,7 @@ from import_etabs_dialog import ImportEtabs_Dialog
 from general_infor_dialog import GeneralInfor_Dialog
 from open_file_dialog import OpenFile_Dialog
 from new_file_dialog import NewFile_Dialog
+from barest_dialog import BarSet_Dialog
 
 from utils import select_csv_file, get_open_filename
 
@@ -21,6 +22,8 @@ from crud.cr_general_infor import get_infor
 class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def __init__(self):
         super().__init__()
+        self.current_path = None
+        self.dialog_barset = None
         self.dialog_import_etabs = None
         self.dialog_open = None
         self.dialog_new = None
@@ -36,6 +39,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.action_Open.triggered.connect(self.open_file)
         self.a_ImportEtabs.triggered.connect(self.open_import_etabs)
         self.a_GeneralInfor.triggered.connect(self.set_general_infor)
+        self.a_BarSet.triggered.connect(self.open_barset)
 
         # The `@qtc.Slot()` decorator in this code snippet is used to define a slot method in a
 
@@ -47,6 +51,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def new_file(self):
         self.dialog_new = NewFile_Dialog(self)
         self.dialog_new.path_new.connect(self.update_message)
+        self.dialog_new.path_new.connect(self.set_current_path)
         self.dialog_new.engine_new.connect(self.set_current_engine)
         self.set_active_action(True)
         self.dialog_new.exec()
@@ -55,10 +60,12 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def open_file(self):
         self.dialog_open = OpenFile_Dialog(self)
         self.dialog_open.path_open.connect(self.update_message)
+        self.dialog_open.path_open.connect(self.set_current_path)
         self.dialog_open.engine_open.connect(self.set_current_engine)
         self.set_active_action(True)
         self.dialog_open.open_file()
 
+    @qtc.Slot()
     def open_import_etabs(self):
         self.dialog_import_etabs = ImportEtabs_Dialog()
         self.dialog_import_etabs.attach_etabs()
@@ -72,6 +79,11 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.dialog_import_etabs.connected_etabs.connect(self.a_ImportEtabs.setEnabled(False))
 
     @qtc.Slot()
+    def open_barset(self):
+        self.dialog_barset = BarSet_Dialog(self.current_engine, self.current_path)
+        self.dialog_barset.exec()
+
+    @qtc.Slot()
     def set_general_infor(self):
         self.dialog_new = GeneralInfor_Dialog(self.current_engine)
         self.dialog_new.infor_updated.connect(self.update_message)
@@ -80,6 +92,10 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     @qtc.Slot(Engine)
     def set_current_engine(self, engine: Engine):
         self.current_engine = engine
+
+    @qtc.Slot(str)
+    def set_current_path(self, path: str):
+        self.current_path = path
 
     @qtc.Slot(str)
     def update_message(self, message: str):

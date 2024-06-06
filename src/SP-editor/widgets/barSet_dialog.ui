@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>559</width>
-    <height>520</height>
+    <width>570</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="font">
@@ -45,7 +45,20 @@
           </widget>
          </item>
          <item row="1" column="0" colspan="3">
-          <widget class="QTableView" name="tbview_BarSet"/>
+          <widget class="QTableView" name="tbview_BarSet">
+           <property name="editTriggers">
+            <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+           </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+           <attribute name="horizontalHeaderVisible">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+          </widget>
          </item>
         </layout>
        </widget>

@@ -4,6 +4,7 @@ from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 
+from crud.cr_barset import create_barset
 from utils import write_to_csv, get_new_filename
 
 from widgets.generalInfor_dialog import Ui_d_GeneralInfor
@@ -49,10 +50,11 @@ class NewFile_Dialog(qtw.QDialog, Ui_d_GeneralInfor):
             self.dialog_new_path = get_new_filename(extensions)
 
             if self.dialog_new_path:
-                print(self.dialog_new_path)
                 self.engine = create_db_and_tables(self.dialog_new_path)
+
                 infor = create_infor(self.engine, data_list)
-                print(infor.design_code)
+                barset = create_barset(self.engine, infor.bar_set)
+                print(infor.bar_set)
                 self.path_new.emit(self.dialog_new_path)
                 self.engine_new.emit(self.engine)
                 self.close()
