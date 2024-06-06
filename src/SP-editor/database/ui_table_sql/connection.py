@@ -18,3 +18,9 @@ def create_connection(widget: qtw.QDialog, path: str, table_name: str):
                                  f"<p> The following table are missing"
                                  f"from the database:{tables_not_found}<p>")
         sys.exit(-1)
+
+
+def create_model(table_name: str):
+    model = qsql.QSqlTableModel()
+    model.setTable(table_name)
+    return model
