@@ -1,6 +1,6 @@
 import json
 import sys
-from typing import Type, Literal
+from typing import Type, Literal, Sequence
 
 import pandas as pd
 
@@ -22,7 +22,7 @@ def update_barset(engine: Engine, barset: str):
     json_to_sql(barset_file, engine, mode='replace')
 
 
-def get_barset(engine: Engine, barset: str):
+def get_barset(engine: Engine, barset: str) -> Sequence[BarSet]:
     with Session(engine) as session:
         statement = select(BarSet)
         results = session.exec(statement)
@@ -50,16 +50,3 @@ def json_to_sql(file_name: str, engine: Engine,
         data = json.load(json_file)
     df = pd.DataFrame(data)
     df.to_sql("barset", con=engine, if_exists=mode, index=False)
-
-
-def sqlmodel_to_df(objects: list[SQLModel]) -> pd.DataFrame:
-    """Converts SQLModel objects into a Pandas DataFrame.
-    Usage
-    ----------
-    df = sqlmodel_to_df(list_of_sqlmodels)
-    Parameters
-    ----------
-    :param objects: List[SQLModel]: List of SQLModel objects to be converted.
-    """
-
-    return pd.DataFrame.from_records(map(dict, objects)).iloc[:, 1:]

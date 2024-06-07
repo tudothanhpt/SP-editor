@@ -5,6 +5,8 @@ from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 
+from sqlmodel import SQLModel
+
 
 class PandasModel(qtc.QAbstractTableModel):
     """A model to interface a Qt view with pandas dataframe """
@@ -59,6 +61,24 @@ class PandasModel(qtc.QAbstractTableModel):
                 return str(self._dataframe.index[section])
 
         return None
+
+    @staticmethod
+    def sqlmodel_to_df(objects: list[SQLModel]) -> pd.DataFrame:
+        """Converts SQLModel objects into a Pandas DataFrame.
+
+        Usage
+        ----------
+        df = sqlmodel_to_df(list_of_sqlmodels)
+
+        Parameters
+        ----------
+        :param objects: List[SQLModel]: List of SQLModel objects to be converted.
+        """
+
+        if not objects:
+            return pd.DataFrame()  # Return an empty DataFrame if the list is empty
+
+        return pd.DataFrame.from_records([obj.dict() for obj in objects])
 
 
 if __name__ == "__main__":
