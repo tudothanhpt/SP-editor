@@ -4,10 +4,8 @@ from typing import Type, Literal
 
 import pandas as pd
 
-from sqlmodel import Session, select
+from sqlmodel import Session, select, SQLModel
 from database.models import BarSet
-from database.models import GeneralInfor
-from database import barset_table
 
 from core.global_variables import BarGroupType
 
@@ -52,3 +50,16 @@ def json_to_sql(file_name: str, engine: Engine,
         data = json.load(json_file)
     df = pd.DataFrame(data)
     df.to_sql("barset", con=engine, if_exists=mode, index=False)
+
+
+def sqlmodel_to_df(objects: list[SQLModel]) -> pd.DataFrame:
+    """Converts SQLModel objects into a Pandas DataFrame.
+    Usage
+    ----------
+    df = sqlmodel_to_df(list_of_sqlmodels)
+    Parameters
+    ----------
+    :param objects: List[SQLModel]: List of SQLModel objects to be converted.
+    """
+
+    return pd.DataFrame.from_records(map(dict, objects)).iloc[:, 1:]

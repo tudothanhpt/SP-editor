@@ -8,6 +8,8 @@ alabaster==0.7.16
     # via sphinx
 altgraph==0.17.4
     # via pyinstaller
+annotated-types==0.7.0
+    # via pydantic
 babel==2.15.0
     # via sphinx
 build==1.2.1
@@ -23,7 +25,7 @@ colorama==0.4.6
     #   build
     #   click
     #   sphinx
-comtypes==1.4.2
+comtypes==1.1.14
     # via Sp-editor (pyproject.toml)
 contourpy==1.2.1
     # via matplotlib
@@ -39,6 +41,8 @@ fonttools==4.51.0
     # via
     #   ezdxf
     #   matplotlib
+greenlet==3.0.3
+    # via sqlalchemy
 idna==3.7
     # via requests
 imagesize==1.4.1
@@ -55,7 +59,6 @@ matplotlib==3.8.4
     #   seaborn
 numpy==1.26.4
     # via
-    #   Sp-editor (pyproject.toml)
     #   contourpy
     #   ezdxf
     #   matplotlib
@@ -81,6 +84,10 @@ pillow==10.3.0
     # via matplotlib
 pip-tools==7.4.1
     # via Sp-editor (pyproject.toml)
+pydantic==2.7.3
+    # via sqlmodel
+pydantic-core==2.18.4
+    # via pydantic
 pygments==2.18.0
     # via sphinx
 pyinstaller==6.6.0
@@ -144,8 +151,16 @@ sphinxcontrib-qthelp==1.0.7
     # via sphinx
 sphinxcontrib-serializinghtml==1.1.10
     # via sphinx
+sqlalchemy==2.0.30
+    # via sqlmodel
+sqlmodel==0.0.18
+    # via Sp-editor (pyproject.toml)
 typing-extensions==4.11.0
-    # via ezdxf
+    # via
+    #   ezdxf
+    #   pydantic
+    #   pydantic-core
+    #   sqlalchemy
 tzdata==2024.1
     # via pandas
 urllib3==2.2.1

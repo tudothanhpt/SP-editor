@@ -7,7 +7,6 @@ from PySide6 import QtSql as qsql
 
 from sqlalchemy.engine.base import Engine
 from crud.cr_barset import create_barset, get_barset
-from database.ui_table_sql.connection import create_connection, create_model
 
 from core.global_variables import BarGroupType
 from crud.cr_general_infor import get_infor
@@ -24,7 +23,7 @@ class BarSet_Dialog(qtw.QDialog, Ui_d_BarSet):
         self.infor = get_infor(self.engine)
 
         self.setupUi(self)
-        create_connection(self, self.current_path, self.table_name)
+
         self.text_changed()
         self.cb_BarSetList.clear()
         self.cb_BarSetList.addItems(list(str(barset) for barset in BarGroupType))
@@ -34,10 +33,7 @@ class BarSet_Dialog(qtw.QDialog, Ui_d_BarSet):
     def text_changed(self):
         ctext = self.cb_BarSetList.currentText()
 
-        model = qsql.QSqlTableModel()
-        model.setTable("barset")
         self.tbview_BarSet.setModel(model)
-        model.select()
 
 
 if __name__ == '__main__':
