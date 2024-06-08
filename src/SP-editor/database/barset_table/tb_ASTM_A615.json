@@ -1,0 +1,79 @@
+[
+  {
+    "id": 1,
+    "size": "#3",
+    "diameter": 0.375,
+    "area": 0.11,
+    "weight": 0.376
+  },
+  {
+    "id": 2,
+    "size": "#4",
+    "diameter": 0.5,
+    "area": 0.2,
+    "weight": 0.668
+  },
+  {
+    "id": 3,
+    "size": "#5",
+    "diameter": 0.625,
+    "area": 0.31,
+    "weight": 1.043
+  },
+  {
+    "id": 4,
+    "size": "#6",
+    "diameter": 0.75,
+    "area": 0.44,
+    "weight": 1.502
+  },
+  {
+    "id": 5,
+    "size": "#7",
+    "diameter": 0.875,
+    "area": 0.6,
+    "weight": 2.044
+  },
+  {
+    "id": 6,
+    "size": "#8",
+    "diameter": 1.0,
+    "area": 0.79,
+    "weight": 2.67
+  },
+  {
+    "id": 7,
+    "size": "#9",
+    "diameter": 1.128,
+    "area": 1.0,
+    "weight": 3.4
+  },
+  {
+    "id": 8,
+    "size": "#10",
+    "diameter": 1.27,
+    "area": 1.27,
+    "weight": 4.303
+  },
+  {
+    "id": 9,
+    "size": "#11",
+    "diameter": 1.41,
+    "area": 1.56,
+    "weight": 5.313
+  },
+  {
+    "id": 10,
+    "size": "#14",
+    "diameter": 1.693,
+    "area": 2.25,
+    "weight": 7.65
+  },
+  {
+    "id": 11,
+    "size": "#18",
+    "diameter": 2.257,
+    "area": 4.0,
+    "weight": 13.6
+  }
+]
