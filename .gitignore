@@ -1,5 +1,5 @@
 .idea
 .venv
 .vscode
-__pycache__
-Sp_editor.egg-info
+SP-editor/
+Sp_editor.egg-info/
