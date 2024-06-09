@@ -8,7 +8,7 @@ import pandas as pd
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
-
+from io import StringIO
 
 def get_new_filename(suffix) -> str:
     rv, _ = qtw.QFileDialog.getSaveFileName(caption="New File", filter=suffix)
@@ -66,3 +66,29 @@ def select_csv_file() -> [str]:
         if file_paths:
             return file_paths[0]  # Return the first selected file path
     return None
+
+def prompt_json_file(base_dir: str) -> None:
+    """Prompt user to select a JSON file for loading data."""
+    base_dir = os.path.abspath(base_dir)
+    file_dialog = qtw.QFileDialog()
+    file_dialog.setFileMode(qtw.QFileDialog.ExistingFile)
+    file_dialog.setNameFilter("JSON files (*.json)")
+    file_dialog.setDirectory(base_dir)
+    if file_dialog.exec():
+        file_path = file_dialog.selectedFiles()[0]
+        return file_path
+
+def read_json_to_df(json_file_path: str) -> pd.DataFrame:
+    """Read a JSON file and return a pandas DataFrame."""
+    with open(json_file_path, 'r') as file:
+        json_data = file.read()
+
+    # Use StringIO to create a stream from the JSON string
+    json_stream = StringIO(json_data)
+
+    # Read the JSON data into a pandas DataFrame
+    df = pd.read_json(json_stream)
+    if 'id' in df.columns:
+        df = df.drop(columns=['id'])
+    
+    return df
