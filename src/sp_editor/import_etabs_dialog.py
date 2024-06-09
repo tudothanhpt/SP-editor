@@ -54,7 +54,6 @@ class ImportEtabs_Dialog(qtw.QDialog, Ui_d_ImportEtabs):
 
     def custom_signal_emit(self):
         model_name = self.SapModel.GetModelFilename()
-        print(model_name)
         self.connected_etabs.emit(model_name)
 
 
