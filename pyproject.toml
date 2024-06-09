@@ -1,0 +1,51 @@
+# SP-editor project
+# Empowering Structural Engineers with Seamless Communication Between SpColumn and ETABS
+
+[build-system]
+requires = ["setuptools", "wheel"]  # PEP 508 specifications.
+
+[project]
+name = "sp_editor"
+version = "0.1.0"
+authors = [
+    { name = "Thanh Tu", email = "tado@thorntontomasetti.com" },
+    { name = "Bui Mark", email = "abui@thorntontomasetti.com" },
+]
+description = "A shear wall design software that make connection between ETABS and SpColumn"
+readme = "README.md"
+requires-python = "<3.13,>=3.10"
+classifiers = [
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+]
+dependencies = [
+    # Packages this project requires
+
+    "pyside6 == 6.7.0",
+    "ezdxf == 1.3.0",
+    "pandas == 2.2.2",
+    "matplotlib==3.8.4",
+    "seaborn==0.13.2",
+    "openpyxl==3.1.2",
+    "pyqtgraph == 0.13.7",
+    "pyinstaller==6.6.0",
+    "comtypes==1.1.14",
+    "sqlmodel==0.0.18"
+]
+[project.optional-dependencies]
+dev = [
+    # Development tools to work on this project
+    "sphinx==7.3.7",
+    "sphinxcontrib-plantuml==0.29",
+    "pip-tools==7.4.1"
+]
+test = [
+    # Testing tools to test this project
+    "pytest==8.2.0",
+    "tox==4.15.0",
+    "behave==1.2.6"
+]
+
+[tool.pylint.MASTER]
+ignore-paths = '^src/sp_editor/widgets/.*$'

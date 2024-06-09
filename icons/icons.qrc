@@ -1,0 +1,15 @@
+<RCC>
+  <qresource prefix="Main">
+    <file>Horizontal TT Logo - Color.png</file>
+  </qresource>
+  <qresource prefix="Btn">
+    <file>material_icon.png</file>
+    <file>Force.png</file>
+    <file>parallel.png</file>
+    <file>Calculation_Case.png</file>
+    <file>Group_edit.png</file>
+    <file>rebar_icon.png</file>
+    <file>etabs logo.png</file>
+    <file>spcolumn-icon.png</file>
+  </qresource>
+</RCC>
