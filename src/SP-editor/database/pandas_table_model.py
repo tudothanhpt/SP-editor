@@ -9,14 +9,14 @@ from sqlmodel import SQLModel
 
 
 class PandasModel(qtc.QAbstractTableModel):
-    """A model to interface a Qt view with pandas dataframe """
+    """A model to interface a Qt view with pandas dataframe"""
 
     def __init__(self, dataframe: pd.DataFrame, parent=None):
         qtc.QAbstractTableModel.__init__(self, parent)
         self._dataframe = dataframe
 
     def rowCount(self, parent=qtc.QModelIndex()) -> int:
-        """ Override method from QAbstractTableModel
+        """Override method from QAbstractTableModel
 
         Return row count of the pandas DataFrame
         """
@@ -48,7 +48,8 @@ class PandasModel(qtc.QAbstractTableModel):
         return None
 
     def headerData(
-            self, section: int, orientation: qtc.Qt.Orientation, role: qtc.Qt.ItemDataRole):
+        self, section: int, orientation: qtc.Qt.Orientation, role: qtc.Qt.ItemDataRole
+    ):
         """Override method from QAbstractTableModel
 
         Return dataframe index as vertical header data and columns as horizontal header data.

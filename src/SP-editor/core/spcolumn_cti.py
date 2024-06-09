@@ -168,11 +168,37 @@ class CTIfile:
         # Option 27: Section capacity: 0-Moment capacity method; 1-Critical Capacity method (Section capacity in Project left panel | General)
         option27 = 1
 
-        options = [option1, option2, option3, option4, option5, option6, option7, option8, option9, option10, option11,
-                   option12, option13, option14, option15, option16, option17, option18, option19, option20, option21,
-                   option22, option23, option24, option25, option26, option27]
+        options = [
+            option1,
+            option2,
+            option3,
+            option4,
+            option5,
+            option6,
+            option7,
+            option8,
+            option9,
+            option10,
+            option11,
+            option12,
+            option13,
+            option14,
+            option15,
+            option16,
+            option17,
+            option18,
+            option19,
+            option20,
+            option21,
+            option22,
+            option23,
+            option24,
+            option25,
+            option26,
+            option27,
+        ]
 
-        self.UserOptions = ','.join(map(str, options))
+        self.UserOptions = ",".join(map(str, options))
 
     def set_user_options2(self, numforceCombos: int) -> None:
         """
@@ -236,147 +262,210 @@ class CTIfile:
         # Option 27: Section capacity: 0-Moment capacity method; 1-Critical Capacity method (Section capacity in Project left panel | General)
         option27 = 1
 
-        options = [option1, option2, option3, option4, option5, option6, option7, option8, option9, option10, option11,
-                   option12, option13, option14, option15, option16, option17, option18, option19, option20, option21,
-                   option22, option23, option24, option25, option26, option27]
+        options = [
+            option1,
+            option2,
+            option3,
+            option4,
+            option5,
+            option6,
+            option7,
+            option8,
+            option9,
+            option10,
+            option11,
+            option12,
+            option13,
+            option14,
+            option15,
+            option16,
+            option17,
+            option18,
+            option19,
+            option20,
+            option21,
+            option22,
+            option23,
+            option24,
+            option25,
+            option26,
+            option27,
+        ]
 
-        self.UserOptions = ','.join(map(str, options))
+        self.UserOptions = ",".join(map(str, options))
 
     def set_irregular_options(self) -> None:
         """Set options related to irregular sections."""
-        # Option 1: Reserved. Do not edit. 
+        # Option 1: Reserved. Do not edit.
         option1 = 0
-        # Option 2: Reserved. Do not edit. 
+        # Option 2: Reserved. Do not edit.
         option2 = 0
         # Option 3: Reserved. Do not edit.
         option3 = 0
-        # Option 4: Reserved. Do not edit. 
+        # Option 4: Reserved. Do not edit.
         option4 = 0
-        # Option 5: Area of reinforcing bar that is to be added through irregular section editor 
+        # Option 5: Area of reinforcing bar that is to be added through irregular section editor
         option5 = 0
-        # Option 6: Maximum X value of drawing area of irregular section editor 
+        # Option 6: Maximum X value of drawing area of irregular section editor
         option6 = 0
-        # Option 7:  Maximum Y value of drawing area of irregular section editor 
+        # Option 7:  Maximum Y value of drawing area of irregular section editor
         option7 = 0
-        # Option 8: Minimum X value of drawing area of irregular section editor 
+        # Option 8: Minimum X value of drawing area of irregular section editor
         option8 = 0
-        # Option 9: Minimum Y value of drawing area of irregular section editor 
+        # Option 9: Minimum Y value of drawing area of irregular section editor
         option9 = 0
-        # Option 10:  Grid step in X of irregular section editor 
+        # Option 10:  Grid step in X of irregular section editor
         option10 = 0
-        # Option 11:  Grid step in Y of irregular section editor 
+        # Option 11:  Grid step in Y of irregular section editor
         option11 = 0
-        # Option 12:  Grid snap step in X of irregular section editor 
+        # Option 12:  Grid snap step in X of irregular section editor
         option12 = 0
-        # Option 13: Grid snap step in Y of irregular section editor 
+        # Option 13: Grid snap step in Y of irregular section editor
         option13 = 0
 
-        options = [option1, option2, option3, option4, option5, option6, option7, option8, option9, option10, option11,
-                   option12, option13]
-        self.__IrregularOptions = ','.join(map(str, options))
+        options = [
+            option1,
+            option2,
+            option3,
+            option4,
+            option5,
+            option6,
+            option7,
+            option8,
+            option9,
+            option10,
+            option11,
+            option12,
+            option13,
+        ]
+        self.__IrregularOptions = ",".join(map(str, options))
 
     def set_ties(self) -> None:
         """Set options related to ties."""
         # Ties' options for Irregular options do not need to be cared, options are set to default. We do not use regular section for this API
         # If Irregular Pattern (Section left panel | Irregular) is selected: Reserved. Do not edit.
-        # Option 1: Reserved. Do not edit. 
+        # Option 1: Reserved. Do not edit.
         option1 = 0
-        # Option 2: Reserved. Do not edit. 
+        # Option 2: Reserved. Do not edit.
         option2 = 0
-        # Option 3: Reserved. Do not edit.   
+        # Option 3: Reserved. Do not edit.
         option3 = 0
         options = [option1, option2, option3]
-        self.__Ties = ','.join(map(str, options))
+        self.__Ties = ",".join(map(str, options))
 
     def set_investigation_reinforcement(self) -> None:
         # Investigation Reinforcement's options for Irregular options do not need to be cared, options are set to default. We do not use regular section for this API
         # Option 1: Reserved. Do not edit.
         option1 = 0
-        # Option 2: Reserved. Do not edit. 
+        # Option 2: Reserved. Do not edit.
         option2 = 0
         # Option 3: Reserved. Do not edit.
         option3 = 0
-        # Option 4: Reserved. Do not edit. 
+        # Option 4: Reserved. Do not edit.
         option4 = 0
-        # Option 5: Reserved. Do not edit. 
+        # Option 5: Reserved. Do not edit.
         option5 = 0
-        # Option 6: Reserved. Do not edit. 
+        # Option 6: Reserved. Do not edit.
         option6 = 0
-        # Option 7: Reserved. Do not edit. 
+        # Option 7: Reserved. Do not edit.
         option7 = 0
-        # Option 8: Reserved. Do not edit. 
+        # Option 8: Reserved. Do not edit.
         option8 = 0
-        # Option 9: Reserved. Do not edit. 
+        # Option 9: Reserved. Do not edit.
         option9 = 0
-        # Option 10: Reserved. Do not edit. 
+        # Option 10: Reserved. Do not edit.
         option10 = 0
-        # Option 11: Reserved. Do not edit. 
+        # Option 11: Reserved. Do not edit.
         option11 = 0
-        # Option 12:  Reserved. Do not edit. 
+        # Option 12:  Reserved. Do not edit.
         option12 = 0
 
-        options = [option1, option2, option3, option4, option5, option6, option7, option8, option9, option10, option11,
-                   option12]
-        self.__InvestigationReinforcement = ','.join(map(str, options))
+        options = [
+            option1,
+            option2,
+            option3,
+            option4,
+            option5,
+            option6,
+            option7,
+            option8,
+            option9,
+            option10,
+            option11,
+            option12,
+        ]
+        self.__InvestigationReinforcement = ",".join(map(str, options))
 
     def set_design_reinforcement(self) -> None:
         # This section applies to design mode only
         # DesignReinforcement's options are not applied for Irregular options, options are set to default. We do not use regular section for this API
-        # Option 1: Reserved. Do not edit. 
+        # Option 1: Reserved. Do not edit.
         option1 = 0
-        # Option 2: Reserved. Do not edit. 
+        # Option 2: Reserved. Do not edit.
         option2 = 0
         # Option 3: Reserved. Do not edit.
         option3 = 0
-        # Option 4: Reserved. Do not edit. 
+        # Option 4: Reserved. Do not edit.
         option4 = 0
-        # Option 5: Reserved. Do not edit. 
+        # Option 5: Reserved. Do not edit.
         option5 = 0
-        # Option 6: Reserved. Do not edit. 
+        # Option 6: Reserved. Do not edit.
         option6 = 0
-        # Option 7: Reserved. Do not edit. 
+        # Option 7: Reserved. Do not edit.
         option7 = 0
-        # Option 8: Reserved. Do not edit. 
+        # Option 8: Reserved. Do not edit.
         option8 = 0
-        # Option 9: Reserved. Do not edit. 
+        # Option 9: Reserved. Do not edit.
         option9 = 0
-        # Option 10: Reserved. Do not edit. 
+        # Option 10: Reserved. Do not edit.
         option10 = 0
-        # Option 11: Reserved. Do not edit. 
+        # Option 11: Reserved. Do not edit.
         option11 = 0
-        # Option 12:  Reserved. Do not edit. 
+        # Option 12:  Reserved. Do not edit.
         option12 = 0
 
-        options = [option1, option2, option3, option4, option5, option6, option7, option8, option9, option10, option11,
-                   option12]
-        self.__DesignReinforcement = ','.join(map(str, options))
+        options = [
+            option1,
+            option2,
+            option3,
+            option4,
+            option5,
+            option6,
+            option7,
+            option8,
+            option9,
+            option10,
+            option11,
+            option12,
+        ]
+        self.__DesignReinforcement = ",".join(map(str, options))
 
     def set_investigation_section_dimensions(self) -> None:
         # InvestigationSectionDimensions's options are not applied for Irregular options, options are set to default. We do not use regular section for this API'
-        # Option 1: Reserved. Do not edit. 
+        # Option 1: Reserved. Do not edit.
         option1 = 0
-        # Option 2: Reserved. Do not edit. 
+        # Option 2: Reserved. Do not edit.
         option2 = 0
         options = [option1, option2]
-        self.__InvestigationSectionDimensions = ','.join(map(str, options))
+        self.__InvestigationSectionDimensions = ",".join(map(str, options))
 
     def set_design_section_dimensions(self) -> None:
         # This section applies to design mode only
         # DesignSectionDimensions's options are not applied for Irregular options, options are set to default. We do not use regular section for this API
         option1 = 0
-        # Option 2: Reserved. Do not edit. 
+        # Option 2: Reserved. Do not edit.
         option2 = 0
         # Option 3: Reserved. Do not edit.
         option3 = 0
-        # Option 4: Reserved. Do not edit. 
+        # Option 4: Reserved. Do not edit.
         option4 = 0
-        # Option 5: Reserved. Do not edit. 
+        # Option 5: Reserved. Do not edit.
         option5 = 0
-        # Option 6: Reserved. Do not edit. 
+        # Option 6: Reserved. Do not edit.
         option6 = 0
 
         options = [option1, option2, option3, option4, option5, option6]
-        self.__DesignSectionDimensions = ','.join(map(str, options))
+        self.__DesignSectionDimensions = ",".join(map(str, options))
 
     def set_material_properties(self, fc, ec, fy, es) -> None:
         # Option 1: Concrete strength, f’c
@@ -401,43 +490,57 @@ class CTIfile:
         option10 = 1
         # Option 11: Compression-controlled strain limit
         option11 = 0.002069
-        options = [option1, option2, option3, option4, option5, option6, option7, option8, option9, option10, option11]
-        self.__MaterialProperties = ','.join(map(str, options))
+        options = [
+            option1,
+            option2,
+            option3,
+            option4,
+            option5,
+            option6,
+            option7,
+            option8,
+            option9,
+            option10,
+            option11,
+        ]
+        self.__MaterialProperties = ",".join(map(str, options))
 
     def set_reduction_factors(self) -> None:
-        '''There are 5 values separated by commas in one line in this section. These values are described 
-        below in the order they appear from left to right. (Capacity Reduction Factors/Material Resistance 
-        Factors in Definitions dialog | Properties | Reduction Factors) '''
+        """There are 5 values separated by commas in one line in this section. These values are described
+        below in the order they appear from left to right. (Capacity Reduction Factors/Material Resistance
+        Factors in Definitions dialog | Properties | Reduction Factors)"""
         # Option 1: Phi(a) for axial compression
         option1 = 0.8
         # Option 2: Phi(b) for tension-controlled failure
         option2 = 0.9
-        # Option 3: Phi(c) for compression-controlled failure 
+        # Option 3: Phi(c) for compression-controlled failure
         option3 = 0.650000
-        # Option 4: Reserved. Do not edit 
+        # Option 4: Reserved. Do not edit
         option4 = 0.1
         # Option 5: Minimum dimension of tied irregular sections for CSA A23.3-14 and CSA A23.3-19; 0-for all other cases
         option5 = 0
         options = [option1, option2, option3, option4, option5]
-        self.__ReductionFactors = ','.join(map(str, options))
+        self.__ReductionFactors = ",".join(map(str, options))
 
     def set_design_criteria(self) -> None:
-        '''There are 4 values separated by commas in one line in this section. These values are described 
-        below in the order they appear from left to right. (Reinforcement Ratio, Reinforcement Bars and 
-        Capacity Ratio in Definitions dialog | Properties | Reduction Factors) '''
+        """There are 4 values separated by commas in one line in this section. These values are described
+        below in the order they appear from left to right. (Reinforcement Ratio, Reinforcement Bars and
+        Capacity Ratio in Definitions dialog | Properties | Reduction Factors)"""
         # Option 1: Minimum reinforcement ratio
         option1 = 0.010000
         # Option 2: Maximum reinforcement ratio
         option2 = 0.080000
         # Option 3: Minimum clear spacing between bars
         option3 = 1.500000
-        # Option 4: Allowable Capacity (Ratio) 
+        # Option 4: Allowable Capacity (Ratio)
         option4 = 1.000000
         options = [option1, option2, option3, option4]
-        self.__DesignCriteria = ','.join(map(str, options))
+        self.__DesignCriteria = ",".join(map(str, options))
 
     def set_external_points_etabs(self, lst_PierSDShape, pierIndex) -> None:
-        self.__ExternalPoints = connect_etabs.SPcolumnPierPoint(lst_PierSDShape, pierIndex)
+        self.__ExternalPoints = connect_etabs.SPcolumnPierPoint(
+            lst_PierSDShape, pierIndex
+        )
 
     def set_external_points_cad(self, acadPath: str) -> None:
         """
@@ -457,7 +560,9 @@ class CTIfile:
     def set_internal_points(self) -> None:
         self.__InternalPoints = "0"
 
-    def set_reinforcement_bars_auto(self, lst_PierSDShape, pierIndex, offset_distance, spacing, rebarArea) -> None:
+    def set_reinforcement_bars_auto(
+        self, lst_PierSDShape, pierIndex, offset_distance, spacing, rebarArea
+    ) -> None:
 
         lst_PierSDShape = connect_etabs.get_sdshape_pierPolygon()
 
@@ -488,23 +593,37 @@ class CTIfile:
                 # Normalize the perpendicular vectors
                 length_v1_perp = (v1_perp[0] ** 2 + v1_perp[1] ** 2) ** 0.5
                 length_v2_perp = (v2_perp[0] ** 2 + v2_perp[1] ** 2) ** 0.5
-                v1_perp_norm = (v1_perp[0] / length_v1_perp, v1_perp[1] / length_v1_perp)
-                v2_perp_norm = (v2_perp[0] / length_v2_perp, v2_perp[1] / length_v2_perp)
+                v1_perp_norm = (
+                    v1_perp[0] / length_v1_perp,
+                    v1_perp[1] / length_v1_perp,
+                )
+                v2_perp_norm = (
+                    v2_perp[0] / length_v2_perp,
+                    v2_perp[1] / length_v2_perp,
+                )
 
                 # Calculate the bisector vector
-                bisector = ((v1_perp_norm[0] + v2_perp_norm[0]) / 2, (v1_perp_norm[1] + v2_perp_norm[1]) / 2)
+                bisector = (
+                    (v1_perp_norm[0] + v2_perp_norm[0]) / 2,
+                    (v1_perp_norm[1] + v2_perp_norm[1]) / 2,
+                )
 
                 # Scale the bisector vector by the offset distance
-                offset_vector = (offset_distance * bisector[0], offset_distance * bisector[1])
+                offset_vector = (
+                    offset_distance * bisector[0],
+                    offset_distance * bisector[1],
+                )
 
                 # Calculate the offset point
-                offset_point = (curr_point[0] + offset_vector[0], curr_point[1] + offset_vector[1])
+                offset_point = (
+                    curr_point[0] + offset_vector[0],
+                    curr_point[1] + offset_vector[1],
+                )
 
                 lst_offset_points.append(offset_point)
             return lst_offset_points
 
         def extract_segments(polyline):
-
             """
             Input polyline to be extracted as list
             Return Values:
@@ -525,7 +644,7 @@ class CTIfile:
             Return Values:
             list_rebarsPts (list) : List of rebars' coordinates based on polyline segments and user-specified spacing
             """
-            # Break polyline into segments 
+            # Break polyline into segments
             segments = extract_segments(lst_offsettedpolyline_points)
             temp_list_rebarsPts = []
 
@@ -533,13 +652,20 @@ class CTIfile:
                 start_point, end_point = segment
                 # Calculate the control points for the current segment
                 rounded_distance = math.sqrt(
-                    (end_point[0] - start_point[0]) ** 2 + (end_point[1] - start_point[1]) ** 2)
+                    (end_point[0] - start_point[0]) ** 2
+                    + (end_point[1] - start_point[1]) ** 2
+                )
                 num_points = math.ceil(rounded_distance / spacing)
                 num_points = max(num_points, 2)
                 x_diff = (end_point[0] - start_point[0]) / (num_points - 1)
                 y_diff = (end_point[1] - start_point[1]) / (num_points - 1)
-                control_points = [(round(start_point[0] + i * x_diff, 5), round(start_point[1] + i * y_diff, 5)) for i
-                                  in range(num_points)]
+                control_points = [
+                    (
+                        round(start_point[0] + i * x_diff, 5),
+                        round(start_point[1] + i * y_diff, 5),
+                    )
+                    for i in range(num_points)
+                ]
 
                 # Append the calculated rebars point to the list of unique values
                 temp_list_rebarsPts.append(control_points)
@@ -570,19 +696,27 @@ class CTIfile:
                 elif isinstance(lst[0], list):
                     return [[rebarArea] + item for item in lst]
                 else:
-                    raise TypeError("Unsupported data format. Must be list of tuples or lists.")
+                    raise TypeError(
+                        "Unsupported data format. Must be list of tuples or lists."
+                    )
 
             def list_to_multiline_string(lst):
-                return '\n'.join([','.join(map(str, item)) for item in lst])
+                return "\n".join([",".join(map(str, item)) for item in lst])
 
             total_rebar = len(lst_rebarCoordinates)
             modified_list = add_parameter_to_tuples(lst_rebarCoordinates, rebarArea)
             multiline_string_rebarPts = list_to_multiline_string(modified_list)
-            multiline_string_rebarPts = str(total_rebar) + '\n' + multiline_string_rebarPts
+            multiline_string_rebarPts = (
+                str(total_rebar) + "\n" + multiline_string_rebarPts
+            )
             return multiline_string_rebarPts
 
-        lst_offsettedpolyline_points = offset_polyline(lst_PierSDShape, pierIndex, offset_distance)
-        lst_rebarCoordinates = calculate_rebarpoints_for_segments(lst_offsettedpolyline_points, spacing)
+        lst_offsettedpolyline_points = offset_polyline(
+            lst_PierSDShape, pierIndex, offset_distance
+        )
+        lst_rebarCoordinates = calculate_rebarpoints_for_segments(
+            lst_offsettedpolyline_points, spacing
+        )
 
         self.__ReinforcementBars = SPcolumn_RebarFormat(lst_rebarCoordinates, rebarArea)
 
@@ -590,20 +724,20 @@ class CTIfile:
         acaddoc = read_acad.open_autocad_file(acadPath)
         rebar = read_acad.get_rebarinfo_fromCAD(acaddoc)
         rebar_spColFormat = read_acad.format_rebar_info_for_spcolumn(rebar)
-        parts = self.UserOptions.split(',')
+        parts = self.UserOptions.split(",")
         parts[16] = str(len(rebar))
-        self.UserOptions = ','.join(parts)
+        self.UserOptions = ",".join(parts)
         self.__ReinforcementBars = rebar_spColFormat
 
     def set_factored_loads(self, forceSet) -> None:
         self.__FactoredLoads = forceSet
 
     def set_slenderness_column(self) -> None:
-        """This section contains 2 lines describing slenderness parameters for column being designed. The 
-        first line is for X-axis parameters, and the second line is for Y-axis parameters. 
-        There are 9 values6 separated by commas in each line. These values are described below in the 
-        order they appear from left to right. (Design Column X Axis and Design Column Y  Axis in 
-        Slenderness dialog | Columns) """
+        """This section contains 2 lines describing slenderness parameters for column being designed. The
+        first line is for X-axis parameters, and the second line is for Y-axis parameters.
+        There are 9 values6 separated by commas in each line. These values are described below in the
+        order they appear from left to right. (Design Column X Axis and Design Column Y  Axis in
+        Slenderness dialog | Columns)"""
 
         # Typically we set to "No" to slenderness consideration, the following code as below
         # Param1
@@ -631,19 +765,38 @@ class CTIfile:
         param9_X = 0
         param9_Y = 0
 
-        SlendernessColumn_Xaxis = [columnclearheight, k_nonsway_X, k_sway_X, param4_X, param5, param6, param7, param8_X,
-                                   param9_X]
-        SlendernessColumn_Xaxis_string = ','.join(map(str, SlendernessColumn_Xaxis))
-        SlendernessColumn_Yaxis = [columnclearheight, k_nonsway_Y, k_sway_Y, param4_Y, param5, param6, param7, param8_Y,
-                                   param9_Y]
-        SlendernessColumn_Yaxis_string = ','.join(map(str, SlendernessColumn_Yaxis))
-        self.__SlendernessColumn = f"{SlendernessColumn_Xaxis_string}\n{SlendernessColumn_Yaxis_string}"
+        SlendernessColumn_Xaxis = [
+            columnclearheight,
+            k_nonsway_X,
+            k_sway_X,
+            param4_X,
+            param5,
+            param6,
+            param7,
+            param8_X,
+            param9_X,
+        ]
+        SlendernessColumn_Xaxis_string = ",".join(map(str, SlendernessColumn_Xaxis))
+        SlendernessColumn_Yaxis = [
+            columnclearheight,
+            k_nonsway_Y,
+            k_sway_Y,
+            param4_Y,
+            param5,
+            param6,
+            param7,
+            param8_Y,
+            param9_Y,
+        ]
+        SlendernessColumn_Yaxis_string = ",".join(map(str, SlendernessColumn_Yaxis))
+        self.__SlendernessColumn = (
+            f"{SlendernessColumn_Xaxis_string}\n{SlendernessColumn_Yaxis_string}"
+        )
 
     def set_slenderness_column_AboveAndBelow(self) -> None:
-
-        """This section contains 2 lines describing slenderness parameters for column above and column 
-        below. The first line is for column above, and the second line is for column below. (Columns 
-        Above/Below in Slenderness dialog | Columns) """
+        """This section contains 2 lines describing slenderness parameters for column above and column
+        below. The first line is for column above, and the second line is for column below. (Columns
+        Above/Below in Slenderness dialog | Columns)"""
 
         # Param1: 1. 0-No column specified; 1-Circular column specified; 2-Rectangular column specified; 3-Column above section taken as design column section
         param1_above = 0
@@ -663,11 +816,27 @@ class CTIfile:
         # Param6: Concrete modulus of elasticity, Ec
         param6_above = 0
         param6_below = 0
-        SlendernessColumn_Above = [param1_above, param2_above, param3_above, param4_above, param5_above, param6_above]
-        SlendernessColumn_Above_string = ','.join(map(str, SlendernessColumn_Above))
-        SlendernessColumn_Below = [param1_below, param2_below, param3_below, param4_below, param5_below, param6_below]
-        SlendernessColumn_Below_string = ','.join(map(str, SlendernessColumn_Below))
-        self.__SlendernessColumnAboveAndBelow = f"{SlendernessColumn_Above_string}\n{SlendernessColumn_Below_string}"
+        SlendernessColumn_Above = [
+            param1_above,
+            param2_above,
+            param3_above,
+            param4_above,
+            param5_above,
+            param6_above,
+        ]
+        SlendernessColumn_Above_string = ",".join(map(str, SlendernessColumn_Above))
+        SlendernessColumn_Below = [
+            param1_below,
+            param2_below,
+            param3_below,
+            param4_below,
+            param5_below,
+            param6_below,
+        ]
+        SlendernessColumn_Below_string = ",".join(map(str, SlendernessColumn_Below))
+        self.__SlendernessColumnAboveAndBelow = (
+            f"{SlendernessColumn_Above_string}\n{SlendernessColumn_Below_string}"
+        )
 
     def set_slenderness_beams(self) -> None:
         # 0-Rectangular Beam specified; 1-No beam specified; 2-Rigid beam specified
@@ -759,14 +928,14 @@ class CTIfile:
         beam7 = [param1_7, param2_7, param3_7, param4_7, param5_7, param6_7, param7_7]
         beam8 = [param1_8, param2_8, param3_8, param4_8, param5_8, param6_8, param7_8]
 
-        beam1_string = ','.join(map(str, beam1))
-        beam2_string = ','.join(map(str, beam2))
-        beam3_string = ','.join(map(str, beam3))
-        beam4_string = ','.join(map(str, beam4))
-        beam5_string = ','.join(map(str, beam5))
-        beam6_string = ','.join(map(str, beam6))
-        beam7_string = ','.join(map(str, beam7))
-        beam8_string = ','.join(map(str, beam8))
+        beam1_string = ",".join(map(str, beam1))
+        beam2_string = ",".join(map(str, beam2))
+        beam3_string = ",".join(map(str, beam3))
+        beam4_string = ",".join(map(str, beam4))
+        beam5_string = ",".join(map(str, beam5))
+        beam6_string = ",".join(map(str, beam6))
+        beam7_string = ",".join(map(str, beam7))
+        beam8_string = ",".join(map(str, beam8))
 
         self.__SlendernessBeams = f"{beam1_string}\n{beam2_string}\n{beam3_string}\n{beam4_string}\n{beam5_string}\n{beam6_string}\n{beam7_string}\n{beam8_string}"
 
@@ -780,13 +949,13 @@ class CTIfile:
         self.__PhiDelta = 0.750000
 
     def set_crackedI(self) -> None:
-        """There are 2 values separated by commas in one line in this section. These values are described 
-        below in the order they appear from left to right. (Beams and Columns Cracked Section 
-        Coefficients in Slenderness dialog | Properties | Slenderness Factors)  """
+        """There are 2 values separated by commas in one line in this section. These values are described
+        below in the order they appear from left to right. (Beams and Columns Cracked Section
+        Coefficients in Slenderness dialog | Properties | Slenderness Factors)"""
         CrackedI_Beam = 0.35
         CrackedI_Column = 0.7
         CrackedI = [CrackedI_Beam, CrackedI_Column]
-        self.__CrackedI = ','.join(map(str, CrackedI))
+        self.__CrackedI = ",".join(map(str, CrackedI))
 
     def set_service_loads(self) -> None:
         self.__ServiceLoads = 0
@@ -808,28 +977,34 @@ class CTIfile:
 0.900000,0.000000,0.000000,-1.000000,0.000000"""
 
     def set_bar_group_type(self) -> None:
-        """There is 1 value in this section. (Bar Set drop-down list on menu Options | Reinforcement…) 
-            0-User Defined 
-            1. ASTM615 
-            2. CSA G30.18 
-            3. prEN 10080 
-            4. ASTM615M """
+        """There is 1 value in this section. (Bar Set drop-down list on menu Options | Reinforcement…)
+        0-User Defined
+        1. ASTM615
+        2. CSA G30.18
+        3. prEN 10080
+        4. ASTM615M"""
         self.__BarGroupType = "1"
 
     def set_user_defined_bars(self) -> None:
         self.__UserDefinedBars = ""
 
     def set_sustained_load_factors(self) -> None:
-        """There are 5 values separated by commas in one line in this section. Each value respectively 
-        represents percentage of Dead, Live, Wind, EQ, and Snow load case that is considered sustained 
-        (Load Cases in Definitions dialog | Load Case/Combo.). """
+        """There are 5 values separated by commas in one line in this section. Each value respectively
+        represents percentage of Dead, Live, Wind, EQ, and Snow load case that is considered sustained
+        (Load Cases in Definitions dialog | Load Case/Combo.)."""
         DLpercentage = 100.00
         LLpercentage = 0.00
         Wpercentage = 0.00
         EQpercentage = 0.00
         Spercentage = 0.00
-        SustainedLoadFactors = [DLpercentage, LLpercentage, Wpercentage, EQpercentage, Spercentage]
-        self.__SustainedLoadFactors = ','.join(map(str, SustainedLoadFactors))
+        SustainedLoadFactors = [
+            DLpercentage,
+            LLpercentage,
+            Wpercentage,
+            EQpercentage,
+            Spercentage,
+        ]
+        self.__SustainedLoadFactors = ",".join(map(str, SustainedLoadFactors))
 
     def get_irregular_options(self):
         return self.__IrregularOptions
@@ -864,40 +1039,42 @@ class CTIfile:
         Returns:
             str: The constructed CTI file content.
         """
-        return f"#spColumn Text Input (CTI) File\n" \
-               f"[spColumn Version]\n{self.__SpColumnVersion}\n" \
-               f"[Project]\n{self.__ProjectName}\n" \
-               f"[Column ID]\n{self.__ColumnID}\n" \
-               f"[Engineer]\n{self.__Engineer}\n" \
-               f"[Investigation Run Flag]\n{self.__InvestigationRunFlag}\n" \
-               f"[Design Run Flag]\n{self.__DesignRunFlag}\n" \
-               f"[Slenderness Flag]\n{self.__SlendernessFlag}\n" \
-               f"[User Options]\n{self.UserOptions}\n" \
-               f"[Irregular Options]\n{self.__IrregularOptions}\n" \
-               f"[Ties]\n{self.__Ties}\n" \
-               f"[Investigation Reinforcement]\n{self.__InvestigationReinforcement}\n" \
-               f"[Design Reinforcement]\n{self.__DesignReinforcement}\n" \
-               f"[Investigation Section Dimensions]\n{self.__InvestigationSectionDimensions}\n" \
-               f"[Design Section Dimensions]\n{self.__DesignSectionDimensions}\n" \
-               f"[Material Properties]\n{self.__MaterialProperties}\n" \
-               f"[Reduction Factors]\n{self.__ReductionFactors}\n" \
-               f"[Design Criteria]\n{self.__DesignCriteria}\n" \
-               f"[External Points]\n{self.__ExternalPoints}\n" \
-               f"[Internal Points]\n{self.__InternalPoints}\n" \
-               f"[Reinforcement Bars]\n{self.__ReinforcementBars}\n" \
-               f"[Factored Loads]\n{self.__FactoredLoads}\n" \
-               f"[Slenderness: Column]\n{self.__SlendernessColumn}\n" \
-               f"[Slenderness: Column Above And Below]\n{self.__SlendernessColumnAboveAndBelow}\n" \
-               f"[Slenderness: Beams]\n{self.__SlendernessBeams}\n" \
-               f"[EI]\n{self.__EI}\n" \
-               f"[SldOptFact]\n{self.__SldOptFact}\n" \
-               f"[Phi_Delta]\n{self.__PhiDelta}\n" \
-               f"[Cracked I]\n{self.__CrackedI}\n" \
-               f"[Service Loads]\n{self.__ServiceLoads}\n" \
-               f"[Load Combinations]\n{self.__LoadCombinations}\n" \
-               f"[BarGroupType]\n{self.__BarGroupType}\n" \
-               f"[User Defined Bars]\n{self.__UserDefinedBars}\n" \
-               f"[Sustained Load Factors]\n{self.__SustainedLoadFactors}\n"
+        return (
+            f"#spColumn Text Input (CTI) File\n"
+            f"[spColumn Version]\n{self.__SpColumnVersion}\n"
+            f"[Project]\n{self.__ProjectName}\n"
+            f"[Column ID]\n{self.__ColumnID}\n"
+            f"[Engineer]\n{self.__Engineer}\n"
+            f"[Investigation Run Flag]\n{self.__InvestigationRunFlag}\n"
+            f"[Design Run Flag]\n{self.__DesignRunFlag}\n"
+            f"[Slenderness Flag]\n{self.__SlendernessFlag}\n"
+            f"[User Options]\n{self.UserOptions}\n"
+            f"[Irregular Options]\n{self.__IrregularOptions}\n"
+            f"[Ties]\n{self.__Ties}\n"
+            f"[Investigation Reinforcement]\n{self.__InvestigationReinforcement}\n"
+            f"[Design Reinforcement]\n{self.__DesignReinforcement}\n"
+            f"[Investigation Section Dimensions]\n{self.__InvestigationSectionDimensions}\n"
+            f"[Design Section Dimensions]\n{self.__DesignSectionDimensions}\n"
+            f"[Material Properties]\n{self.__MaterialProperties}\n"
+            f"[Reduction Factors]\n{self.__ReductionFactors}\n"
+            f"[Design Criteria]\n{self.__DesignCriteria}\n"
+            f"[External Points]\n{self.__ExternalPoints}\n"
+            f"[Internal Points]\n{self.__InternalPoints}\n"
+            f"[Reinforcement Bars]\n{self.__ReinforcementBars}\n"
+            f"[Factored Loads]\n{self.__FactoredLoads}\n"
+            f"[Slenderness: Column]\n{self.__SlendernessColumn}\n"
+            f"[Slenderness: Column Above And Below]\n{self.__SlendernessColumnAboveAndBelow}\n"
+            f"[Slenderness: Beams]\n{self.__SlendernessBeams}\n"
+            f"[EI]\n{self.__EI}\n"
+            f"[SldOptFact]\n{self.__SldOptFact}\n"
+            f"[Phi_Delta]\n{self.__PhiDelta}\n"
+            f"[Cracked I]\n{self.__CrackedI}\n"
+            f"[Service Loads]\n{self.__ServiceLoads}\n"
+            f"[Load Combinations]\n{self.__LoadCombinations}\n"
+            f"[BarGroupType]\n{self.__BarGroupType}\n"
+            f"[User Defined Bars]\n{self.__UserDefinedBars}\n"
+            f"[Sustained Load Factors]\n{self.__SustainedLoadFactors}\n"
+        )
 
     def write_CTIfile_to_file(self, file_path) -> None:
         with open(file_path, "w") as file:

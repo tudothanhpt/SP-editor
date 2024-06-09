@@ -71,15 +71,32 @@ class UserOptions:
 
     def set_user_options_CTIformat(self):
         options = [
-            self.run_option, self.unit_system, self.design_code, self.run_axis,
-            self.reserved1, self.slenderness_consideration, self.bar_selection,
-            self.reserved2, self.column_section_shape, self.reinforcing_bar_layout,
-            self.column_type, self.confinement_type, self.load_type_inspection,
-            self.load_type_design, self.reinforcement_layout_inspection,
-            self.reinforcement_layout_design, self.reserved3, self.num_factored_loads,
-            self.num_service_loads, self.num_exterior_points, self.num_interior_points,
-            self.reserved4, self.reserved5, self.cover_type_investion_mode,
-            self.cover_type_design_mode, self.num_load_combinations,
-            self.section_capacity_method
+            self.run_option,
+            self.unit_system,
+            self.design_code,
+            self.run_axis,
+            self.reserved1,
+            self.slenderness_consideration,
+            self.bar_selection,
+            self.reserved2,
+            self.column_section_shape,
+            self.reinforcing_bar_layout,
+            self.column_type,
+            self.confinement_type,
+            self.load_type_inspection,
+            self.load_type_design,
+            self.reinforcement_layout_inspection,
+            self.reinforcement_layout_design,
+            self.reserved3,
+            self.num_factored_loads,
+            self.num_service_loads,
+            self.num_exterior_points,
+            self.num_interior_points,
+            self.reserved4,
+            self.reserved5,
+            self.cover_type_investion_mode,
+            self.cover_type_design_mode,
+            self.num_load_combinations,
+            self.section_capacity_method,
         ]
-        return ','.join(map(str, options))
+        return ",".join(map(str, options))

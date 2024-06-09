@@ -12,7 +12,8 @@ from PySide6 import QtGui as qtg
 
 def get_new_filename(suffix) -> str:
     rv, _ = qtw.QFileDialog.getSaveFileName(caption="New File", filter=suffix)
-    if rv != '' and not rv.endswith(suffix): rv
+    if rv != "" and not rv.endswith(suffix):
+        rv
 
     return rv
 
@@ -26,30 +27,35 @@ def about_dialog(parent, title, text):
 
 
 def get_save_filename(suffix):
-    rv, _ = qtw.QFileDialog.getSaveFileName(caption="Save File", filter='*.{}'.format(suffix))
-    if rv != '' and not rv.endswith(suffix): rv += '.' + suffix
+    rv, _ = qtw.QFileDialog.getSaveFileName(
+        caption="Save File", filter="*.{}".format(suffix)
+    )
+    if rv != "" and not rv.endswith(suffix):
+        rv += "." + suffix
 
     return rv
 
 
 def get_open_filename(suffix, curr_dir):
-    rv, _ = qtw.QFileDialog.getOpenFileName(caption="Open Model File", dir=curr_dir, filter=suffix)
-    if rv == '' and not rv.endswith(suffix):
-        raise FileNotFoundError(
-            errno.ENOENT, os.strerror(errno.ENOENT), rv
-        )
+    rv, _ = qtw.QFileDialog.getOpenFileName(
+        caption="Open Model File", dir=curr_dir, filter=suffix
+    )
+    if rv == "" and not rv.endswith(suffix):
+        raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), rv)
 
     return rv
 
 
 def confirm(parent, title, msg):
-    rv = qtw.QMessageBox.question(parent, title, msg, qtw.QMessageBox.Yes, qtw.QMessageBox.No)
+    rv = qtw.QMessageBox.question(
+        parent, title, msg, qtw.QMessageBox.Yes, qtw.QMessageBox.No
+    )
 
     return True if rv == qtw.QMessageBox.Yes else False
 
 
 def write_to_csv(data, csv_filename):
-    with open(csv_filename, 'w', newline='', encoding='utf-8') as file:
+    with open(csv_filename, "w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerow(data)
 

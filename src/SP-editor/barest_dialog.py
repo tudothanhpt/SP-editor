@@ -46,7 +46,7 @@ class BarSet_Dialog(qtw.QDialog, Ui_d_BarSet):
         self.tbview_BarSet.setModel(model)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     barset_dialog = BarSet_Dialog()
     barset_dialog.show()

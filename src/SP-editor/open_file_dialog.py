@@ -6,7 +6,9 @@ from database.database import connect_db_and_tables
 
 
 class OpenFile_Dialog(qtw.QFileDialog):
-    engine_open = qtc.Signal(Engine)  # Define a custom signal that emits an Engine object
+    engine_open = qtc.Signal(
+        Engine
+    )  # Define a custom signal that emits an Engine object
     path_open = qtc.Signal(str)
 
     def __init__(self, parent: qtw.QMainWindow | None = None):
@@ -29,11 +31,21 @@ class OpenFile_Dialog(qtw.QFileDialog):
                 self.engine_open.emit(self.engine)  # Emit the signal with the engine
 
             else:
-                qtw.QMessageBox.warning(self.parent, "File not selected", "No file was selected", qtw.QMessageBox.Ok)
+                qtw.QMessageBox.warning(
+                    self.parent,
+                    "File not selected",
+                    "No file was selected",
+                    qtw.QMessageBox.Ok,
+                )
         except FileNotFoundError:
-            qtw.QMessageBox.warning(self.parent, "File not found", "No such file or directory", qtw.QMessageBox.Ok)
+            qtw.QMessageBox.warning(
+                self.parent,
+                "File not found",
+                "No such file or directory",
+                qtw.QMessageBox.Ok,
+            )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     ex = OpenFile_Dialog()

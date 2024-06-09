@@ -9,7 +9,13 @@ from utils import write_to_csv, get_new_filename
 from widgets.generalInfor_dialog import Ui_d_GeneralInfor
 
 from sqlalchemy.engine.base import Engine
-from core.global_variables import DesignCode, BarGroupType, UnitSystem, ConfinementType, SectionCapacityMethod
+from core.global_variables import (
+    DesignCode,
+    BarGroupType,
+    UnitSystem,
+    ConfinementType,
+    SectionCapacityMethod,
+)
 from crud.cr_general_infor import update_infor, get_infor
 
 
@@ -48,14 +54,19 @@ class GeneralInfor_Dialog(qtw.QDialog, Ui_d_GeneralInfor):
 
     @qtc.Slot()
     def update_general_infor(self):
-        data_list = [self.cb_DesignCode.currentText(), self.cb_UnitSystem.currentText(), self.cb_BarSet.currentText(),
-                     self.cb_Confinement.currentText(), self.cb_SectionCapacity.currentText()]
+        data_list = [
+            self.cb_DesignCode.currentText(),
+            self.cb_UnitSystem.currentText(),
+            self.cb_BarSet.currentText(),
+            self.cb_Confinement.currentText(),
+            self.cb_SectionCapacity.currentText(),
+        ]
         self.infor = update_infor(self.engine, data_list)
         self.infor_updated.emit("General information updated")
         self.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     general_infor_dialog = GeneralInfor_Dialog()
     general_infor_dialog.show()

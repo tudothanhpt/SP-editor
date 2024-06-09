@@ -80,7 +80,10 @@ def getVerticesList_fromCAD(acaddoc: Any) -> List[List[Tuple[float, float]]]:
     # Iterate through entities in the model space
     for entity in modelspace:
         # Check if the entity is a polyline and belongs to the specified layer
-        if entity.objectname == ACADOBJECTNAME_POLYLINE and entity.layer == ACADLAYER_POLYLINE:
+        if (
+            entity.objectname == ACADOBJECTNAME_POLYLINE
+            and entity.layer == ACADLAYER_POLYLINE
+        ):
             # Extract coordinates of the polyline
             a = list(entity.coordinates)
             # Group coordinates into pairs to represent vertices
@@ -128,17 +131,17 @@ def format_vertices_for_spcolumn(coordinates: List[List[Tuple[float, float]]]) -
 def get_rebarinfo_fromCAD(acaddoc) -> List[Tuple[float, float, float]]:
     """
     Extract rebar information from an AutoCAD DXF file.
-    
+
     This function opens an AutoCAD DXF file, iterates through the entities
     in the model space, and collects information about circles. It returns
     a list of tuples, each containing the area, center X coordinate, and
     center Y coordinate of a circle.
-    
+
     Args:
         file_path (str): The path to the AutoCAD DXF file.
-        
+
     Returns:
-        List[Tuple[float, float, float]]: A list of tuples containing the area, 
+        List[Tuple[float, float, float]]: A list of tuples containing the area,
                                            center X, and center Y coordinates of each circle.
     """
     ACADLAYER_CIRCLE = "Rebar"
@@ -151,19 +154,24 @@ def get_rebarinfo_fromCAD(acaddoc) -> List[Tuple[float, float, float]]:
     list_rebarinfo: List[Tuple[float, float, float]] = []
 
     for entity in modelspace:
-        if entity.ObjectName == ACADOBJECTNAME_CIRCLE and entity.layer == ACADLAYER_CIRCLE:
+        if (
+            entity.ObjectName == ACADOBJECTNAME_CIRCLE
+            and entity.layer == ACADLAYER_CIRCLE
+        ):
             center_coor: Tuple[float, float, float] = entity.Center
             center_x = round(center_coor[0], 2)
             center_y = round(center_coor[1], 2)
             radius = entity.Radius
-            area = round(math.pi * (radius ** 2), 2)
+            area = round(math.pi * (radius**2), 2)
             temp_rebarinfo = (area, center_x, center_y)
             list_rebarinfo.append(temp_rebarinfo)
     acaddoc.close()
     return list_rebarinfo
 
 
-def format_rebar_info_for_spcolumn(list_rebarinfo: List[Tuple[float, float, float]]) -> str:
+def format_rebar_info_for_spcolumn(
+    list_rebarinfo: List[Tuple[float, float, float]]
+) -> str:
     """
     Format the rebar information for an SPColumn CTI file.
 

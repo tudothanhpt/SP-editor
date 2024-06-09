@@ -34,7 +34,11 @@ def connect_to_etabs(widget: qtw.QDialog, model_is_open: bool):
                 print(path)
                 break
             except FileNotFoundError:
-                qtw.QMessageBox.warning(widget, "File not found", "No such file or directory",
-                                        qtw.QMessageBox.StandardButton.Ok)
+                qtw.QMessageBox.warning(
+                    widget,
+                    "File not found",
+                    "No such file or directory",
+                    qtw.QMessageBox.StandardButton.Ok,
+                )
                 break
     return etabs_model

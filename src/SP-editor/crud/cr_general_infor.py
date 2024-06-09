@@ -15,7 +15,7 @@ def create_infor(engine: Engine, params: list[str]) -> GeneralInfor:
             unit_system=u_sys,
             bar_set=b_set,
             confinement=confi,
-            section_capacity=s_capacity
+            section_capacity=s_capacity,
         )
         session.add(infor)
         session.commit()

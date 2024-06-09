@@ -69,14 +69,18 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def open_import_etabs(self):
         self.dialog_import_etabs = ImportEtabs_Dialog()
         self.dialog_import_etabs.attach_etabs()
-        self.dialog_import_etabs.lb_ActiveModel.setText(self.dialog_import_etabs.SapModel.GetModelFilename())
+        self.dialog_import_etabs.lb_ActiveModel.setText(
+            self.dialog_import_etabs.SapModel.GetModelFilename()
+        )
         self.dialog_import_etabs.exec()
 
         self.sap_model = self.dialog_import_etabs.SapModel
         self.etabs_object = self.dialog_import_etabs.EtabsObject
 
         self.dialog_import_etabs.connected_etabs.connect(self.update_message)
-        self.dialog_import_etabs.connected_etabs.connect(self.a_ImportEtabs.setEnabled(False))
+        self.dialog_import_etabs.connected_etabs.connect(
+            self.a_ImportEtabs.setEnabled(False)
+        )
 
     @qtc.Slot()
     def open_barset(self):
@@ -114,7 +118,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.a_BatchProcessor.setEnabled(mode)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     ex = MainWindow()
     ex.show()

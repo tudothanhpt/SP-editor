@@ -14,12 +14,12 @@ from sqlalchemy.engine.base import Engine
 
 def create_barset(engine: Engine, barset: str):
     barset_file = barset_list(barset)
-    json_to_sql(barset_file, engine, mode='append')
+    json_to_sql(barset_file, engine, mode="append")
 
 
 def update_barset(engine: Engine, barset: str):
     barset_file = barset_list(barset)
-    json_to_sql(barset_file, engine, mode='replace')
+    json_to_sql(barset_file, engine, mode="replace")
 
 
 def get_barset(engine: Engine, barset: str) -> Sequence[BarSet]:
@@ -44,8 +44,9 @@ def barset_list(barset: str):
         return None
 
 
-def json_to_sql(file_name: str, engine: Engine,
-                mode: Literal['fail', 'append', 'replace']):
+def json_to_sql(
+    file_name: str, engine: Engine, mode: Literal["fail", "append", "replace"]
+):
     with open(file_name) as json_file:
         data = json.load(json_file)
     df = pd.DataFrame(data)
