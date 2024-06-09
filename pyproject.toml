@@ -46,3 +46,6 @@ test = [
     "tox==4.15.0",
     "behave==1.2.6"
 ]
+
+[tool.pylint.MASTER]
+ignore-paths = '^src/sp_editor/widgets/.*$'
