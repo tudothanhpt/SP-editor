@@ -1,6 +1,6 @@
 import os
 import sys
-from PyQt6.QtWidgets import QApplication, QMessageBox
+from PySide6.QtWidgets import QApplication, QMessageBox
 
 def show_file_not_found_message(message: str):
     """

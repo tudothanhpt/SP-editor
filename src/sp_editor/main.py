@@ -72,7 +72,8 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def open_import_etabs(self):
         self.dialog_import_etabs = ImportEtabs_Dialog()
         self.dialog_import_etabs.attach_etabs()
-        self.dialog_import_etabs.lb_ActiveModel.setText(self.dialog_import_etabs.SapModel.GetModelFilename())
+        self.dialog_import_etabs.lb_ActiveModel.setText(self.dialog_import_etabs.SapModel.GetModelFilename(
+            IncludePath=False ))
         self.dialog_import_etabs.exec()
 
         self.sap_model = self.dialog_import_etabs.SapModel

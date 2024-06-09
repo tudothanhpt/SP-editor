@@ -199,7 +199,7 @@ class Ui_mw_Main(object):
     # setupUi
 
     def retranslateUi(self, mw_Main):
-        mw_Main.setWindowTitle(QCoreApplication.translate("mw_Main", u"SP-editor", None))
+        mw_Main.setWindowTitle(QCoreApplication.translate("mw_Main", u"sp_editor", None))
         self.action_New.setText(QCoreApplication.translate("mw_Main", u"&New", None))
 #if QT_CONFIG(shortcut)
         self.action_New.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+N", None))
@@ -229,7 +229,7 @@ class Ui_mw_Main(object):
 #if QT_CONFIG(shortcut)
         self.a_Doc.setShortcut(QCoreApplication.translate("mw_Main", u"F1", None))
 #endif // QT_CONFIG(shortcut)
-        self.a_About.setText(QCoreApplication.translate("mw_Main", u"About SP-editor", None))
+        self.a_About.setText(QCoreApplication.translate("mw_Main", u"About sp_editor", None))
         self.a_ImportEtabs.setText(QCoreApplication.translate("mw_Main", u"Import", None))
 #if QT_CONFIG(shortcut)
         self.a_ImportEtabs.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+E", None))

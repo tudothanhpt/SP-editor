@@ -38,7 +38,7 @@ class Material_Dialog(QtWidgets.QDialog, Ui_d_material):
         super().__init__(parent)
         self.setupUi(self)
         self.engine = engine
-        self.db_dir = '.\\src\\SP-editor\\database\\material_table\\'
+        self.db_dir = '.\\src\\sp_editor\\database\\material_table\\'
         # Define headers for the tables
         headers_concrete = ["name", "fc", "Ec", "max_fc", "beta_1", "eu"]
         headers_steel = ["name", "fy", "Es", "ety"]
@@ -190,7 +190,7 @@ class Material_Dialog(QtWidgets.QDialog, Ui_d_material):
 def main():
     """Main function to run the MaterialDialog."""
     app = QApplication(sys.argv)
-    database_path = r"C:\\Users\\abui\\Documents\\BM\\git\\repo\\SP-editor\\tests\\demoAB1.spe"
+    database_path = r"C:\\Users\\abui\\Documents\\BM\\git\\repo\\sp_editor\\tests\\demoAB1.spe"
     engine = set_engine(database_path)
 
     if engine:

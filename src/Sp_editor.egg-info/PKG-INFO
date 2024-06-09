@@ -1,5 +1,5 @@
 Metadata-Version: 2.1
-Name: Sp-editor
+Name: sp_editor
 Version: 0.1.0
 Summary: A shear wall design software that make connection between ETABS and SpColumn
 Author-email: Thanh Tu <tado@thorntontomasetti.com>, Bui Mark <abui@thorntontomasetti.com>

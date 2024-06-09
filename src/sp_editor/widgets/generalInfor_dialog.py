@@ -117,7 +117,7 @@ class Ui_d_GeneralInfor(object):
     # setupUi
 
     def retranslateUi(self, d_GeneralInfor):
-        d_GeneralInfor.setWindowTitle(QCoreApplication.translate("d_GeneralInfor", u"SP-editor", None))
+        d_GeneralInfor.setWindowTitle(QCoreApplication.translate("d_GeneralInfor", u"sp_editor", None))
         self.pb_OK.setText(QCoreApplication.translate("d_GeneralInfor", u"OK", None))
         self.pb_Cancel.setText(QCoreApplication.translate("d_GeneralInfor", u"Cancel", None))
         self.groupBox.setTitle(QCoreApplication.translate("d_GeneralInfor", u"General", None))

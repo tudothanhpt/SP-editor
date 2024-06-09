@@ -17,7 +17,7 @@ class OpenFile_Dialog(qtw.QFileDialog):
 
     @qtc.Slot()
     def open_file(self):
-        extensions = "SP-editor file (*.spe)"
+        extensions = "sp_editor file (*.spe)"
         root_path = sys.path[0]
         try:
             self.dialog_open_path, _ = qtw.QFileDialog.getOpenFileName(

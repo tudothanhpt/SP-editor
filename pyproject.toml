@@ -1,11 +1,11 @@
-# SP-editor project
+# sp_editor project
 # Empowering Structural Engineers with Seamless Communication Between SpColumn and ETABS
 
 [build-system]
 requires = ["setuptools", "wheel"]  # PEP 508 specifications.
 
 [project]
-name = "Sp-editor"
+name = "sp_editor"
 version = "0.1.0"
 authors = [
     { name = "Thanh Tu", email = "tado@thorntontomasetti.com" },

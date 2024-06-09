@@ -43,7 +43,7 @@ class NewFile_Dialog(qtw.QDialog, Ui_d_GeneralInfor):
 
     @qtc.Slot()
     def new_file_general_infor(self):
-        extensions = "SP-editor file (*.spe)"
+        extensions = "sp_editor file (*.spe)"
         data_list = [self.cb_DesignCode.currentText(), self.cb_UnitSystem.currentText(), self.cb_BarSet.currentText(),
                      self.cb_Confinement.currentText(), self.cb_SectionCapacity.currentText()]
         try:
