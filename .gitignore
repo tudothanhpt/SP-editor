@@ -1,5 +1,5 @@
 .idea
 .venv
 .vscode
-SP-editor/
-Sp_editor.egg-info/
+src/SP-editor/
+src/Sp_editor.egg-info/
