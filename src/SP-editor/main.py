@@ -11,6 +11,7 @@ from general_infor_dialog import GeneralInfor_Dialog
 from open_file_dialog import OpenFile_Dialog
 from new_file_dialog import NewFile_Dialog
 from barest_dialog import BarSet_Dialog
+from material_dialog import Material_Dialog
 
 from utils import select_csv_file, get_open_filename
 
@@ -30,6 +31,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.current_engine = None
         self.sap_model = None
         self.etabs_object = None
+        self.dialog_material = None
 
         self.setupUi(self)
         self.set_active_action(False)
@@ -40,6 +42,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.a_ImportEtabs.triggered.connect(self.open_import_etabs)
         self.a_GeneralInfor.triggered.connect(self.set_general_infor)
         self.a_BarSet.triggered.connect(self.open_barset)
+        self.a_MaterialProp.triggered.connect(self.open_material)
 
         # The `@qtc.Slot()` decorator in this code snippet is used to define a slot method in a
 
@@ -82,6 +85,11 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def open_barset(self):
         self.dialog_barset = BarSet_Dialog(self.current_engine, self.current_path)
         self.dialog_barset.exec()
+        
+    @qtc.Slot()
+    def open_material(self):
+        self.dialog_material = Material_Dialog(self.current_engine)
+        self.dialog_material.exec()    
 
     @qtc.Slot()
     def set_general_infor(self):

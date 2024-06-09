@@ -1,4 +1,5 @@
 from sqlmodel import Field, Relationship, SQLModel
+from typing import Optional, List, Dict, Any
 
 
 class GeneralInfor(SQLModel, table=True):
@@ -10,28 +11,28 @@ class GeneralInfor(SQLModel, table=True):
     section_capacity: str
 
 
-class ConcreteMaterial(SQLModel, table=True):
+class MaterialConcrete(SQLModel, table=True):
     """
     Concrete material properties
     """
     id: int | None = Field(default=None, primary_key=True)
-    name: str
-    strength_fc: str
-    elasticity_Ec: str
-    max_stress_fc: str
-    beta_1: str
-    ultimate_stain_Eu: str
+    name: Optional[str] = None
+    fc: Optional[float] = None
+    Ec: Optional[float] = None
+    max_fc: Optional[float] = None
+    beta_1: Optional[float] = None
+    eu: Optional[float] = None
 
 
-class SteelMaterial(SQLModel, table=True):
+class MaterialRebar(SQLModel, table=True):
     """
     Steel material properties
     """
     id: int | None = Field(default=None, primary_key=True)
-    name: str
-    strength_fy: str
-    elasticity_Es: str
-    ultimate_stain_Ety: str = Field(default="0.0021")
+    name: Optional[str] = None
+    fy: Optional[float] = None
+    Es: Optional[float] = None
+    ety: str = Field(default="0.0021")
 
 
 class BarSet(SQLModel, table=True):
@@ -72,3 +73,4 @@ class PierForce(SQLModel, table=True):
 
     level_id: int | None = Field(default=None, foreign_key="levelgroup.id")
     level: LevelGroup | None = Relationship(back_populates="levels")
+
