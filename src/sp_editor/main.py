@@ -6,23 +6,22 @@ from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 
 from widgets.main_window import Ui_mw_Main
+
 from import_etabs_dialog import ImportEtabs_Dialog
 from general_infor_dialog import GeneralInfor_Dialog
 from open_file_dialog import OpenFile_Dialog
 from new_file_dialog import NewFile_Dialog
 from barest_dialog import BarSet_Dialog
 from material_dialog import Material_Dialog
-
-from utils import select_csv_file, get_open_filename
+from groups_dialog import Group_Dialog
 
 from sqlalchemy.engine.base import Engine
-from database.database import create_db_and_tables, connect_db_and_tables
-from crud.cr_general_infor import get_infor
 
 
 class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def __init__(self):
         super().__init__()
+        self.dialog_group = None
         self.current_path = None
         self.dialog_barset = None
         self.dialog_import_etabs = None
@@ -43,13 +42,8 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.a_GeneralInfor.triggered.connect(self.set_general_infor)
         self.a_BarSet.triggered.connect(self.open_barset)
         self.a_MaterialProp.triggered.connect(self.open_material)
+        self.a_Groups.triggered.connect(self.open_groups)
 
-        # The `@qtc.Slot()` decorator in this code snippet is used to define a slot method in a
-
-    # PyQt/PySide class. In PyQt/PySide, slots are used to handle signals emitted by widgets or other
-    # objects. By decorating a method with `@qtc.Slot()`, you are explicitly marking that method as a
-    # slot that can be connected to signals.
-    # @qtc.Slot()
     @qtc.Slot()
     def new_file(self):
         self.dialog_new = NewFile_Dialog(self)
@@ -73,7 +67,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.dialog_import_etabs = ImportEtabs_Dialog()
         self.dialog_import_etabs.attach_etabs()
         self.dialog_import_etabs.lb_ActiveModel.setText(self.dialog_import_etabs.SapModel.GetModelFilename(
-            IncludePath=False ))
+            IncludePath=False))
         self.dialog_import_etabs.exec()
 
         self.sap_model = self.dialog_import_etabs.SapModel
@@ -83,20 +77,25 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.dialog_import_etabs.connected_etabs.connect(self.a_ImportEtabs.setEnabled(False))
 
     @qtc.Slot()
-    def open_barset(self):
-        self.dialog_barset = BarSet_Dialog(self.current_engine, self.current_path)
-        self.dialog_barset.exec()
-        
-    @qtc.Slot()
-    def open_material(self):
-        self.dialog_material = Material_Dialog(self.current_engine)
-        self.dialog_material.exec()    
-
-    @qtc.Slot()
     def set_general_infor(self):
         self.dialog_new = GeneralInfor_Dialog(self.current_engine)
         self.dialog_new.infor_updated.connect(self.update_message)
         self.dialog_new.exec()
+
+    @qtc.Slot()
+    def open_material(self):
+        self.dialog_material = Material_Dialog(self.current_engine)
+        self.dialog_material.exec()
+
+    @qtc.Slot()
+    def open_barset(self):
+        self.dialog_barset = BarSet_Dialog(self.current_engine, self.current_path)
+        self.dialog_barset.exec()
+
+    @qtc.Slot()
+    def open_groups(self):
+        self.dialog_group = Group_Dialog(self.current_engine, self.current_path)
+        self.dialog_group.exec()
 
     @qtc.Slot(Engine)
     def set_current_engine(self, engine: Engine):

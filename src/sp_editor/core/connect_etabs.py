@@ -5,6 +5,7 @@ import comtypes.client
 import sys
 import pandas as pd
 import numpy as np
+from pandas import DataFrame
 
 
 def connect_to_etabs(model_is_open: bool, file_path: str | None = None) -> tuple:
@@ -52,6 +53,35 @@ def connect_to_etabs(model_is_open: bool, file_path: str | None = None) -> tuple
 lst_PierSDShape = list[dict[str, list[list[float]]]]
 
 
+def get_story_infor() -> DataFrame:
+    """
+    returns: DataFrame
+
+    Return dataframe of list level
+
+    """
+    SapModel, EtabsObject = connect_to_etabs(model_is_open=True)
+
+    # get the table
+    table_key: str = 'Story Definitions'
+
+    # get the database table
+    story_db = SapModel.DatabaseTables.GetTableForDisplayArray(table_key, GroupName='')
+    # Extract header and data
+    header = story_db[2]
+    data_values = story_db[4]
+
+    # Group the data values into rows
+    rows = [data_values[i:i + len(header)] for i in range(0, len(data_values), len(header))]
+
+    # Create the DataFrame
+    df = pd.DataFrame(rows, columns=header)
+
+    # Select only the 'Story' and 'Height' columns
+    df_selected = df[['Story', 'Height']]
+    return df_selected
+
+
 def get_sdshape_pierPolygon() -> lst_PierSDShape:
     """
     returns: lst_PierSDShape (list)
@@ -62,10 +92,10 @@ def get_sdshape_pierPolygon() -> lst_PierSDShape:
     SapModel, EtabsObject = connect_to_etabs()
 
     # get the table
-    table_key: str = 'Section Designer Shapes - Concrete Polygon';
+    table_key: str = 'Section Designer Shapes - Concrete Polygon'
 
     # get the database table
-    sdshapes_db = SapModel.DatabaseTables.GetTableForDisplayArray(table_key, GroupName='');
+    sdshapes_db = SapModel.DatabaseTables.GetTableForDisplayArray(table_key, GroupName='')
     lst_tblHeader: list = sdshapes_db[2]
     lst_tblValues: list = sdshapes_db[4]
     lst_Data: list[list] = [lst_tblValues[i:i + len(lst_tblHeader)] for i in

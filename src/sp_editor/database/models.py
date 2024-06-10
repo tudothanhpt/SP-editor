@@ -46,31 +46,38 @@ class BarSet(SQLModel, table=True):
     weight: str
 
 
-class LevelGroup(SQLModel, table=True):
-    """
-    Level group with each level name contain all pier force infor related to that level
-    """
-    id: int | None = Field(default=None, primary_key=True)
-    name: str
-    levels: list["PierForce"] = Relationship(back_populates="level")
+class Level(SQLModel, table=True):
+    name: str = Field(default=None, primary_key=True)
+    height: str = Field(default=None)
 
 
-class PierForce(SQLModel, table=True):
-    """
-    Store data from etabs input Pier force table
-    """
-    id: int | None = Field(default=None, primary_key=True)
-    story: str = Field(index=True)
-    pier: str = Field(index=True)
-    load_combo: str
-    location: str
-    P: str
-    V2: str
-    V3: str
-    T: str
-    M2: str
-    M3: str
+class Pierlabel(SQLModel, table=True):
+    story: str = Field(default=None, primary_key=True, max_length=50)
+    label: str = Field(default=None, primary_key=True, max_length=50)
+    unique_name: Optional[int] = Field(default=None)
+    pier_name: Optional[str] = Field(default=None, max_length=50)
 
-    level_id: int | None = Field(default=None, foreign_key="levelgroup.id")
-    level: LevelGroup | None = Relationship(back_populates="levels")
+    pierforces: List["Pierforce"] = Relationship(back_populates="pierlabel")
+    grouplevels: List["Grouplevel"] = Relationship(back_populates="pierlabel")
 
+
+class Pierforce(SQLModel, table=True):
+    story: str = Field(default=None, foreign_key="pierlabel.story", primary_key=True, max_length=50)
+    pier: str = Field(default=None, primary_key=True, max_length=50)
+    combo: Optional[str] = Field(default=None, max_length=50)
+    location: Optional[str] = Field(default=None, max_length=50)
+    p: Optional[float] = Field(default=None)
+    v2: Optional[float] = Field(default=None)
+    v3: Optional[float] = Field(default=None)
+    t: Optional[float] = Field(default=None)
+    m2: Optional[float] = Field(default=None)
+    m3: Optional[float] = Field(default=None)
+
+    pierlabel: Pierlabel = Relationship(back_populates="pierforces")
+
+
+class Grouplevel(SQLModel, table=True):
+    tier: int = Field(default=None, primary_key=True)
+    story: str = Field(default=None, foreign_key="pierlabel.story", primary_key=True, max_length=50)
+
+    pierlabel: Pierlabel = Relationship(back_populates="grouplevels")

@@ -1,6 +1,7 @@
 import pandas as pd
 import sys
 import os
+
 sys.path.append(os.getcwd())
 import json
 
@@ -10,6 +11,7 @@ from sqlalchemy.engine import Engine  # Ensure compatibility with SQLModel
 from typing import Optional, List, Dict, Any
 from PyQt6.QtWidgets import QApplication, QMessageBox
 
+
 def show_file_not_found_message(message: str):
     """
     Display a QMessageBox indicating that the database file does not exist.
@@ -18,7 +20,8 @@ def show_file_not_found_message(message: str):
     msg_box = QMessageBox()
     msg_box.setText(message)
     msg_box.setWindowTitle("File Not Found")
-    msg_box.exec() 
+    msg_box.exec()
+
 
 class ConcreteMaterial(SQLModel, table=True):
     """
@@ -122,6 +125,7 @@ def create_material_db(engine: Optional[Engine]) -> None:
     # Create tables defined by SQLModel in the database
     SQLModel.metadata.create_all(engine)
 
+
 def initialize_basic_database(engine: Optional[Engine], json_path: str) -> None:
     """Initialize the basic database: create tables and insert data."""
     if engine:
@@ -135,6 +139,7 @@ def initialize_basic_database(engine: Optional[Engine], json_path: str) -> None:
     else:
         print("Failed to set up the database engine.")
 
+
 def main() -> None:
     """Main function to set up the database and insert data from a JSON file."""
     # Define paths to the database and JSON file
@@ -144,6 +149,7 @@ def main() -> None:
     # Set up the database engine
     engine = set_engine(database_path)
     initialize_basic_database(engine, json_path)
+
 
 if __name__ == "__main__":
     main()
