@@ -1,5 +1,5 @@
-
 import pandas as pd
+
 
 def read_json_file(file_path):
     """
@@ -14,7 +14,8 @@ def read_json_file(file_path):
     df = pd.read_json(file_path)
     return df
 
-# Example usage
+
+# example usage
 file_path = r"C:\Users\abui\Documents\BM\git\repo\SP-editor\src\SP-editor\database\material_table\tb_ACI_Concrete.json"
 df = read_json_file(file_path)
 print(df)
