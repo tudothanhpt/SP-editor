@@ -1,4 +1,5 @@
 import json
+import os
 import sys
 from typing import Type, Literal, Sequence
 
@@ -31,15 +32,16 @@ def get_barset(engine: Engine, barset: str) -> Sequence[BarSet]:
 
 
 def barset_list(barset: str):
-    base_path = "database/barset_table"
+    
+    base_path = os.path.abspath(r"src\sp_editor\database\barset_table")
     if barset == str(BarGroupType.ASTM615):
-        return f"{base_path}/tb_ASTM_A615.json"
+        return os.path.join(base_path,"tb_ASTM_A615.json")
     elif barset == str(BarGroupType.ASTM615M):
-        return f"{base_path}/tb_ASTM_A615M.json"
+        return os.path.join(base_path,"tb_ASTM_A615M.json")
     elif barset == str(BarGroupType.PR_EN_10080):
-        return f"{base_path}/tb_PrEN_10080.json"
+        return os.path.join(base_path,"tb_PrEN_10080.json")
     elif barset == str(BarGroupType.CSA_G30_18):
-        return f"{base_path}/tb_CSA_G30_18.json"
+        return os.path.join(base_path,"tb_CSA_G30_18.json")
     else:
         return None
 

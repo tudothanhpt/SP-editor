@@ -4,3 +4,4 @@
 src/SP-editor/
 src/Sp_editor.egg-info/
 __pycache__
+src/tests/
