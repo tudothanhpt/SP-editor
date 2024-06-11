@@ -2,7 +2,7 @@ import sys
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from sqlalchemy.engine.base import Engine
-from database.database import connect_db_and_tables
+from sp_editor.database.database import connect_db_and_tables
 
 
 class OpenFile_Dialog(qtw.QFileDialog):

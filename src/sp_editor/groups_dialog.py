@@ -4,7 +4,7 @@ from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 
-from widgets.levelgroup_dialog import Ui_group_dialog
+from sp_editor.widgets.levelgroup_dialog import Ui_group_dialog
 from sqlalchemy.engine.base import Engine
 
 

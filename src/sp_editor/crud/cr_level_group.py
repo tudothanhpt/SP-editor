@@ -3,7 +3,7 @@ import pandas as pd
 from pandas import DataFrame
 
 from sqlmodel import Session, select
-from database.models import Grouplevel, Pierlabel, Level
+from sp_editor.database.models import Grouplevel, Pierlabel, Level
 
 from sqlalchemy.engine.base import Engine
 

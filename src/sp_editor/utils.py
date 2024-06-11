@@ -69,7 +69,6 @@ def select_csv_file() -> [str]:
 
 def prompt_json_file(base_dir: str) -> None:
     """Prompt user to select a JSON file for loading data."""
-    base_dir = os.path.abspath(base_dir)
     file_dialog = qtw.QFileDialog()
     file_dialog.setFileMode(qtw.QFileDialog.ExistingFile)
     file_dialog.setNameFilter("JSON files (*.json)")

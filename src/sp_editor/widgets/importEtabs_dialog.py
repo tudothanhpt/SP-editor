@@ -18,7 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QDialog, QGridLayout, QGroupBox,
     QLabel, QPushButton, QSizePolicy, QSpacerItem,
     QVBoxLayout, QWidget)
-import icons_rc
+from sp_editor import icons_rc
 
 class Ui_d_ImportEtabs(object):
     def setupUi(self, d_ImportEtabs):

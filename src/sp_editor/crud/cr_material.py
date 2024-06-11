@@ -21,7 +21,7 @@ def set_engine(database_path: str) -> Optional[Engine]:
         Optional[Engine]: The created database engine, or None if the database file does not exist.
     """
     if not os.path.exists(database_path):
-        show_file_not_found_message("No Existing Database")
+        print("No Existing Database")
         return None
 
     return create_engine(f"sqlite:///{database_path}", echo=False)

@@ -1,17 +1,18 @@
 import sys
 import os
-sys.path.append(os.getcwd())
 import pandas as pd
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QDialog, QApplication, QHeaderView, QTableView, QFileDialog, QMessageBox
 from PySide6.QtCore import Qt, QPoint, QModelIndex
 from sqlalchemy.engine import Engine
 
-from widgets.material_dialog import Ui_d_material
-from widgets.misc_dialog import show_database_updated_message
-from database.pandas_model_material import PandasModelMaterial
-from crud.cr_material import set_engine, get_df_from_db, update_df_to_db
-from utils import read_json_to_df, prompt_json_file
+from sp_editor.widgets.material_dialog import Ui_d_material
+from sp_editor.widgets.misc_dialog import show_database_updated_message
+from sp_editor.database.pandas_model_material import PandasModelMaterial
+from sp_editor.crud.cr_material import set_engine, get_df_from_db, update_df_to_db
+from sp_editor.utils import read_json_to_df, prompt_json_file
+from sp_editor import GLOBALPATH
+
 INITDATA_CONC = {
     "name": [None],
     "fc": [None],
@@ -31,6 +32,7 @@ INITDATA_STEEL = {
 DB_TBLNAME_CONC = "materialconcrete"
 DB_TBLNAME_REBAR = "materialrebar"
 
+
 class Material_Dialog(QtWidgets.QDialog, Ui_d_material):
     """Dialog class to handle user interactions for material data."""
     
@@ -38,7 +40,7 @@ class Material_Dialog(QtWidgets.QDialog, Ui_d_material):
         super().__init__(parent)
         self.setupUi(self)
         self.engine = engine
-        self.db_dir = '.\\src\\sp_editor\\database\\material_table\\'
+        self.db_dir = os.path.join(GLOBALPATH, 'database', 'material_table')
         # Define headers for the tables
         headers_concrete = ["name", "fc", "Ec", "max_fc", "beta_1", "eu"]
         headers_steel = ["name", "fy", "Es", "ety"]
@@ -190,7 +192,7 @@ class Material_Dialog(QtWidgets.QDialog, Ui_d_material):
 def main():
     """Main function to run the MaterialDialog."""
     app = QApplication(sys.argv)
-    database_path = r"C:\\Users\\abui\\Documents\\BM\\git\\repo\\sp_editor\\tests\\demoAB1.spe"
+    database_path = r"C:\Users\abui\Desktop\Git\repo\SP-editor\tests\demoAB1.spe"
     engine = set_engine(database_path)
 
     if engine:

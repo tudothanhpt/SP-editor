@@ -18,8 +18,7 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QMainWindow, QMenu, QMenuBar,
     QSizePolicy, QStatusBar, QToolBar, QWidget)
-import icons_rc
-
+from sp_editor import icons_rc
 class Ui_mw_Main(object):
     def setupUi(self, mw_Main):
         if not mw_Main.objectName():

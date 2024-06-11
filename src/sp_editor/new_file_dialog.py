@@ -4,15 +4,15 @@ from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 
-from crud.cr_barset import create_barset
-from utils import write_to_csv, get_new_filename
+from sp_editor.crud.cr_barset import create_barset
+from sp_editor.utils import write_to_csv, get_new_filename
 
-from widgets.generalInfor_dialog import Ui_d_GeneralInfor
+from sp_editor.widgets.generalInfor_dialog import Ui_d_GeneralInfor
 
 from sqlalchemy.engine.base import Engine
-from core.global_variables import DesignCode, BarGroupType, UnitSystem, ConfinementType, SectionCapacityMethod
-from crud.cr_general_infor import create_infor, update_infor, get_infor
-from database.database import create_db_and_tables
+from sp_editor.core.global_variables import DesignCode, BarGroupType, UnitSystem, ConfinementType, SectionCapacityMethod
+from sp_editor.crud.cr_general_infor import create_infor, update_infor, get_infor
+from sp_editor.database.database import create_db_and_tables
 
 
 class NewFile_Dialog(qtw.QDialog, Ui_d_GeneralInfor):

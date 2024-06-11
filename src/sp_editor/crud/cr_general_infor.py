@@ -3,8 +3,8 @@ from typing import Type
 from sqlmodel import Session, select
 from sqlalchemy.engine.base import Engine
 
-from database.models import GeneralInfor
-from database.database import create_db_and_tables
+from sp_editor.database.models import GeneralInfor
+from sp_editor.database.database import create_db_and_tables
 
 
 def create_infor(engine: Engine, params: list[str]) -> GeneralInfor:

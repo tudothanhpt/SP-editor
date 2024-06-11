@@ -1,7 +1,7 @@
 from sqlmodel import Field, SQLModel, create_engine, Relationship, Session, select
 from typing import List, Optional
 from natsort import natsorted
-from core.connect_etabs import get_story_infor
+from sp_editor.core.connect_etabs import get_story_infor
 
 
 class Level(SQLModel, table=True):

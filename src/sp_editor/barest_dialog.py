@@ -6,12 +6,12 @@ from PySide6 import QtGui as qtg
 from PySide6 import QtSql as qsql
 
 from sqlalchemy.engine.base import Engine
-from crud.cr_barset import create_barset, get_barset, update_barset
-from database.pandas_table_model import PandasModel
+from sp_editor.crud.cr_barset import create_barset, get_barset, update_barset
+from sp_editor.database.pandas_table_model import PandasModel
 
-from core.global_variables import BarGroupType
-from crud.cr_general_infor import get_infor
-from widgets.barSet_dialog import Ui_d_BarSet
+from sp_editor.core.global_variables import BarGroupType
+from sp_editor.crud.cr_general_infor import get_infor
+from sp_editor.widgets.barSet_dialog import Ui_d_BarSet
 
 
 class BarSet_Dialog(qtw.QDialog, Ui_d_BarSet):

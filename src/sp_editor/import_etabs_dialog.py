@@ -3,9 +3,9 @@ from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 
-from widgets.importEtabs_dialog import Ui_d_ImportEtabs
-from utils import get_open_filename
-from core.connect_etabs import connect_to_etabs, get_story_infor
+from sp_editor.widgets.importEtabs_dialog import Ui_d_ImportEtabs
+from sp_editor.utils import get_open_filename
+from sp_editor.core.connect_etabs import connect_to_etabs, get_story_infor
 
 from typing import Any
 
