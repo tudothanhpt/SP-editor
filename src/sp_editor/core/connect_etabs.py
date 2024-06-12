@@ -106,9 +106,7 @@ def get_pier_label_infor(sap_model: Any, etabs_object: Any) -> DataFrame:
     # Create the DataFrame
     df = pd.DataFrame(rows, columns=header)
 
-    # Select only the 'Story' and 'Height' columns
-    df_selected = df[['Story', 'Height']]
-    return df_selected
+    return df
 
 
 def get_sdshape_pierPolygon() -> lst_PierSDShape:

@@ -55,8 +55,8 @@ class Level(SQLModel, table=True):
 class Pierlabel(SQLModel, table=True):
     story: str = Field(default=None, primary_key=True, max_length=50)
     label: str = Field(default=None, primary_key=True, max_length=50)
-    unique_name: Optional[int] = Field(default=None)
-    pier_name: Optional[str] = Field(default=None, max_length=50)
+    uniquename: Optional[int] = Field(default=None)
+    piername: Optional[str] = Field(default=None, max_length=50)
 
     pierforces: List["Pierforce"] = Relationship(back_populates="pierlabel")
     grouplevels: List["Grouplevel"] = Relationship(back_populates="pierlabel")
@@ -78,7 +78,7 @@ class Pierforce(SQLModel, table=True):
 
 
 class Grouplevel(SQLModel, table=True):
-    tier: int = Field(default=None, primary_key=True)
+    tier: str | None = Field(default=None, primary_key=True)
     story: str = Field(default=None, foreign_key="pierlabel.story", primary_key=True, max_length=50)
 
     pierlabel: Pierlabel = Relationship(back_populates="grouplevels")

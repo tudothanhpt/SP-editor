@@ -17,9 +17,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QAbstractItemView, QApplication, QDialog, QFrame,
     QGridLayout, QGroupBox, QHBoxLayout, QLabel,
-    QLineEdit, QListView, QListWidget, QListWidgetItem,
-    QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout,
-    QWidget)
+    QLineEdit, QListView, QPushButton, QSizePolicy,
+    QSpacerItem, QVBoxLayout, QWidget)
 
 class Ui_group_dialog(object):
     def setupUi(self, group_dialog):
@@ -87,12 +86,8 @@ class Ui_group_dialog(object):
 
         self.verticalLayout_3.addWidget(self.label_4)
 
-        self.lview_pierName = QListWidget(self.frame_4)
+        self.lview_pierName = QListView(self.frame_4)
         self.lview_pierName.setObjectName(u"lview_pierName")
-        self.lview_pierName.setFrameShape(QFrame.Shape.Box)
-        self.lview_pierName.setFrameShadow(QFrame.Shadow.Sunken)
-        self.lview_pierName.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.lview_pierName.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
 
         self.verticalLayout_3.addWidget(self.lview_pierName)
 
