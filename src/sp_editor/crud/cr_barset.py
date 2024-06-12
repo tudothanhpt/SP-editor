@@ -32,17 +32,14 @@ def get_barset(engine: Engine, barset: str) -> Sequence[BarSet]:
 
 
 def barset_list(barset: str):
-
     if barset == str(BarGroupType.ASTM615):
-
-        return os.path.join(GLOBALPATH, "database", "barset_table","tb_ASTM_A615.json")
-
+        return os.path.join(GLOBALPATH, "database", "barset_table", "tb_ASTM_A615.json")
     elif barset == str(BarGroupType.ASTM615M):
-        return os.path.join(GLOBALPATH, "database", "barset_table","tb_ASTM_A615M.json")
+        return os.path.join(GLOBALPATH, "database", "barset_table", "tb_ASTM_A615M.json")
     elif barset == str(BarGroupType.PR_EN_10080):
-        return os.path.join(GLOBALPATH, "database", "barset_table","tb_PrEN_10080.json")
+        return os.path.join(GLOBALPATH, "database", "barset_table", "tb_PrEN_10080.json")
     elif barset == str(BarGroupType.CSA_G30_18):
-        return os.path.join(GLOBALPATH, "database", "barset_table","tb_CSA_G30_18.json")
+        return os.path.join(GLOBALPATH, "database", "barset_table", "tb_CSA_G30_18.json")
     else:
         return None
 

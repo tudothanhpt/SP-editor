@@ -3,10 +3,9 @@ import sys
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
-from PySide6 import QtSql as qsql
 
 from sqlalchemy.engine.base import Engine
-from sp_editor.crud.cr_barset import create_barset, get_barset, update_barset
+from sp_editor.crud.cr_barset import get_barset, update_barset
 from sp_editor.database.pandas_table_model import PandasModel
 
 from sp_editor.core.global_variables import BarGroupType
@@ -29,18 +28,18 @@ class BarSet_Dialog(qtw.QDialog, Ui_d_BarSet):
 
         self.cb_BarSetList.clear()
         self.cb_BarSetList.addItems(list(str(barset) for barset in BarGroupType))
-        self.current_text = self.infor.bar_set
+        self.current_text = str(self.infor.bar_set)
         self.cb_BarSetList.setCurrentText(self.current_text)
-        self.display_df_model()
+        self.display_df_model(self.engine, self.current_text)
         self.cb_BarSetList.currentTextChanged.connect(self.text_changed)
 
     def text_changed(self):
         self.current_text = self.cb_BarSetList.currentText()
         update_barset(self.engine, self.current_text)
-        self.display_df_model()
+        self.display_df_model(self.engine, self.current_text)
 
-    def display_df_model(self):
-        self.current_barset = get_barset(self.engine, self.current_text)
+    def display_df_model(self, engine: Engine, text: str):
+        self.current_barset = get_barset(engine, text)
         barset_df = PandasModel.sqlmodel_to_df(self.current_barset)
         model = PandasModel(barset_df)
         self.tbview_BarSet.setModel(model)

@@ -1,5 +1,5 @@
 import sys
-from typing import Any
+from typing import Any, Sequence
 import pandas as pd
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
@@ -63,7 +63,7 @@ class PandasModel(qtc.QAbstractTableModel):
         return None
 
     @staticmethod
-    def sqlmodel_to_df(objects: list[SQLModel]) -> pd.DataFrame:
+    def sqlmodel_to_df(objects: Sequence[SQLModel | Any]) -> pd.DataFrame:
         """Converts SQLModel objects into a Pandas DataFrame.
 
         Usage
@@ -77,8 +77,16 @@ class PandasModel(qtc.QAbstractTableModel):
 
         if not objects:
             return pd.DataFrame()  # Return an empty DataFrame if the list is empty
-
-        return pd.DataFrame.from_records([obj.dict() for obj in objects])
+        else:
+            # Extract data from SQLModel objects
+            data = [model.dict() for model in objects]
+            # Get the column order from the first SQLModel object
+            column_order = list(objects[0].__fields__.keys())
+            # Convert the list of dictionaries to a pandas DataFrame
+            df_out = pd.DataFrame(data)
+            # Apply the column order
+            df_out = df_out[column_order]
+        return df_out
 
 
 if __name__ == "__main__":

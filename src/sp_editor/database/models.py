@@ -41,9 +41,9 @@ class BarSet(SQLModel, table=True):
     """
     id: int | None = Field(default=None, primary_key=True)
     size: str
-    diameter: str
-    area: str
-    weight: str
+    diameter: float
+    area: float
+    weight: float
 
 
 class Level(SQLModel, table=True):
