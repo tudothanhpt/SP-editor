@@ -1,20 +1,17 @@
 import sys
-import os
-from typing import Any
 
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
-from PySide6 import QtGui as qtg
 
 from sp_editor.widgets.main_window import Ui_mw_Main
 
-from sp_editor.import_etabs_dialog import ImportEtabs_Dialog
-from sp_editor.general_infor_dialog import GeneralInfor_Dialog
-from sp_editor.open_file_dialog import OpenFile_Dialog  
-from sp_editor.new_file_dialog import NewFile_Dialog
-from sp_editor.barest_dialog import BarSet_Dialog
-from sp_editor.material_dialog import Material_Dialog
-from sp_editor.groups_dialog import Group_Dialog
+from viewmodels.import_etabs_dialog import ImportEtabs_Dialog
+from viewmodels.general_infor_dialog import GeneralInfor_Dialog
+from viewmodels.open_file_dialog import OpenFile_Dialog
+from viewmodels.new_file_dialog import NewFile_Dialog
+from viewmodels.barest_dialog import BarSet_Dialog
+from viewmodels.material_dialog import Material_Dialog
+from viewmodels.groups_dialog import Group_Dialog
 
 from sqlalchemy.engine.base import Engine
 

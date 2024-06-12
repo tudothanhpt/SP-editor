@@ -1,10 +1,8 @@
 .idea
 .venv
 .vscode
-src/SP-editor/
-src/Sp_editor.egg-info/
+src/sp_editor.egg-info/
 __pycache__
-src/tests/
 build
 dist
 .env
