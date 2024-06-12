@@ -47,7 +47,8 @@ class BarSet(SQLModel, table=True):
 
 
 class Level(SQLModel, table=True):
-    name: str = Field(default=None, primary_key=True)
+    index: int | None = Field(default=None, primary_key=True)
+    story: str = Field(default=None, primary_key=True)
     height: str = Field(default=None)
 
 

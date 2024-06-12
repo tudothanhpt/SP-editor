@@ -14,6 +14,8 @@ from viewmodels.material_dialog import Material_Dialog
 from viewmodels.groups_dialog import Group_Dialog
 
 from sqlalchemy.engine.base import Engine
+from core.connect_etabs import get_story_infor
+from crud.cr_level_group import get_level_db
 
 
 class MainWindow(qtw.QMainWindow, Ui_mw_Main):
@@ -70,7 +72,10 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
 
         self.sap_model = self.dialog_import_etabs.SapModel
         self.etabs_object = self.dialog_import_etabs.EtabsObject
-
+        # TODO: add widget to get load combo and story infor below
+        df = get_story_infor(self.sap_model, self.etabs_object)
+        get_level_db(self.current_engine, df)
+        ##############################################
         self.dialog_import_etabs.connected_etabs.connect(self.update_message)
         self.dialog_import_etabs.connected_etabs.connect(self.a_ImportEtabs.setEnabled(False))
 
