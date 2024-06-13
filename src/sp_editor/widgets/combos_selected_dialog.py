@@ -115,6 +115,8 @@ class Ui_Dialog(object):
 
         self.lview_selectedCombos = QListView(self.frame_3)
         self.lview_selectedCombos.setObjectName(u"lview_selectedCombos")
+        self.lview_selectedCombos.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.lview_selectedCombos.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
 
         self.verticalLayout_2.addWidget(self.lview_selectedCombos)
 

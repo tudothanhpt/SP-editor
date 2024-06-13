@@ -81,3 +81,11 @@ class Grouplevel(SQLModel, table=True):
     story: str = Field(default=None, foreign_key="pierlabel.story", primary_key=True, max_length=50)
 
     pierlabel: Pierlabel = Relationship(back_populates="grouplevels")
+    
+class LoadCombinations(SQLModel, table=True):
+    """
+    Bar set material properties
+    """
+    id: int | None = Field(default=None, primary_key=True)
+    loadCombinations: Optional[str] = Field(default=None)
+    selectedLoadCombinations: Optional[str] = Field(default=None)
