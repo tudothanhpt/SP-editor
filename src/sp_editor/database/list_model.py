@@ -15,7 +15,7 @@ class ListModel(QAbstractListModel):
         if role == Qt.DisplayRole:
             return self.items[index.row()]
 
-    def rowCount(self, index = None):
+    def rowCount(self, index):
         # Return the number of items in the list
         return len(self.items)
 
@@ -45,5 +45,5 @@ class ListModel(QAbstractListModel):
     
     def get_items_with_indices(self):
         """Return a list of tuples containing items and their indices."""
-        current_item = [(self.data(self.index(row, 0), Qt.DisplayRole), row) for row in range(self.rowCount())]
+        current_item = [(item, self.original_order[item]) for item in self.items]
         return current_item
