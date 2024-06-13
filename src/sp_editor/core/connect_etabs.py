@@ -221,6 +221,7 @@ def SPcolumnPierLabel(lst_PierSDShape, pierIndex):
 
     return PierLabel
 
+
 def get_load_combinations(SapModel) -> DataFrame:
     """
     returns: DataFrame
@@ -241,9 +242,9 @@ def get_load_combinations(SapModel) -> DataFrame:
 
     # Create the DataFrame
     df = pd.DataFrame(rows, columns=header)
-    df_uLoadCombination= df['Name'].unique()
+    df_uLoadCombination = df['Name'].unique()
     df_uLoadCombination = pd.DataFrame(df_uLoadCombination, columns=['LoadCombinations'])
-    df_uLoadCombination["SelectedCombo"]= None
+    df_uLoadCombination["SelectedCombo"] = None
     print(df_uLoadCombination)
-    #lst_uLoadCombination = df_uLoadCombination["Name"].tolist()
+    # lst_uLoadCombination = df_uLoadCombination["Name"].tolist()
     return df_uLoadCombination
