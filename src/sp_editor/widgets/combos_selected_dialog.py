@@ -20,17 +20,17 @@ from PySide6.QtWidgets import (QAbstractItemView, QApplication, QDialog, QFrame,
     QListView, QPushButton, QSizePolicy, QSpacerItem,
     QVBoxLayout, QWidget)
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        if not Dialog.objectName():
-            Dialog.setObjectName(u"Dialog")
-        Dialog.resize(621, 524)
+class Ui_combosSelection_dialog(object):
+    def setupUi(self, combosSelection_dialog):
+        if not combosSelection_dialog.objectName():
+            combosSelection_dialog.setObjectName(u"combosSelection_dialog")
+        combosSelection_dialog.resize(621, 524)
         font = QFont()
         font.setPointSize(12)
-        Dialog.setFont(font)
-        self.gridLayout = QGridLayout(Dialog)
+        combosSelection_dialog.setFont(font)
+        self.gridLayout = QGridLayout(combosSelection_dialog)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.frame = QFrame(Dialog)
+        self.frame = QFrame(combosSelection_dialog)
         self.frame.setObjectName(u"frame")
         self.frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame.setFrameShadow(QFrame.Shadow.Raised)
@@ -115,8 +115,6 @@ class Ui_Dialog(object):
 
         self.lview_selectedCombos = QListView(self.frame_3)
         self.lview_selectedCombos.setObjectName(u"lview_selectedCombos")
-        self.lview_selectedCombos.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.lview_selectedCombos.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
 
         self.verticalLayout_2.addWidget(self.lview_selectedCombos)
 
@@ -135,19 +133,19 @@ class Ui_Dialog(object):
         QWidget.setTabOrder(self.lview_selectedCombos, self.pb_ok)
         QWidget.setTabOrder(self.pb_ok, self.pb_cancel)
 
-        self.retranslateUi(Dialog)
+        self.retranslateUi(combosSelection_dialog)
 
-        QMetaObject.connectSlotsByName(Dialog)
+        QMetaObject.connectSlotsByName(combosSelection_dialog)
     # setupUi
 
-    def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Design Load Combinations Selection", None))
-        self.pb_ok.setText(QCoreApplication.translate("Dialog", u"OK", None))
-        self.pb_cancel.setText(QCoreApplication.translate("Dialog", u"Cancel", None))
-        self.groupBox.setTitle(QCoreApplication.translate("Dialog", u"Choose Combinations", None))
-        self.label.setText(QCoreApplication.translate("Dialog", u"List of Combinations", None))
+    def retranslateUi(self, combosSelection_dialog):
+        combosSelection_dialog.setWindowTitle(QCoreApplication.translate("combosSelection_dialog", u"Design Load Combinations Selection", None))
+        self.pb_ok.setText(QCoreApplication.translate("combosSelection_dialog", u"OK", None))
+        self.pb_cancel.setText(QCoreApplication.translate("combosSelection_dialog", u"Cancel", None))
+        self.groupBox.setTitle(QCoreApplication.translate("combosSelection_dialog", u"Choose Combinations", None))
+        self.label.setText(QCoreApplication.translate("combosSelection_dialog", u"List of Combinations", None))
         self.pb_select.setText("")
         self.pb_deselect.setText("")
-        self.label_2.setText(QCoreApplication.translate("Dialog", u"Design Combinattion", None))
+        self.label_2.setText(QCoreApplication.translate("combosSelection_dialog", u"Design Combinattion", None))
     # retranslateUi
 

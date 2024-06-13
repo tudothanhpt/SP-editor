@@ -14,8 +14,8 @@ from controllers.material_dialog import Material_Dialog
 from controllers.groups_dialog import Group_Dialog
 
 from sqlalchemy.engine.base import Engine
-from core.connect_etabs import get_story_infor, get_pier_label_infor
-from crud.cr_level_group import get_level_db, get_pier_label_db
+from core.connect_etabs import get_story_infor, get_pier_label_infor, get_pier_force_infor
+from crud.cr_level_group import get_level_db, get_pier_label_db, get_pier_design_force_db
 
 
 class MainWindow(qtw.QMainWindow, Ui_mw_Main):
@@ -73,11 +73,15 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.sap_model = self.dialog_import_etabs.SapModel
         self.etabs_object = self.dialog_import_etabs.EtabsObject
         # TODO: add widget to get load combo and story infor pierlabel below
-        df = get_story_infor(self.sap_model, self.etabs_object)
-        get_level_db(self.current_engine, df)
-        df = get_pier_label_infor(self.sap_model, self.etabs_object)
-        get_pier_label_db(self.current_engine, df)
-
+        # get story label from api and then put into database
+        df_story = get_story_infor(self.sap_model, self.etabs_object)
+        get_level_db(self.current_engine, df_story)
+        # get pier label from api then put into database
+        df_pier_label = get_pier_label_infor(self.sap_model, self.etabs_object)
+        get_pier_label_db(self.current_engine, df_pier_label)
+        # get pier design force and then put into database
+        df_pier_design_force = get_pier_force_infor(self.sap_model, self.etabs_object, ['LC1_1.4D'])
+        get_pier_design_force_db(self.current_engine, df_pier_design_force)
         ##############################################
         self.dialog_import_etabs.connected_etabs.connect(self.update_message)
         self.dialog_import_etabs.connected_etabs.connect(self.a_ImportEtabs.setEnabled(False))

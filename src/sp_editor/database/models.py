@@ -52,17 +52,21 @@ class Level(SQLModel, table=True):
     height: str = Field(default=None)
 
 
-class Pierlabel(SQLModel, table=True):
+class PierLabel(SQLModel, table=True):
+    index: int | None = Field(default=None, primary_key=True)
+
     story: str = Field(default=None, primary_key=True, max_length=50)
     label: str = Field(default=None, primary_key=True, max_length=50)
     uniquename: Optional[int] = Field(default=None)
     piername: Optional[str] = Field(default=None, max_length=50)
 
-    pierforces: List["Pierforce"] = Relationship(back_populates="pierlabel")
-    grouplevels: List["Grouplevel"] = Relationship(back_populates="pierlabel")
+    pierforces: List["PierForce"] = Relationship(back_populates="pierlabel")
+    grouplevels: List["GroupLevel"] = Relationship(back_populates="pierlabel")
 
 
-class Pierforce(SQLModel, table=True):
+class PierForce(SQLModel, table=True):
+    index: int | None = Field(default=None, primary_key=True)
+
     story: str = Field(default=None, foreign_key="pierlabel.story", primary_key=True, max_length=50)
     pier: str = Field(default=None, primary_key=True, max_length=50)
     combo: Optional[str] = Field(default=None, max_length=50)
@@ -74,15 +78,16 @@ class Pierforce(SQLModel, table=True):
     m2: Optional[float] = Field(default=None)
     m3: Optional[float] = Field(default=None)
 
-    pierlabel: Pierlabel = Relationship(back_populates="pierforces")
+    pierlabel: PierLabel = Relationship(back_populates="pierforces")
 
 
-class Grouplevel(SQLModel, table=True):
+class GroupLevel(SQLModel, table=True):
     tier: str | None = Field(default=None, primary_key=True)
     story: str = Field(default=None, foreign_key="pierlabel.story", primary_key=True, max_length=50)
 
-    pierlabel: Pierlabel = Relationship(back_populates="grouplevels")
-    
+    pierlabel: PierLabel = Relationship(back_populates="grouplevels")
+
+
 class LoadCombinations(SQLModel, table=True):
     """
     Bar set material properties

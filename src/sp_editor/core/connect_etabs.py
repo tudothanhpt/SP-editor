@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 from typing import Any
+import sys
+
+from PySide6 import QtCore as qtc
+from PySide6 import QtWidgets as qtw
+from PySide6 import QtGui as qtg
 
 import comtypes.client
-import sys
 import pandas as pd
-import numpy as np
 from pandas import DataFrame
 
 
@@ -50,9 +53,6 @@ def connect_to_etabs(model_is_open: bool, file_path: str | None = None) -> tuple
     return SapModel, EtabsObject
 
 
-lst_PierSDShape = list[dict[str, list[list[float]]]]
-
-
 def get_story_infor(sap_model: Any, etabs_object: Any) -> DataFrame:
     """
     returns: DataFrame
@@ -83,12 +83,6 @@ def get_story_infor(sap_model: Any, etabs_object: Any) -> DataFrame:
 
 
 def get_pier_label_infor(sap_model: Any, etabs_object: Any) -> DataFrame:
-    """
-        returns: DataFrame
-
-        Return dataframe of list level
-
-        """
     SapModel = sap_model
     EtabsObject = etabs_object
     # get the table
@@ -107,6 +101,54 @@ def get_pier_label_infor(sap_model: Any, etabs_object: Any) -> DataFrame:
     df = pd.DataFrame(rows, columns=header)
 
     return df
+
+
+def get_pier_force_infor(sap_model: Any, etabs_object: Any, design_combo: list[str]) -> DataFrame:
+    SapModel = sap_model
+    EtabsObject = etabs_object
+    table_key = 'Design Forces - Piers'
+
+    # Set load combination selected for display
+    ret = SapModel.DatabaseTables.SetLoadCombinationsSelectedForDisplay(design_combo)
+    if ret[-1] != 0:
+        error_message = (
+            f"<b>Failed to set load combinations for display<b>."
+            f"<p>Please make sure load combination existed.<p>"
+            f"<p>Return code: {ret[-1]}.<p>")
+        show_warning(error_message)
+        return pd.DataFrame()
+
+    # Get the database table
+    story_db = SapModel.DatabaseTables.GetTableForDisplayArray(table_key, GroupName='')
+    if story_db[-1] != 0:
+        error_message = (f"<b>Failed to get table for display.<b> "
+                         f"<p>PLease make sure you design wall with selected load combination. <p>"
+                         f"<p> Return code: {story_db[-1]}.<p>")
+        show_warning(error_message)
+        return pd.DataFrame()
+
+    # Extract header and data
+    header = story_db[2]
+    data_values = story_db[4]
+
+    # Group the data values into rows
+    rows = [data_values[i:i + len(header)] for i in range(0, len(data_values), len(header))]
+
+    # Create the DataFrame
+    df = pd.DataFrame(rows, columns=header)
+
+    return df
+
+
+def show_warning(message: str):
+    msg_box = qtw.QMessageBox()
+    msg_box.setIcon(qtw.QMessageBox.Warning)
+    msg_box.setText(message)
+    msg_box.setWindowTitle("Warning")
+    msg_box.exec()
+
+
+lst_PierSDShape = list[dict[str, list[list[float]]]]
 
 
 def get_sdshape_pierPolygon() -> lst_PierSDShape:
