@@ -220,3 +220,30 @@ def SPcolumnPierLabel(lst_PierSDShape, pierIndex):
     # Add the length of the list at the beginning
 
     return PierLabel
+
+def get_load_combinations(SapModel) -> DataFrame:
+    """
+    returns: DataFrame
+
+    Return dataframe of list level
+
+    """
+    # get the table
+    table_key: str = 'Load Combination Definitions'
+    # get the database table
+    story_db = SapModel.DatabaseTables.GetTableForDisplayArray(table_key, GroupName='')
+    # Extract header and data
+    header = story_db[2]
+    data_values = story_db[4]
+
+    # Group the data values into rows
+    rows = [data_values[i:i + len(header)] for i in range(0, len(data_values), len(header))]
+
+    # Create the DataFrame
+    df = pd.DataFrame(rows, columns=header)
+    df_uLoadCombination= df['Name'].unique()
+    df_uLoadCombination = pd.DataFrame(df_uLoadCombination, columns=['LoadCombinations'])
+    df_uLoadCombination["SelectedCombo"]= None
+    print(df_uLoadCombination)
+    #lst_uLoadCombination = df_uLoadCombination["Name"].tolist()
+    return df_uLoadCombination
