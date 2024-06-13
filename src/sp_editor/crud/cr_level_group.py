@@ -28,7 +28,7 @@ def get_pierlabel_with_level(engine: Engine, stories: list[str]):
 def create_level_group(engine: Engine, stories: list[str]):
     with Session(engine) as session:
         for story in stories:
-            group = Grouplevel(story=story, tier='1')
+            group = Grouplevel(story=story, tier="None")
             session.add(group)
         session.commit()
 
@@ -39,17 +39,32 @@ def update_group_level(engine: Engine, stories: list[str], tier_name: str):
         results = session.exec(statement)
         groups = results.all()
         for group in groups:
-            print(group)
-            # group.tier = tier_name
-            # session.add(group)
-            # session.commit()
-            # session.refresh(group)
+            group.tier = tier_name
+            session.add(group)
+            session.commit()
+            session.refresh(group)
+        return groups
+
+
+def get_group_level(engine: Engine):
+    with Session(engine) as session:
+        statement = select(Grouplevel.tier).where(Grouplevel.tier != 'None')
+        results = session.exec(statement)
+        groups = results.all()
+        return groups
+
+
+def delete_group_level(engine: Engine, tiers: [str]):
+    with Session(engine) as session:
+        statement = select(Grouplevel).where(Grouplevel.tier.in_(tiers))
+        results = session.exec(statement)
+        groups = results.all()
         return groups
 
 
 def get_level(engine: Engine):
     with Session(engine) as session:
-        statement = select(Level)
+        statement = select(Level.story)
         results = session.exec(statement)
         level_detail = results.all()
         return level_detail

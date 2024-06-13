@@ -5,16 +5,16 @@ from PySide6 import QtWidgets as qtw
 
 from sp_editor.widgets.main_window import Ui_mw_Main
 
-from viewmodels.import_etabs_dialog import ImportEtabs_Dialog
-from viewmodels.general_infor_dialog import GeneralInfor_Dialog
-from viewmodels.open_file_dialog import OpenFile_Dialog
-from viewmodels.new_file_dialog import NewFile_Dialog
-from viewmodels.barest_dialog import BarSet_Dialog
-from viewmodels.material_dialog import Material_Dialog
-from viewmodels.groups_dialog import Group_Dialog
+from controllers.import_etabs_dialog import ImportEtabs_Dialog
+from controllers.general_infor_dialog import GeneralInfor_Dialog
+from controllers.open_file_dialog import OpenFile_Dialog
+from controllers.new_file_dialog import NewFile_Dialog
+from controllers.barest_dialog import BarSet_Dialog
+from controllers.material_dialog import Material_Dialog
+from controllers.groups_dialog import Group_Dialog
 
 from sqlalchemy.engine.base import Engine
-from core.connect_etabs import get_story_infor,get_pier_label_infor
+from core.connect_etabs import get_story_infor, get_pier_label_infor
 from crud.cr_level_group import get_level_db, get_pier_label_db
 
 

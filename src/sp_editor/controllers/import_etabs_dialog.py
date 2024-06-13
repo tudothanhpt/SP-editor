@@ -46,8 +46,8 @@ class ImportEtabs_Dialog(qtw.QDialog, Ui_d_ImportEtabs):
         try:
             path = get_open_filename(file_name, root_path)
             self.SapModel, self.EtabsObject = connect_to_etabs(model_is_open, path)
-            self.custom_signal_emit()
             self.close()
+            self.custom_signal_emit()
         except FileNotFoundError:
             qtw.QMessageBox.warning(self, "File not found", "No such file or directory",
                                     qtw.QMessageBox.StandardButton.Ok)
