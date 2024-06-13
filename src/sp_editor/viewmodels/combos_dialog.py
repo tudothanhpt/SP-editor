@@ -5,10 +5,20 @@ from PySide6 import QtGui as qtg
 
 from sp_editor.widgets.combos_selected_dialog import Ui_Dialog
 from sp_editor.utils import get_open_filename
-from sp_editor.core.connect_etabs import connect_to_etabs, get_story_infor
+from sp_editor.core.connect_etabs import connect_to_etabs, get_load_combinations
 from sp_editor.database.list_model import ListModel
-from typing import Any
+from sp_editor.crud.cr_load_combo import get_df_load_combinations_fromdb, create_df_to_db
+from sp_editor.core.connect_etabs import connect_to_etabs
 
+from sqlmodel import Session, create_engine
+from typing import Any
+from sqlalchemy.engine.base import Engine
+
+engine_temppath = r"C:\Users\abui\Desktop\Git\repo\SP-editor\tests\TestBM\1235.spe"
+engine: Engine = create_engine(f"sqlite:///{engine_temppath}")
+table_name='loadcombinations'
+
+#print(INITIAL_DF.to_dict("list"))
 
 class Combo_Dialog(qtw.QDialog, Ui_Dialog):
 
@@ -16,18 +26,31 @@ class Combo_Dialog(qtw.QDialog, Ui_Dialog):
         super().__init__(parent)
         self.setupUi(self)
         
-        INITIALDATA = [f"Item {i}" for i in range(1, 101,2)]
-        self.lview_combos_model = ListModel(INITIALDATA) #to be replaced
-        self.lview_selectedCombos_model = ListModel([])
-        self.lview_combos.setModel(self.lview_combos_model)
+        self.lview_combos_listIndices = None
+        self.lview_selectedCombos_listIndices = None
+        
+        self.load_DB()
+        
         self.lview_selectedCombos.setModel(self.lview_selectedCombos_model)
-            # Connect buttons to the respective functions
+        # Connect buttons to the respective functions
         self.pb_select.clicked.connect(self.move_right)
         self.pb_deselect.clicked.connect(self.move_left)
 
         # Connect OK and Cancel buttons
         self.pb_ok.clicked.connect(self.on_ok_clicked)
         self.pb_cancel.clicked.connect(self.reject)
+    def load_DB(self):
+
+        self.tmpDF =get_df_load_combinations_fromdb(engine)
+
+        self.lview_combos_list = self.tmpDF.iloc[:, 0].dropna().tolist()
+        self.lview_selectedCombos_list = self.tmpDF.iloc[:, 1].dropna().tolist()
+        
+        self.lview_combos_model = ListModel(self.lview_combos_list)
+        self.lview_selectedCombos_model = ListModel(self.lview_selectedCombos_list)
+        
+        self.lview_combos.setModel(self.lview_combos_model)
+        self.lview_selectedCombos.setModel(self.lview_selectedCombos_model)
 
     def move_right(self):
         # Get selected indexes in the left list view
@@ -43,6 +66,9 @@ class Combo_Dialog(qtw.QDialog, Ui_Dialog):
             self.lview_selectedCombos.model().add_items(items_to_move)
             # Sort right list view by original order
             self.lview_selectedCombos.model().sort_items_by_original_order()
+            self.lview_combos_listIndices = self.lview_combos.model().get_items_with_indices()
+            self.lview_selectedCombos_listIndices = self.lview_selectedCombos.model().get_items_with_indices()
+            
 
     def move_left(self):
         # Get selected indexes in the right list view
@@ -50,6 +76,7 @@ class Combo_Dialog(qtw.QDialog, Ui_Dialog):
         if selected_indexes:
             # Collect items and their original positions
             items_to_move = [(self.lview_selectedCombos.model().data(index, qtc.Qt.DisplayRole), index.row()) for index in sorted(selected_indexes)]
+            print(items_to_move)
             # Remove items from right list view
             for item, _ in reversed(items_to_move):
                 self.lview_selectedCombos.model().remove_item_by_value(item)
@@ -57,12 +84,26 @@ class Combo_Dialog(qtw.QDialog, Ui_Dialog):
             self.lview_combos.model().add_items(items_to_move)
             # Sort left list view by original order
             self.lview_combos.model().sort_items_by_original_order()
+            self.lview_combos_listIndices = self.lview_combos.model().get_items_with_indices()
+            self.lview_selectedCombos_listIndices = self.lview_selectedCombos.model().get_items_with_indices()
+            
     
     def on_ok_clicked(self):
-        self.accept()
-
+        print("List1 :")
+        print(self.lview_combos_listIndices)
+        print("List2 :")
+        print(self.lview_selectedCombos_listIndices)
+        tempdf = self.tmpDF
+        for name, index in self.lview_combos_listIndices:
+            tempdf.at[index, 'LoadCombinations'] = name
+            tempdf.at[index, 'SelectedCombo'] = None
+        # Update SelectedCombo column using List2
+        for name, index in self.lview_selectedCombos_listIndices:
+            tempdf.at[index, 'SelectedCombo'] = name
+            tempdf.at[index, 'LoadCombinations'] = None
         
-        
+        print(tempdf)
+        tempdf.to_sql(table_name, con=engine, if_exists='replace', index=False)
 def main():
     """Main function to run the MaterialDialog."""
     app = qtw.QApplication(sys.argv)
