@@ -1,56 +1,71 @@
-import pandas as pd
-from typing import Any, List
-from pandas import DataFrame
-from PySide6.QtWidgets import QApplication, QMessageBox, QWidget, QVBoxLayout, QListView, QPushButton
-from PySide6.QtCore import QStringListModel
-from core.connect_etabs import connect_to_etabs
+import sys
+from PySide6.QtWidgets import (QApplication, QComboBox, QGroupBox, QHBoxLayout,
+                               QLabel, QLineEdit, QVBoxLayout, QWidget, QStackedWidget)
 
 
-class MainWindow(QWidget):
+class RebarWidget(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("QListView Example")
 
-        # Create a QListView
-        self.list_view = QListView(self)
+        # Create the main layout
+        layout = QVBoxLayout()
 
-        # Create a QPushButton to trigger the data fetching and display
-        self.fetch_button = QPushButton("Fetch Pier Force Data", self)
-        self.fetch_button.clicked.connect(self.fetch_data)
+        # Create the group box
+        group_box = QGroupBox("Rebar")
+        group_layout = QVBoxLayout()
 
-        # Set layout
-        layout = QVBoxLayout(self)
-        layout.addWidget(self.list_view)
-        layout.addWidget(self.fetch_button)
+        # Create the "Bars by" combo box
+        self.bars_by_combo = QComboBox()
+        self.bars_by_combo.addItems(["Size", "Area"])
+        self.bars_by_combo.currentIndexChanged.connect(self.update_bar_size_widget)
+
+        # Create the label and stacked widget for "Bar size"
+        bar_size_label = QLabel("Bar size")
+        self.bar_size_stacked_widget = QStackedWidget()
+
+        # Create the combo box and line edit for "Bar size"
+        self.bar_size_combo = QComboBox()
+        self.bar_size_combo.addItems(["#3", "#4", "#5", "#6", "#7", "#8"])
+
+        self.bar_size_line_edit = QLineEdit()
+
+        # Add the combo box and line edit to the stacked widget
+        self.bar_size_stacked_widget.addWidget(self.bar_size_combo)
+        self.bar_size_stacked_widget.addWidget(self.bar_size_line_edit)
+
+        # Create the rest of the labels and widgets
+        spacing_label = QLabel("Spacing")
+        self.spacing_edit = QLineEdit()
+
+        quantities_label = QLabel("Quantities")
+        self.quantities_edit = QLineEdit()
+
+        # Add widgets to the group layout
+        group_layout.addWidget(QLabel("Bars by"))
+        group_layout.addWidget(self.bars_by_combo)
+        group_layout.addWidget(bar_size_label)
+        group_layout.addWidget(self.bar_size_stacked_widget)
+        group_layout.addWidget(spacing_label)
+        group_layout.addWidget(self.spacing_edit)
+        group_layout.addWidget(quantities_label)
+        group_layout.addWidget(self.quantities_edit)
+
+        group_box.setLayout(group_layout)
+        layout.addWidget(group_box)
         self.setLayout(layout)
 
-    def fetch_data(self):
-        sap_model, etabs_object = connect_to_etabs(True)
-        design_combos = ['LC1_1.4D']
-        output = get_pier_force_data(sap_model, etabs_object, design_combos)
-        if not output.empty:
-            self.display_data(output)
+        # Initialize the correct widget for "Bar size"
+        self.update_bar_size_widget()
 
-    def display_data(self, df: DataFrame):
-        # Convert DataFrame to list of strings
-        data_strings = df.apply(lambda row: ', '.join(row.values.astype(str)), axis=1).tolist()
-
-        # Create a QStringListModel with the data
-        model = QStringListModel(data_strings)
-
-        # Set the model to the QListView
-        self.list_view.setModel(model)
+    def update_bar_size_widget(self):
+        if self.bars_by_combo.currentText() == "Size":
+            self.bar_size_stacked_widget.setCurrentWidget(self.bar_size_combo)
+        else:
+            self.bar_size_stacked_widget.setCurrentWidget(self.bar_size_line_edit)
 
 
-if __name__ == '__main__':
-    # sap_model, etabs_object = connect_to_etabs(True)
-    # design_combos = ['LC1_1.4D']
-    # output = get_pier_force_data(sap_model, etabs_object, design_combos)
-    # print(output)
-    app = QApplication([])
-
-    # Create and show the main window
-    window = MainWindow()
-    window.show()
-
-    app.exec()
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    widget = RebarWidget()
+    widget.show()
+    sys.exit(app.exec())

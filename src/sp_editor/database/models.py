@@ -82,6 +82,8 @@ class PierForce(SQLModel, table=True):
 
 
 class GroupLevel(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+
     tier: str | None = Field(default=None, primary_key=True)
     story: str = Field(default=None, foreign_key="pierlabel.story", primary_key=True, max_length=50)
 

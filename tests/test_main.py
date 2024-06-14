@@ -118,6 +118,7 @@ class ApplicationWindow(QMainWindow):
     def set_canvas_table_configuration(self, row_count, data):
         self.fig.set_canvas(self.canvas)
         self._ax = self.canvas.figure.add_subplot(projection="3d")
+        self._ax.set_axis_off()
 
         self._ax.set_xlabel(self.column_names[0])
         self._ax.set_ylabel(self.column_names[1])

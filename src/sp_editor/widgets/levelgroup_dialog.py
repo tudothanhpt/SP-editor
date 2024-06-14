@@ -24,7 +24,7 @@ class Ui_group_dialog(object):
     def setupUi(self, group_dialog):
         if not group_dialog.objectName():
             group_dialog.setObjectName(u"group_dialog")
-        group_dialog.resize(672, 679)
+        group_dialog.resize(710, 756)
         font = QFont()
         font.setPointSize(12)
         group_dialog.setFont(font)
@@ -36,11 +36,6 @@ class Ui_group_dialog(object):
         self.frame.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_2 = QGridLayout(self.frame)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.pb_addGroup = QPushButton(self.frame)
-        self.pb_addGroup.setObjectName(u"pb_addGroup")
-
-        self.gridLayout_2.addWidget(self.pb_addGroup, 0, 3, 1, 1)
-
         self.groupBox = QGroupBox(self.frame)
         self.groupBox.setObjectName(u"groupBox")
         self.horizontalLayout = QHBoxLayout(self.groupBox)
@@ -110,21 +105,70 @@ class Ui_group_dialog(object):
         self.horizontalLayout.addWidget(self.frame_4)
 
 
-        self.gridLayout_2.addWidget(self.groupBox, 1, 0, 1, 4)
+        self.gridLayout_2.addWidget(self.groupBox, 1, 0, 1, 3)
 
-        self.le_groupName = QLineEdit(self.frame)
-        self.le_groupName.setObjectName(u"le_groupName")
+        self.frame_5 = QFrame(self.frame)
+        self.frame_5.setObjectName(u"frame_5")
+        self.frame_5.setFrameShape(QFrame.Shape.NoFrame)
+        self.frame_5.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_3 = QHBoxLayout(self.frame_5)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.horizontalLayout_3.setContentsMargins(2, 2, 2, 2)
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout_2.addWidget(self.le_groupName, 0, 2, 1, 1)
+        self.horizontalLayout_3.addItem(self.horizontalSpacer_2)
 
+        self.pb_OK = QPushButton(self.frame_5)
+        self.pb_OK.setObjectName(u"pb_OK")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.pb_OK.sizePolicy().hasHeightForWidth())
+        self.pb_OK.setSizePolicy(sizePolicy)
+        self.pb_OK.setMinimumSize(QSize(100, 0))
+
+        self.horizontalLayout_3.addWidget(self.pb_OK)
+
+        self.pb_cancel = QPushButton(self.frame_5)
+        self.pb_cancel.setObjectName(u"pb_cancel")
+        self.pb_cancel.setMinimumSize(QSize(100, 0))
+
+        self.horizontalLayout_3.addWidget(self.pb_cancel)
+
+
+        self.gridLayout_2.addWidget(self.frame_5, 2, 0, 1, 1)
+
+        self.frame_2 = QFrame(self.frame)
+        self.frame_2.setObjectName(u"frame_2")
+        self.frame_2.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_2.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_2 = QHBoxLayout(self.frame_2)
+        self.horizontalLayout_2.setSpacing(6)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalLayout_2.setContentsMargins(9, 9, 9, 9)
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout_2.addItem(self.horizontalSpacer, 0, 0, 1, 1)
+        self.horizontalLayout_2.addItem(self.horizontalSpacer)
 
-        self.label_2 = QLabel(self.frame)
+        self.label_2 = QLabel(self.frame_2)
         self.label_2.setObjectName(u"label_2")
 
-        self.gridLayout_2.addWidget(self.label_2, 0, 1, 1, 1)
+        self.horizontalLayout_2.addWidget(self.label_2)
+
+        self.le_groupName = QLineEdit(self.frame_2)
+        self.le_groupName.setObjectName(u"le_groupName")
+        self.le_groupName.setMinimumSize(QSize(150, 0))
+
+        self.horizontalLayout_2.addWidget(self.le_groupName)
+
+        self.pb_addGroup = QPushButton(self.frame_2)
+        self.pb_addGroup.setObjectName(u"pb_addGroup")
+        self.pb_addGroup.setMinimumSize(QSize(100, 0))
+
+        self.horizontalLayout_2.addWidget(self.pb_addGroup)
+
+
+        self.gridLayout_2.addWidget(self.frame_2, 0, 0, 1, 3)
 
 
         self.gridLayout.addWidget(self.frame, 0, 0, 1, 1)
@@ -137,11 +181,13 @@ class Ui_group_dialog(object):
 
     def retranslateUi(self, group_dialog):
         group_dialog.setWindowTitle(QCoreApplication.translate("group_dialog", u"Level Groups", None))
-        self.pb_addGroup.setText(QCoreApplication.translate("group_dialog", u"Add", None))
         self.groupBox.setTitle(QCoreApplication.translate("group_dialog", u"Level Groups", None))
         self.label.setText(QCoreApplication.translate("group_dialog", u"Story Name", None))
         self.label_4.setText(QCoreApplication.translate("group_dialog", u"Pier Name", None))
         self.label_3.setText(QCoreApplication.translate("group_dialog", u"Groups Name", None))
+        self.pb_OK.setText(QCoreApplication.translate("group_dialog", u"OK", None))
+        self.pb_cancel.setText(QCoreApplication.translate("group_dialog", u"Cancel", None))
         self.label_2.setText(QCoreApplication.translate("group_dialog", u"Name: ", None))
+        self.pb_addGroup.setText(QCoreApplication.translate("group_dialog", u"Add", None))
     # retranslateUi
 
