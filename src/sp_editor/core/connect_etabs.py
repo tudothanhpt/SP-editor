@@ -9,6 +9,7 @@ from PySide6 import QtGui as qtg
 import comtypes.client
 import pandas as pd
 from pandas import DataFrame
+from typing import List, Optional, Tuple
 
 
 def connect_to_etabs(model_is_open: bool, file_path: str | None = None) -> tuple:
@@ -193,7 +194,7 @@ def get_sdshape_pierPolygon() -> lst_PierSDShape:
     return lst_PierSDShape;
 
 
-def get_current_unit(SapModel) -> tuple[str, str, str]:
+def get_current_unit(SapModel) -> Tuple[str, str, str]:
     force_units_ETABS: dict[str, int] = {"lb": 1, "kip": 2, "Kip": 2, "N": 3, "kN": 4, "KN": 4, "kgf": 5, "Kgf": 5,
                                          "tonf": 6, "Tonf": 6}
     length_units_ETABS: dict[str, int] = {"inch": 1, "ft": 2, "micron": 3, "mm": 4, "cm": 5, "m": 6}
@@ -263,18 +264,23 @@ def SPcolumnPierLabel(lst_PierSDShape, pierIndex):
 
     return PierLabel
 
-
-def get_load_combinations(SapModel) -> DataFrame:
+def get_loadCombo_df_fromE(SapModel) -> Tuple[DataFrame, DataFrame]:
     """
-    returns: DataFrame
+    Returns two dataframes: one with unique load combinations and another with all load combinations.
+    The second dataframe also has a column for selected load combinations.
 
-    Return dataframe of list level
+    Args:
+        SapModel (Any): The SapModel object from ETABS.
 
+    Returns:
+        Tuple[DataFrame, DataFrame]: A tuple containing two dataframes.
     """
-    # get the table
+    # Get the table
     table_key: str = 'Load Combination Definitions'
-    # get the database table
+
+    # Get the database table
     story_db = SapModel.DatabaseTables.GetTableForDisplayArray(table_key, GroupName='')
+
     # Extract header and data
     header = story_db[2]
     data_values = story_db[4]
@@ -284,9 +290,14 @@ def get_load_combinations(SapModel) -> DataFrame:
 
     # Create the DataFrame
     df = pd.DataFrame(rows, columns=header)
-    df_uLoadCombination = df['Name'].unique()
-    df_uLoadCombination = pd.DataFrame(df_uLoadCombination, columns=['LoadCombinations'])
-    df_uLoadCombination["SelectedCombo"] = None
-    print(df_uLoadCombination)
-    # lst_uLoadCombination = df_uLoadCombination["Name"].tolist()
-    return df_uLoadCombination
+
+    # Get unique load combinations
+    df_LC = df['Name'].unique()
+    df_LC = pd.DataFrame(df_LC, columns=["uniqueloadCombos"])
+
+    # Create dataframe with all load combinations and selected load combinations column
+    df_LCselection = df_LC.rename(columns={'uniqueloadCombos': 'allloadCombos'})
+    df_LCselection["selectedLoadCombos"] = None
+
+    return df_LC , df_LCselection
+    
