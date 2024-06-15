@@ -2,38 +2,32 @@ import sys
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
+import pandas as pd
 
 from sp_editor.widgets.combos_selected_dialog import Ui_combosSelection_dialog
 from sp_editor.database.list_model import ListModel
-from sp_editor.crud.cr_load_combo import get_df_load_combinations_fromdb, create_df_to_db
+from sp_editor.crud.cr_load_combo import read_loadComboDB, read_loadComboSelectionDB
+from sp_editor.crud.cr_load_combo import TB_COMBOSELECTION, TB_CS_HEADER_SELECTEDCOMBO, TB_CS_HEADER_ORICOMBO
 
-from sqlmodel import Session, create_engine
+from sqlmodel import create_engine
+from typing import Any,List,Tuple
 from sqlalchemy.engine.base import Engine
 
-table_name = 'loadcombinations'
-
-
-# print(INITIAL_DF.to_dict("list"))
 
 class Combo_Dialog(qtw.QDialog, Ui_combosSelection_dialog):
 
-    def __init__(self, engine: Engine | None = None, path: str | None = None) -> None:
-        super().__init__()
-        self.lview_selectedCombos_model = None
-        self.lview_combos_model = None
-        self.lview_selectedCombos_list = None
-        self.lview_combos_list = None
-        self.engine = engine
-        self.current_path = path
-
+    def __init__(self, engine: Engine , parent: qtw.QWidget = None) -> None:     
+        super().__init__(parent)
         self.setupUi(self)
-
-        self.lview_combos_listIndices = None
-        self.lview_selectedCombos_listIndices = None
-
-        self.load_DB()
-
-        self.lview_selectedCombos.setModel(self.lview_selectedCombos_model)
+        self.engine = engine
+        
+        self.INIT_DF = read_loadComboDB(self.engine)
+        print(self.INIT_DF)
+        self.INIT_LIST = self.INIT_DF["uniqueloadCombos"].to_list()
+        self.ORDER_DICT = {string: index for index, string in enumerate(self.INIT_LIST)}   
+        
+        self.load_DB(self.engine)
+        
         # Connect buttons to the respective functions
         self.pb_select.clicked.connect(self.move_right)
         self.pb_deselect.clicked.connect(self.move_left)
@@ -41,81 +35,114 @@ class Combo_Dialog(qtw.QDialog, Ui_combosSelection_dialog):
         # Connect OK and Cancel buttons
         self.pb_ok.clicked.connect(self.on_ok_clicked)
         self.pb_cancel.clicked.connect(self.reject)
+        
+    def load_DB(self, engine: Engine) -> None:
+        """
+        Load data from the database and set up the list models.
 
-    def load_DB(self):
+        Args:
+            engine (Engine): The SQLAlchemy engine to connect to the database.
 
-        self.tmpDF = get_df_load_combinations_fromdb(self.engine)
-
-        self.lview_combos_list = self.tmpDF.iloc[:, 0].dropna().tolist()
-        self.lview_selectedCombos_list = self.tmpDF.iloc[:, 1].dropna().tolist()
-
-        self.lview_combos_model = ListModel(self.lview_combos_list)
-        self.lview_selectedCombos_model = ListModel(self.lview_selectedCombos_list)
-
+        Returns:
+            None
+        """
+        
+        self.tmpDF: pd.DataFrame = read_loadComboSelectionDB(engine)
+        print(self.tmpDF)
+        
+        self.lview_combos_list: List[str] = self.tmpDF.iloc[:, 0].dropna().tolist()
+        self.lview_selectedCombos_list: List[str] = self.tmpDF.iloc[:, 1].dropna().tolist()
+        
+        self.lview_combos_model: ListModel = ListModel(self.lview_combos_list, self.ORDER_DICT)
+        self.lview_selectedCombos_model: ListModel = ListModel(self.lview_selectedCombos_list, self.ORDER_DICT)
+        
         self.lview_combos.setModel(self.lview_combos_model)
         self.lview_selectedCombos.setModel(self.lview_selectedCombos_model)
+        
+        self.lview_combos_listIndices: List[Tuple[str, int]] = self.lview_combos.model().get_items_with_indices()
+        self.lview_selectedCombos_listIndices: List[Tuple[str, int]] = self.lview_selectedCombos.model().get_items_with_indices()    
 
-    def move_right(self):
-        # Get selected indexes in the left list view
-        selected_indexes = self.lview_combos.selectionModel().selectedIndexes()
-        if selected_indexes:
-            # Collect items and their original positions
-            items_to_move = [(self.lview_combos.model().data(index, qtc.Qt.DisplayRole), index.row()) for index in
-                             sorted(selected_indexes)]
-            print(items_to_move)
-            # Remove items from left list view
-            for item, _ in reversed(items_to_move):
-                self.lview_combos.model().remove_item_by_value(item)
-            # Add items to right list view
-            self.lview_selectedCombos.model().add_items(items_to_move)
-            # Sort right list view by original order
-            self.lview_selectedCombos.model().sort_items_by_original_order()
-            self.lview_combos_listIndices = self.lview_combos.model().get_items_with_indices()
-            self.lview_selectedCombos_listIndices = self.lview_selectedCombos.model().get_items_with_indices()
+    def move_right(self) -> None:
+        """
+        Move selected items from the left list view to the right list view.
+
+        Returns:
+            None
+        """
+        # Get selected items from the left list view
+        selected_items: List[Tuple[str, int]] = [
+            (self.lview_combos.model().data(index, qtc.Qt.DisplayRole), index.row())
+            for index in sorted(self.lview_combos.selectionModel().selectedIndexes())
+        ]
+
+        # Remove selected items from the left list view
+        for item, _ in reversed(selected_items):
+            self.lview_combos.model().remove_item_by_value(item)
+
+        # Add selected items to the right list view
+        self.lview_selectedCombos.model().add_items(selected_items)
+        self.lview_selectedCombos.model().sort_items_by_original_order()
+
+        # Update indices of the lists
+        self.lview_combos_listIndices = self.lview_combos.model().get_items_with_indices()
+        self.lview_selectedCombos_listIndices = self.lview_selectedCombos.model().get_items_with_indices()
 
     def move_left(self):
-        # Get selected indexes in the right list view
-        selected_indexes = self.lview_selectedCombos.selectionModel().selectedIndexes()
-        if selected_indexes:
-            # Collect items and their original positions
-            items_to_move = [(self.lview_selectedCombos.model().data(index, qtc.Qt.DisplayRole), index.row()) for index
-                             in sorted(selected_indexes)]
-            print(items_to_move)
-            # Remove items from right list view
-            for item, _ in reversed(items_to_move):
-                self.lview_selectedCombos.model().remove_item_by_value(item)
-            # Add items to left list view
-            self.lview_combos.model().add_items(items_to_move)
-            # Sort left list view by original order
-            self.lview_combos.model().sort_items_by_original_order()
-            self.lview_combos_listIndices = self.lview_combos.model().get_items_with_indices()
-            self.lview_selectedCombos_listIndices = self.lview_selectedCombos.model().get_items_with_indices()
+        # Get selected items from the right list view
+        selected_items = [
+            (self.lview_selectedCombos.model().data(index, qtc.Qt.DisplayRole), index.row())
+            for index in sorted(self.lview_selectedCombos.selectionModel().selectedIndexes())
+        ]
 
+        # Remove selected items from the right list view
+        for item, _ in reversed(selected_items):
+            self.lview_selectedCombos.model().remove_item_by_value(item)
+
+        # Add selected items to the left list view
+        self.lview_combos.model().add_items(selected_items)
+
+        # Sort left list view by original order
+        self.lview_combos.model().sort_items_by_original_order()
+
+        # Update indices of the lists
+        self.lview_combos_listIndices = self.lview_combos.model().get_items_with_indices()
+        self.lview_selectedCombos_listIndices = self.lview_selectedCombos.model().get_items_with_indices()
+    
     def on_ok_clicked(self):
+        """Update database table with selected items."""
+        for combo_name, index in self.lview_combos_listIndices:
+            self.tmpDF.at[index, TB_CS_HEADER_ORICOMBO] = combo_name
+            self.tmpDF.at[index, TB_CS_HEADER_SELECTEDCOMBO] = None
+
+        for selected_combo_name, index in self.lview_selectedCombos_listIndices:
+            self.tmpDF.at[index, TB_CS_HEADER_SELECTEDCOMBO] = selected_combo_name
+            self.tmpDF.at[index, TB_CS_HEADER_ORICOMBO] = None
+            
+        totalCombos = len(self.lview_combos_listIndices)
+        totalSelectedCombos = len(self.lview_selectedCombos_listIndices)
+        total = totalCombos + totalSelectedCombos
+        print(self.tmpDF)
+        self.tmpDF.to_sql(TB_COMBOSELECTION, con=self.engine, if_exists='replace', index=False)
+        
+        qtw.QMessageBox().information(self, "Notifications", f"{totalSelectedCombos}/{total} selected!")
+        
+        print(self.tmpDF)
+            
+    def print_current_state(self):
         print("List1 :")
         print(self.lview_combos_listIndices)
         print("List2 :")
         print(self.lview_selectedCombos_listIndices)
-        tempdf = self.tmpDF
-        for name, index in self.lview_combos_listIndices:
-            tempdf.at[index, 'LoadCombinations'] = name
-            tempdf.at[index, 'SelectedCombo'] = None
-        # Update SelectedCombo column using List2
-        for name, index in self.lview_selectedCombos_listIndices:
-            tempdf.at[index, 'SelectedCombo'] = name
-            tempdf.at[index, 'LoadCombinations'] = None
-
-        print(tempdf)
-        tempdf.to_sql(table_name, con=self.engine, if_exists='replace', index=False)
-
-
+        
+        
 def main():
-    """Main function to run the MaterialDialog."""
+    """Main function to run the Get Combination Dialog."""
+    engine_temppath = r"C:\Users\abui\Desktop\Git\repo\SP-editor\tests\TestBM\DEMONO1.spe"
+    engine: Engine = create_engine(f"sqlite:///{engine_temppath}")
     app = qtw.QApplication(sys.argv)
-    dialog = Combo_Dialog()
+    dialog = Combo_Dialog(engine)
     dialog.show()
     sys.exit(app.exec())
-
 
 if __name__ == "__main__":
     main()

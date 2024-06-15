@@ -90,10 +90,18 @@ class GroupLevel(SQLModel, table=True):
     pierlabel: PierLabel = Relationship(back_populates="grouplevels")
 
 
+class LoadCombinationsSelection(SQLModel, table=True):
+    """
+    Bar set material properties
+    """
+    id: int | None = Field(default=None, primary_key=True)
+    allloadCombos: Optional[str] = Field(default=None)
+    selectedLoadCombos: Optional[str] = Field(default=None)
+
 class LoadCombinations(SQLModel, table=True):
     """
     Bar set material properties
     """
     id: int | None = Field(default=None, primary_key=True)
-    loadCombinations: Optional[str] = Field(default=None)
-    selectedLoadCombinations: Optional[str] = Field(default=None)
+    uniqueloadCombos: Optional[str] = Field(default=None)
+
