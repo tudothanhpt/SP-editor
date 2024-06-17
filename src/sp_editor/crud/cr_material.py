@@ -26,6 +26,7 @@ def set_engine(database_path: str) -> Optional[Engine]:
 
     return create_engine(f"sqlite:///{database_path}", echo=False)
 
+
 def get_df_from_db(engine, table_name):
     """
     Retrieve data from the specified table in the database using a session and return it as a pandas DataFrame.
@@ -46,6 +47,7 @@ def get_df_from_db(engine, table_name):
 
     return df
 
+
 def update_df_to_db(engine, db_table_name, df):
     """
     Writes a DataFrame to an SQL database.
@@ -62,17 +64,15 @@ def update_df_to_db(engine, db_table_name, df):
         # Write DataFrame to SQL
         df.to_sql(db_table_name, con=engine, if_exists='replace', index=False)
         print(f"DataFrame successfully written to table '{db_table_name}' in the database.")
-        
+
     except Exception as e:
         print(f"An error occurred: {e}")
-    
+
 
 def main():
     database_path = r"C:\Users\abui\Documents\BM\git\repo\SP-editor\tests\test.db"
     engine = set_engine(database_path)
-    
 
 
-    
 if __name__ == "__main__":
     main()

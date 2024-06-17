@@ -1,6 +1,3 @@
-import sys
-import pandas as pd
-from openpyxl.pivot.cache import LevelGroup
 from pandas import DataFrame
 from sqlalchemy import func
 
@@ -10,15 +7,19 @@ from sp_editor.database.models import GroupLevel, PierLabel, Level
 from sqlalchemy.engine.base import Engine
 
 
-def get_level_db(engine: Engine, df: DataFrame):
+def get_level_to_db(engine: Engine, df: DataFrame):
     df.to_sql("level", con=engine, if_exists='replace')
 
 
-def get_pier_label_db(engine: Engine, df: DataFrame):
+def get_sds_to_db(engine: Engine, df: DataFrame):
+    df.to_sql("sectiondesignershape", con=engine, if_exists='replace')
+
+
+def get_pier_label_to_db(engine: Engine, df: DataFrame):
     df.to_sql("pierlabel", con=engine, if_exists='replace')
 
 
-def get_pier_design_force_db(engine: Engine, df: DataFrame):
+def get_pier_design_force_to_db(engine: Engine, df: DataFrame):
     df.to_sql("pierforce", con=engine, if_exists='replace')
 
 
@@ -92,9 +93,9 @@ def get_level(engine: Engine):
         return level_detail
 
 
-def get_level_from_group(engine: Engine):
+def get_level_from_group(engine: Engine, tier: str):
     with Session(engine) as session:
-        statement = select(GroupLevel.id, GroupLevel.story).where(GroupLevel.tier == 'None')
+        statement = select(GroupLevel.id, GroupLevel.story).where(GroupLevel.tier == tier)
         results = session.exec(statement)
         level_detail = results.all()
         level_detail_sorted = sorted(level_detail, key=lambda x: x.id)

@@ -62,7 +62,7 @@ class Group_Dialog(qtw.QDialog, Ui_group_dialog):
             create_level_group(self.engine, self.level_list)
             self.groups_list_before = get_group_level(self.engine, empty_tier=True)
         else:
-            self.level_list = get_level_from_group(self.engine)
+            self.level_list = get_level_from_group(self.engine, 'None')
             self.groups_list_before = get_group_level(self.engine, empty_tier=False)
             self.update_group_list()
         # display level model

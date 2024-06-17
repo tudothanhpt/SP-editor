@@ -52,6 +52,15 @@ class Level(SQLModel, table=True):
     height: str = Field(default=None)
 
 
+class SectionDesignerShape(SQLModel, table=True):
+    index: int | None = Field(default=None, primary_key=True)
+    sectionType: str = Field(default=None, primary_key=True)
+    sectionName: str = Field(default=None, primary_key=True)
+    shapeName: str = Field(default=None, primary_key=True)
+    x: str = Field(default=None, primary_key=True)
+    y: str = Field(default=None, primary_key=True)
+
+
 class PierLabel(SQLModel, table=True):
     index: int | None = Field(default=None, primary_key=True)
 
@@ -98,10 +107,10 @@ class LoadCombinationsSelection(SQLModel, table=True):
     allloadCombos: Optional[str] = Field(default=None)
     selectedLoadCombos: Optional[str] = Field(default=None)
 
+
 class LoadCombinations(SQLModel, table=True):
     """
     Bar set material properties
     """
     id: int | None = Field(default=None, primary_key=True)
     uniqueloadCombos: Optional[str] = Field(default=None)
-

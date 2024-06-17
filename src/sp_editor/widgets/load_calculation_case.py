@@ -95,20 +95,7 @@ class Ui_calculationCase_dialog(object):
 
         self.verticalLayout_4.addWidget(self.groupBox_3)
 
-        self.groupBox_4 = QGroupBox(self.frame_4)
-        self.groupBox_4.setObjectName(u"groupBox_4")
-        self.gridLayout_7 = QGridLayout(self.groupBox_4)
-        self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.lview_pier = QListView(self.groupBox_4)
-        self.lview_pier.setObjectName(u"lview_pier")
-
-        self.gridLayout_7.addWidget(self.lview_pier, 0, 0, 1, 1)
-
-
-        self.verticalLayout_4.addWidget(self.groupBox_4)
-
         self.verticalLayout_4.setStretch(1, 95)
-        self.verticalLayout_4.setStretch(2, 101)
 
         self.gridLayout_2.addWidget(self.frame_4, 2, 0, 1, 1)
 
@@ -522,7 +509,6 @@ class Ui_calculationCase_dialog(object):
         self.groupBox.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Tier", None))
         self.groupBox_5.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Section Designer Shape", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Level Information", None))
-        self.groupBox_4.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Pier Information", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Folder name", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Material", None))
         self.label_16.setText(QCoreApplication.translate("calculationCase_dialog", u"Strength, f'c", None))

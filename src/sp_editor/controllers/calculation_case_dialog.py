@@ -6,18 +6,26 @@ from PySide6 import QtGui as qtg
 
 from sp_editor.widgets.load_calculation_case import Ui_calculationCase_dialog
 
-from crud.cr_level_group import get_group_level
+from crud.cr_level_group import get_group_level, get_level_from_group
+from crud.cr_load_case import get_sds_section_name
+
 from sqlalchemy.engine.base import Engine
 
 
 class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
     def __init__(self, engine: Engine | None = None, path: str | None = None, unit: str | None = None):
         super().__init__()
+        self.level_list = None
+        self.sds_list = None
         self.groups_list = None
         self.engine = engine
         self.current_path = path
         self.current_unit = unit
         self.setupUi(self)
+
+        self.update_group_box()
+        self.update_section_designer_shape()
+        self.cb_tier.currentTextChanged.connect(self.update_level_list)
 
     @qtc.Slot()
     def update_group_box(self):
@@ -30,7 +38,18 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
     @qtc.Slot()
     def update_section_designer_shape(self):
         # TODO: get section designer shape from database and display into combobox
-        pass
+        self.sds_list = get_sds_section_name(self.engine)
+        # using function to make list unique
+        sds_names_unique = self.get_unique_items(self.sds_list)
+        self.cb_sectionDesignerShape.addItems(sds_names_unique)
+
+    @qtc.Slot()
+    def update_level_list(self):
+        # TODO: get level list based on selected tier
+        self.level_list = get_level_from_group(self.engine, self.cb_tier.currentText())
+        self.level_list_model = qtc.QStringListModel()
+        self.level_list_model.setStringList(self.level_list)
+        self.lview_level.setModel(self.level_list_model)
 
     @qtc.Slot()
     def update_concrete_fc(self):
