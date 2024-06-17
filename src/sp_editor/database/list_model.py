@@ -1,5 +1,6 @@
 from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex
 from typing import *
+
 class ListModel(QAbstractListModel):
     def __init__(self, items=None, original_order=None):
         """
