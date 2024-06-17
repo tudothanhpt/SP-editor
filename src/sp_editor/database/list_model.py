@@ -2,6 +2,7 @@ from typing import *
 from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex
 
 
+
 class ListModel(QAbstractListModel):
     def __init__(self, items=None, original_order=None):
         """
@@ -110,6 +111,6 @@ class ListModel(QAbstractListModel):
         Returns:
             List[Tuple[str, int]]: A list of tuples containing the item (str) and its original index (int).
         """
-        current_item: List[Tuple[str, int]] = [(item, self_order[item]) for item, _ in
+        current_item: List[Tuple[str, int]] = [(item, self.original_order[item]) for item, _ in
                                                zip(self.items, self.original_order.values())]
         return current_item
