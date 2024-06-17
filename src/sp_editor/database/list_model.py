@@ -1,5 +1,4 @@
 from typing import *
-
 from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex
 
 

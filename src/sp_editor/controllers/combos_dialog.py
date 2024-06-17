@@ -10,7 +10,7 @@ from sp_editor.crud.cr_load_combo import read_loadComboDB, read_loadComboSelecti
 from sp_editor.crud.cr_load_combo import TB_COMBOSELECTION, TB_CS_HEADER_SELECTEDCOMBO, TB_CS_HEADER_ORICOMBO
 
 from sqlmodel import create_engine
-from typing import Any, List, Tuple
+from typing import *
 from sqlalchemy.engine.base import Engine
 
 
