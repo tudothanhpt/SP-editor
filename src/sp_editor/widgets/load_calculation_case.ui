@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1080</width>
-    <height>755</height>
+    <height>771</height>
    </rect>
   </property>
   <property name="font">
@@ -172,34 +172,34 @@
                   <string>Material</string>
                  </property>
                  <layout class="QFormLayout" name="formLayout">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_16">
-                    <property name="text">
-                     <string>Strength, f'c</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QComboBox" name="cb_fc"/>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_17">
-                    <property name="text">
-                     <string>Strength, fy</string>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="1" column="1">
-                   <widget class="QComboBox" name="cb_fy"/>
+                   <widget class="QComboBox" name="cb_fc">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>28</height>
+                     </size>
+                    </property>
+                   </widget>
                   </item>
-                  <item row="2" column="0">
+                  <item row="2" column="1">
+                   <widget class="QComboBox" name="cb_fy">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>28</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="6" column="0">
                    <widget class="QLabel" name="label_23">
                     <property name="text">
                      <string>Ec</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="2" column="1">
+                  <item row="6" column="1">
                    <widget class="QLabel" name="lb_Ec">
                     <property name="minimumSize">
                      <size>
@@ -215,14 +215,14 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="3" column="0">
+                  <item row="7" column="0">
                    <widget class="QLabel" name="label_25">
                     <property name="text">
                      <string>Es</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="3" column="1">
+                  <item row="7" column="1">
                    <widget class="QLabel" name="lb_Es">
                     <property name="minimumSize">
                      <size>
@@ -235,6 +235,66 @@
                     </property>
                     <property name="text">
                      <string/>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="1">
+                   <widget class="QLabel" name="lb_fc">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>28</height>
+                     </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::Shape::StyledPanel</enum>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="5" column="1">
+                   <widget class="QLabel" name="lb_fy">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>28</height>
+                     </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::Shape::StyledPanel</enum>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QLabel" name="label_16">
+                    <property name="text">
+                     <string>Strength, f'c</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="5" column="0">
+                   <widget class="QLabel" name="label_17">
+                    <property name="text">
+                     <string>Strength, fy</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="label_5">
+                    <property name="text">
+                     <string>Steel</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_2">
+                    <property name="text">
+                     <string>Concrete</string>
                     </property>
                    </widget>
                   </item>
@@ -282,6 +342,9 @@
                       <width>0</width>
                       <height>28</height>
                      </size>
+                    </property>
+                    <property name="clearButtonEnabled">
+                     <bool>false</bool>
                     </property>
                    </widget>
                   </item>
@@ -409,20 +472,6 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="1">
-                   <widget class="QComboBox" name="cb_coverType">
-                    <item>
-                     <property name="text">
-                      <string>Clear</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>To bar center</string>
-                     </property>
-                    </item>
-                   </widget>
-                  </item>
                   <item row="1" column="0">
                    <widget class="QLabel" name="label_26">
                     <property name="text">
@@ -437,6 +486,16 @@
                       <width>0</width>
                       <height>28</height>
                      </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLabel" name="label_3">
+                    <property name="text">
+                     <string>Clear</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignmentFlag::AlignCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -464,7 +523,7 @@
            <property name="frameShadow">
             <enum>QFrame::Shadow::Raised</enum>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_3" stretch="6,5">
+           <layout class="QVBoxLayout" name="verticalLayout_3" stretch="6,3">
             <item>
              <widget class="QFrame" name="f_3dview">
               <property name="frameShape">
@@ -480,92 +539,18 @@
               <property name="title">
                <string>Properties</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_9" rowstretch="0,0,0,0,0" columnstretch="5,4,1">
-               <property name="leftMargin">
-                <number>9</number>
-               </property>
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <item row="3" column="1">
-                <widget class="QLabel" name="lb_Rho">
+              <layout class="QGridLayout" name="gridLayout_7" columnstretch="5,4,1" rowminimumheight="5,3,3,0">
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_13">
                  <property name="frameShape">
-                  <enum>QFrame::Shape::StyledPanel</enum>
+                  <enum>QFrame::Shape::NoFrame</enum>
                  </property>
                  <property name="text">
-                  <string>0.00</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                  <string>Max capacity ratio</string>
                  </property>
                 </widget>
                </item>
                <item row="1" column="2">
-                <widget class="QLabel" name="lb_unitArea">
-                 <property name="frameShape">
-                  <enum>QFrame::Shape::NoFrame</enum>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="margin">
-                  <number>0</number>
-                 </property>
-                 <property name="indent">
-                  <number>3</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_7">
-                 <property name="frameShape">
-                  <enum>QFrame::Shape::NoFrame</enum>
-                 </property>
-                 <property name="text">
-                  <string>Rho</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="2">
-                <widget class="QLabel" name="lb_unitSpacing">
-                 <property name="frameShape">
-                  <enum>QFrame::Shape::NoFrame</enum>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="margin">
-                  <number>0</number>
-                 </property>
-                 <property name="indent">
-                  <number>3</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QLabel" name="lb_grossArea">
-                 <property name="frameShape">
-                  <enum>QFrame::Shape::StyledPanel</enum>
-                 </property>
-                 <property name="text">
-                  <string>0.00</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_10">
-                 <property name="frameShape">
-                  <enum>QFrame::Shape::NoFrame</enum>
-                 </property>
-                 <property name="text">
-                  <string>Min. Clear bar spacing</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="2">
                 <widget class="QLabel" name="lb_unitAs">
                  <property name="frameShape">
                   <enum>QFrame::Shape::NoFrame</enum>
@@ -581,33 +566,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="2" column="1">
-                <widget class="QLabel" name="lb_totalAs">
-                 <property name="frameShape">
-                  <enum>QFrame::Shape::StyledPanel</enum>
-                 </property>
-                 <property name="text">
-                  <string>0.00</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLabel" name="lb_clearBarSpacing">
-                 <property name="frameShape">
-                  <enum>QFrame::Shape::StyledPanel</enum>
-                 </property>
-                 <property name="text">
-                  <string>0.00</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
+               <item row="0" column="0">
                 <widget class="QLabel" name="label">
                  <property name="frameShape">
                   <enum>QFrame::Shape::NoFrame</enum>
@@ -617,13 +576,13 @@
                  </property>
                 </widget>
                </item>
-               <item row="3" column="2">
-                <widget class="QLabel" name="label_9">
+               <item row="0" column="2">
+                <widget class="QLabel" name="lb_unitArea">
                  <property name="frameShape">
                   <enum>QFrame::Shape::NoFrame</enum>
                  </property>
                  <property name="text">
-                  <string>%</string>
+                  <string/>
                  </property>
                  <property name="margin">
                   <number>0</number>
@@ -633,27 +592,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_4">
-                 <property name="frameShape">
-                  <enum>QFrame::Shape::NoFrame</enum>
-                 </property>
-                 <property name="text">
-                  <string>Total As</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_13">
-                 <property name="frameShape">
-                  <enum>QFrame::Shape::NoFrame</enum>
-                 </property>
-                 <property name="text">
-                  <string>Max capacity ratio</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
+               <item row="3" column="1">
                 <widget class="QLabel" name="lb_maxCapacity">
                  <property name="frameShape">
                   <enum>QFrame::Shape::StyledPanel</enum>
@@ -666,13 +605,88 @@
                  </property>
                 </widget>
                </item>
-               <item row="4" column="2">
+               <item row="3" column="2">
                 <widget class="QLabel" name="label_15">
                  <property name="frameShape">
                   <enum>QFrame::Shape::NoFrame</enum>
                  </property>
                  <property name="text">
                   <string/>
+                 </property>
+                 <property name="margin">
+                  <number>0</number>
+                 </property>
+                 <property name="indent">
+                  <number>3</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLabel" name="lb_Rho">
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::StyledPanel</enum>
+                 </property>
+                 <property name="text">
+                  <string>0.00</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_4">
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::NoFrame</enum>
+                 </property>
+                 <property name="text">
+                  <string>Total As</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="lb_grossArea">
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::StyledPanel</enum>
+                 </property>
+                 <property name="text">
+                  <string>0.00</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_7">
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::NoFrame</enum>
+                 </property>
+                 <property name="text">
+                  <string>Rho</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLabel" name="lb_totalAs">
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::StyledPanel</enum>
+                 </property>
+                 <property name="text">
+                  <string>0.00</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="2">
+                <widget class="QLabel" name="label_9">
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::NoFrame</enum>
+                 </property>
+                 <property name="text">
+                  <string>%</string>
                  </property>
                  <property name="margin">
                   <number>0</number>

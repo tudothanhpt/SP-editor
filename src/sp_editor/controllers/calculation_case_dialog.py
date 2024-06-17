@@ -7,7 +7,7 @@ from PySide6 import QtGui as qtg
 from sp_editor.widgets.load_calculation_case import Ui_calculationCase_dialog
 
 from crud.cr_level_group import get_group_level, get_level_from_group
-from crud.cr_load_case import get_sds_section_name
+from crud.cr_load_case import get_sds_section_name, get_concrete_name, get_steel_name, get_rebar_size_name
 
 from sqlalchemy.engine.base import Engine
 
@@ -25,6 +25,10 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
 
         self.update_group_box()
         self.update_section_designer_shape()
+        self.update_concrete_fc()
+        self.update_steel_fy()
+        self.update_rebar_size()
+        
         self.cb_tier.currentTextChanged.connect(self.update_level_list)
 
     @qtc.Slot()
@@ -53,18 +57,20 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
 
     @qtc.Slot()
     def update_concrete_fc(self):
-        # TODO: get fc from material database and display into combobox
-        pass
+        self.concrete_list = get_concrete_name(self.engine)
+        self.cb_fc.addItems(self.concrete_list)
 
     @qtc.Slot()
     def update_steel_fy(self):
         # TODO: get fy from material database and display into combobox
-        pass
+        self.steel_list = get_steel_name(self.engine)
+        self.cb_fy.addItems(self.steel_list)
 
     @qtc.Slot()
     def update_rebar_size(self):
         # TODO: get rebar size from rebar database and display into combobox
-        pass
+        self.rebar_list = get_rebar_size_name(self.engine)
+        self.cb_barSize.addItems(self.rebar_list)
 
     @qtc.Slot()
     def update_level_infor(self):
