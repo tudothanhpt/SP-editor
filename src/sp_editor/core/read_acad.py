@@ -1,8 +1,5 @@
-import pandas as pd
 from typing import Any, List, Tuple, Union
 import comtypes.client
-from comtypes import COMError
-import read_excel
 import time
 import math
 

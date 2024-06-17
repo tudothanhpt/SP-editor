@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1366</width>
-    <height>768</height>
+    <height>771</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -89,6 +89,7 @@
     <property name="title">
      <string>Analyze</string>
     </property>
+    <addaction name="actionDesign_Combos_Selection"/>
     <addaction name="a_GetAllForce"/>
     <addaction name="a_MakeSPcolumn"/>
     <addaction name="a_BatchProcessor"/>
@@ -157,6 +158,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionDesign_Combos_Selection"/>
    <addaction name="a_GetAllForce"/>
    <addaction name="separator"/>
    <addaction name="a_MakeSPcolumn"/>
@@ -373,6 +375,15 @@
     <font>
      <pointsize>12</pointsize>
     </font>
+   </property>
+  </action>
+  <action name="actionDesign_Combos_Selection">
+   <property name="icon">
+    <iconset resource="../../../icons/icons.qrc">
+     <normaloff>:/Btn/selection.png</normaloff>:/Btn/selection.png</iconset>
+   </property>
+   <property name="text">
+    <string>Design Combos Selection</string>
    </property>
   </action>
  </widget>

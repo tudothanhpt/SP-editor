@@ -1,4 +1,7 @@
+from typing import *
+
 from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex
+
 
 class ListModel(QAbstractListModel):
     def __init__(self, items=None, original_order=None):
@@ -11,19 +14,19 @@ class ListModel(QAbstractListModel):
                                             Defaults to None.
         """
         super().__init__()
-        
+
         # Initialize the list of items
         self.items = items if items else []
-        
+
         # Store the original order of items
         # The original order is a dictionary mapping items to their original index in the list.
         # This is used to preserve the ordering of items when sorting.
         self.original_order = original_order if original_order else {}
 
     def data(
-        self,
-        index: QModelIndex,
-        role: Qt.ItemDataRole
+            self,
+            index: QModelIndex,
+            role: Qt.ItemDataRole
     ) -> str | None:
         """
         Return the data at the given index.
@@ -50,7 +53,7 @@ class ListModel(QAbstractListModel):
             int: The number of items in the list.
         """
         return len(self.items)
-    
+
     def add_items(self, items: List[Tuple[str, int]]) -> None:
         """
         Adds a list of items to the model.
@@ -100,7 +103,7 @@ class ListModel(QAbstractListModel):
         self.items.sort(key=lambda item: self.original_order[item])
         # Emit layout changed signal to update the view
         self.layoutChanged.emit()
-    
+
     def get_items_with_indices(self) -> List[Tuple[str, int]]:
         """
         Return a list of tuples containing items and their indices.
@@ -108,5 +111,6 @@ class ListModel(QAbstractListModel):
         Returns:
             List[Tuple[str, int]]: A list of tuples containing the item (str) and its original index (int).
         """
-        current_item: List[Tuple[str, int]] = [(item, self_order[item]) for item, _ in zip(self.items, self.original_order.values())]
+        current_item: List[Tuple[str, int]] = [(item, self_order[item]) for item, _ in
+                                               zip(self.items, self.original_order.values())]
         return current_item

@@ -1,8 +1,7 @@
 <RCC>
-  <qresource prefix="Main">
-    <file>Horizontal TT Logo - Color.png</file>
-  </qresource>
+  <qresource prefix="Main"/>
   <qresource prefix="Btn">
+    <file>selection.png</file>
     <file>material_icon.png</file>
     <file>Force.png</file>
     <file>parallel.png</file>

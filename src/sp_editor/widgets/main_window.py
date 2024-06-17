@@ -8,22 +8,18 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
-    QCursor, QFont, QFontDatabase, QGradient,
-    QIcon, QImage, QKeySequence, QLinearGradient,
-    QPainter, QPalette, QPixmap, QRadialGradient,
-    QTransform)
-from PySide6.QtWidgets import (QApplication, QMainWindow, QMenu, QMenuBar,
-    QSizePolicy, QStatusBar, QToolBar, QWidget)
-from sp_editor import icons_rc
+from PySide6.QtCore import (QCoreApplication, QMetaObject, QRect,
+                            QSize, Qt)
+from PySide6.QtGui import (QAction, QFont, QIcon)
+from PySide6.QtWidgets import (QMenu, QMenuBar,
+                               QStatusBar, QToolBar, QWidget)
+
+
 class Ui_mw_Main(object):
     def setupUi(self, mw_Main):
         if not mw_Main.objectName():
             mw_Main.setObjectName(u"mw_Main")
-        mw_Main.resize(1366, 768)
+        mw_Main.resize(1366, 771)
         mw_Main.setMinimumSize(QSize(1366, 768))
         font = QFont()
         font.setPointSize(12)
@@ -110,6 +106,11 @@ class Ui_mw_Main(object):
         icon15.addFile(u":/Btn/rebar_icon.png", QSize(), QIcon.Normal, QIcon.Off)
         self.a_BarSet.setIcon(icon15)
         self.a_BarSet.setFont(font)
+        self.actionDesign_Combos_Selection = QAction(mw_Main)
+        self.actionDesign_Combos_Selection.setObjectName(u"actionDesign_Combos_Selection")
+        icon16 = QIcon()
+        icon16.addFile(u":/Btn/selection.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.actionDesign_Combos_Selection.setIcon(icon16)
         self.centralwidget = QWidget(mw_Main)
         self.centralwidget.setObjectName(u"centralwidget")
         mw_Main.setCentralWidget(self.centralwidget)
@@ -166,6 +167,7 @@ class Ui_mw_Main(object):
         self.m_Define.addSeparator()
         self.m_Define.addAction(self.a_Groups)
         self.m_Define.addAction(self.a_Cases)
+        self.m_Analyze.addAction(self.actionDesign_Combos_Selection)
         self.m_Analyze.addAction(self.a_GetAllForce)
         self.m_Analyze.addAction(self.a_MakeSPcolumn)
         self.m_Analyze.addAction(self.a_BatchProcessor)
@@ -185,6 +187,7 @@ class Ui_mw_Main(object):
         self.tb_Define.addSeparator()
         self.tb_Define.addAction(self.a_Groups)
         self.tb_Define.addAction(self.a_Cases)
+        self.tb_Analyze.addAction(self.actionDesign_Combos_Selection)
         self.tb_Analyze.addAction(self.a_GetAllForce)
         self.tb_Analyze.addSeparator()
         self.tb_Analyze.addAction(self.a_MakeSPcolumn)
@@ -195,50 +198,53 @@ class Ui_mw_Main(object):
         self.retranslateUi(mw_Main)
 
         QMetaObject.connectSlotsByName(mw_Main)
+
     # setupUi
 
     def retranslateUi(self, mw_Main):
-        mw_Main.setWindowTitle(QCoreApplication.translate("mw_Main", u"sp_editor", None))
+        mw_Main.setWindowTitle(QCoreApplication.translate("mw_Main", u"SP-editor", None))
         self.action_New.setText(QCoreApplication.translate("mw_Main", u"&New", None))
-#if QT_CONFIG(shortcut)
+        # if QT_CONFIG(shortcut)
         self.action_New.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+N", None))
-#endif // QT_CONFIG(shortcut)
+        # endif // QT_CONFIG(shortcut)
         self.action_Open.setText(QCoreApplication.translate("mw_Main", u"&Open", None))
-#if QT_CONFIG(shortcut)
+        # if QT_CONFIG(shortcut)
         self.action_Open.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+O", None))
-#endif // QT_CONFIG(shortcut)
+        # endif // QT_CONFIG(shortcut)
         self.action_Save.setText(QCoreApplication.translate("mw_Main", u"&Save", None))
-#if QT_CONFIG(shortcut)
+        # if QT_CONFIG(shortcut)
         self.action_Save.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+S", None))
-#endif // QT_CONFIG(shortcut)
+        # endif // QT_CONFIG(shortcut)
         self.action_Quit.setText(QCoreApplication.translate("mw_Main", u"&Quit", None))
-#if QT_CONFIG(shortcut)
+        # if QT_CONFIG(shortcut)
         self.action_Quit.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+Q", None))
-#endif // QT_CONFIG(shortcut)
+        # endif // QT_CONFIG(shortcut)
         self.a_GeneralInfor.setText(QCoreApplication.translate("mw_Main", u"&General Information", None))
         self.a_Groups.setText(QCoreApplication.translate("mw_Main", u"&Groups", None))
-#if QT_CONFIG(shortcut)
+        # if QT_CONFIG(shortcut)
         self.a_Groups.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+G", None))
-#endif // QT_CONFIG(shortcut)
+        # endif // QT_CONFIG(shortcut)
         self.a_Cases.setText(QCoreApplication.translate("mw_Main", u"Load Cases", None))
         self.a_GetAllForce.setText(QCoreApplication.translate("mw_Main", u"Get Forces", None))
         self.a_MakeSPcolumn.setText(QCoreApplication.translate("mw_Main", u"Generate SpCol Files", None))
         self.a_BatchProcessor.setText(QCoreApplication.translate("mw_Main", u"Batch Processor", None))
         self.a_Doc.setText(QCoreApplication.translate("mw_Main", u"Documentation", None))
-#if QT_CONFIG(shortcut)
+        # if QT_CONFIG(shortcut)
         self.a_Doc.setShortcut(QCoreApplication.translate("mw_Main", u"F1", None))
-#endif // QT_CONFIG(shortcut)
-        self.a_About.setText(QCoreApplication.translate("mw_Main", u"About sp_editor", None))
+        # endif // QT_CONFIG(shortcut)
+        self.a_About.setText(QCoreApplication.translate("mw_Main", u"About SP-editor", None))
         self.a_ImportEtabs.setText(QCoreApplication.translate("mw_Main", u"Import", None))
-#if QT_CONFIG(shortcut)
+        # if QT_CONFIG(shortcut)
         self.a_ImportEtabs.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+E", None))
-#endif // QT_CONFIG(shortcut)
+        # endif // QT_CONFIG(shortcut)
         self.a_Print.setText(QCoreApplication.translate("mw_Main", u"Print", None))
-#if QT_CONFIG(shortcut)
+        # if QT_CONFIG(shortcut)
         self.a_Print.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+P", None))
-#endif // QT_CONFIG(shortcut)
+        # endif // QT_CONFIG(shortcut)
         self.a_MaterialProp.setText(QCoreApplication.translate("mw_Main", u"&Material Properties", None))
         self.a_BarSet.setText(QCoreApplication.translate("mw_Main", u"Bar Sets", None))
+        self.actionDesign_Combos_Selection.setText(
+            QCoreApplication.translate("mw_Main", u"Design Combos Selection", None))
         self.menu_File.setTitle(QCoreApplication.translate("mw_Main", u"&File", None))
         self.m_Define.setTitle(QCoreApplication.translate("mw_Main", u"&Define", None))
         self.m_Analyze.setTitle(QCoreApplication.translate("mw_Main", u"Analyze", None))
@@ -248,4 +254,3 @@ class Ui_mw_Main(object):
         self.tb_Analyze.setWindowTitle(QCoreApplication.translate("mw_Main", u"Analyze", None))
         self.tb_Help.setWindowTitle(QCoreApplication.translate("mw_Main", u"Help", None))
     # retranslateUi
-
