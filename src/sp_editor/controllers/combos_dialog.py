@@ -122,12 +122,13 @@ class Combo_Dialog(qtw.QDialog, Ui_combosSelection_dialog):
         totalCombos = len(self.lview_combos_listIndices)
         totalSelectedCombos = len(self.lview_selectedCombos_listIndices)
         total = totalCombos + totalSelectedCombos
-        print(self.tmpDF)
+
         self.tmpDF.to_sql(TB_COMBOSELECTION, con=self.engine, if_exists='replace', index=False)
 
         qtw.QMessageBox().information(self, "Notifications", f"{totalSelectedCombos}/{total} selected!")
+        self.close()
 
-        print(self.tmpDF)
+       
 
     def print_current_state(self):
         print("List1 :")

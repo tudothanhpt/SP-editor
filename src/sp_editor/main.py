@@ -98,7 +98,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         ##############################################
         self.dialog_import_etabs.connected_etabs.connect(self.update_message)
         self.dialog_import_etabs.connected_etabs.connect(self.a_ImportEtabs.setEnabled(False))
-        #self.set_active_action_postEtabs(True)
+        self.set_active_action_postEtabs(True)
 
     @qtc.Slot()
     def set_general_infor(self):
@@ -130,6 +130,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def open_loadComboSelection(self):
         self.dialog_group = Combo_Dialog(self.current_engine)
         self.dialog_group.exec()
+        self.a_GetAllForce.setEnabled(False)
 
     @qtc.Slot()
     def get_all_force(self):
@@ -161,7 +162,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.a_Groups.setEnabled(mode)
         self.a_Cases.setEnabled(mode)
         self.actionDesign_Combos_Selection.setEnabled(mode)
-        self.a_GetAllForce.setEnabled(mode)
+        self.a_GetAllForce.setEnabled(False)
         self.a_MakeSPcolumn.setEnabled(mode)
         self.a_BatchProcessor.setEnabled(mode)
 
@@ -170,7 +171,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.a_Groups.setEnabled(mode)
         self.a_Cases.setEnabled(mode)
         self.actionDesign_Combos_Selection.setEnabled(mode)
-        self.a_GetAllForce.setEnabled(mode)
+        self.a_GetAllForce.setEnabled(False)
         self.a_MakeSPcolumn.setEnabled(mode)
         self.a_BatchProcessor.setEnabled(mode)
 

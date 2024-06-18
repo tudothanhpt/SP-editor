@@ -111,6 +111,7 @@ def read_groupDB(engine):
         con=engine                     # The SQLAlchemy engine
     )
     df=df.rename(columns={"story": "Story"})
+    df=df.rename(columns={"tier": "Tier"})
     print(df)
     return df # The DataFrame containing the table data
 
