@@ -153,13 +153,14 @@ def main():
     sap_model = connect_to_etabs(model_is_open=True)[0]
     df_sd= get_sdshape_pierPolygon(sap_model)
     lst_PierSDShape=restructure_sdshapeDF(df_sd)
-    tier_name = 'Tier1.0'
+    tier_name = 'Tier1'
     
-    offsetted_shapes = offset_sdshapeDF(lst_PierSDShape, tier_name=tier_name, offset_distance=-5)
+    offsetted_shapes = offset_sdshapeDF(lst_PierSDShape, tier_name=tier_name, offset_distance=-0.25)
+    print(offsetted_shapes)
     formatted_output = spColumn_CTI_PierPoint(lst_PierSDShape, tier_name)
     segments_shapes=extract_segments(offsetted_shapes)
     
-    rebar_list = calculate_rebarpoints_for_segments(offsetted_shapes, 24)
+    rebar_list = calculate_rebarpoints_for_segments(offsetted_shapes, 0.5)
     multiline_string_rebarPts = spColumn_CTI_Rebar(rebar_list, 0.5)
     with open('sample.txt', 'w') as file:
         file.write(multiline_string_rebarPts)
