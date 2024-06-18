@@ -1,3 +1,4 @@
+import pandas as pd
 from pandas import DataFrame
 from sqlalchemy import func
 
@@ -6,6 +7,7 @@ from sp_editor.database.models import GroupLevel, PierLabel, Level
 
 from sqlalchemy.engine.base import Engine
 
+TB_GROUPLEVEL = str(GroupLevel.__name__).lower()
 
 def get_level_to_db(engine: Engine, df: DataFrame):
     df.to_sql("level", con=engine, if_exists='replace')
@@ -101,6 +103,16 @@ def get_level_from_group(engine: Engine, tier: str):
         level_detail_sorted = sorted(level_detail, key=lambda x: x.id)
         stories = [story for _, story in level_detail_sorted]  # Extract only the story field
         return stories
+
+def read_groupDB(engine):
+    # Read SQL table into a DataFrame
+    df = pd.read_sql_table(
+        table_name=TB_GROUPLEVEL,  # The table to read
+        con=engine                     # The SQLAlchemy engine
+    )
+    df=df.rename(columns={"story": "Story"})
+    print(df)
+    return df # The DataFrame containing the table data
 
 # def update_tier(engine: Engine, list[Level]):
 #     with Session(engine) as session:

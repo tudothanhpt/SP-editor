@@ -110,34 +110,31 @@ def get_pier_force_infor(sap_model: Any, etabs_object: Any, design_combo: list[s
     table_key = 'Design Forces - Piers'
 
     # Set load combination selected for display
-    ret = SapModel.DatabaseTables.SetLoadCombinationsSelectedForDisplay(design_combo)
-    if ret[-1] != 0:
-        error_message = (
-            f"<b>Failed to set load combinations for display<b>."
-            f"<p>Please make sure load combination existed.<p>"
-            f"<p>Return code: {ret[-1]}.<p>")
-        show_warning(error_message)
-        return pd.DataFrame()
+    SapModel.DatabaseTables.SetLoadCombinationsSelectedForDisplay(design_combo)
 
     # Get the database table
-    story_db = SapModel.DatabaseTables.GetTableForDisplayArray(table_key, GroupName='')
-    if story_db[-1] != 0:
+    pierforce_db = SapModel.DatabaseTables.GetTableForDisplayArray(table_key, GroupName='')
+    if pierforce_db[-1] != 0:
         error_message = (f"<b>Failed to get table for display.<b> "
+                         f"<p>PLease make sure: <p>"
+                         f"<p> 1. Ensure you have run ETABS <p>"
+                         f"<p> 2. Ensure you have designed Piers with selected load combination <p>"
                          f"<p>PLease make sure you design wall with selected load combination. <p>"
-                         f"<p> Return code: {story_db[-1]}.<p>")
+                         f"<p> Return code: {pierforce_db[-1]}.<p>")
         show_warning(error_message)
         return pd.DataFrame()
 
     # Extract header and data
-    header = story_db[2]
-    data_values = story_db[4]
+    header = pierforce_db[2]
+    data_values = pierforce_db[4]
 
     # Group the data values into rows
     rows = [data_values[i:i + len(header)] for i in range(0, len(data_values), len(header))]
 
     # Create the DataFrame
     df = pd.DataFrame(rows, columns=header)
-
+    message = f"{len(design_combo)} load combinations extracted."
+    show_information(message)
     return df
 
 
@@ -174,6 +171,13 @@ def show_warning(message: str):
     msg_box.setIcon(qtw.QMessageBox.Warning)
     msg_box.setText(message)
     msg_box.setWindowTitle("Warning")
+    msg_box.exec()
+
+def show_information(message: str):
+    msg_box = qtw.QMessageBox()
+    msg_box.setIcon(qtw.QMessageBox.Information)
+    msg_box.setText(message)
+    msg_box.setWindowTitle("Information")
     msg_box.exec()
 
 

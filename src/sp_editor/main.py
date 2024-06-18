@@ -20,7 +20,7 @@ from sp_editor.core.connect_etabs import get_story_infor, get_pier_label_infor, 
     get_loadCombo_df_fromE, get_section_designer_shape_infor
 from sp_editor.crud.cr_level_group import get_level_to_db, get_pier_label_to_db, get_pier_design_force_to_db, \
     get_sds_to_db
-from sp_editor.crud.cr_load_combo import create_loadComboDB, create_loadComboSelectionDB
+from sp_editor.crud.cr_load_combo import create_loadComboDB, create_loadComboSelectionDB, read_loadComboSelectionDB
 
 
 class MainWindow(qtw.QMainWindow, Ui_mw_Main):
@@ -50,6 +50,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.a_Groups.triggered.connect(self.open_groups)
         self.a_Cases.triggered.connect(self.open_calculation_cases)
         self.actionDesign_Combos_Selection.triggered.connect(self.open_loadComboSelection)
+        self.a_GetAllForce.triggered.connect(self.get_all_force)
 
     @qtc.Slot()
     def new_file(self):
@@ -90,10 +91,6 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         df_sds_shape = get_section_designer_shape_infor(self.sap_model, self.etabs_object)
         get_sds_to_db(self.current_engine, df_sds_shape)
 
-        # get pier design force and then put into database
-        df_pier_design_force = get_pier_force_infor(self.sap_model, self.etabs_object, ['LC1_1.4D'])
-        get_pier_design_force_to_db(self.current_engine, df_pier_design_force)
-
         # get Load combination from API and then put into database
         df_LC, df_LCselection = get_loadCombo_df_fromE(self.sap_model)
         create_loadComboDB(self.current_engine, df_LC)
@@ -101,7 +98,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         ##############################################
         self.dialog_import_etabs.connected_etabs.connect(self.update_message)
         self.dialog_import_etabs.connected_etabs.connect(self.a_ImportEtabs.setEnabled(False))
-        self.set_active_action_postEtabs(True)
+        #self.set_active_action_postEtabs(True)
 
     @qtc.Slot()
     def set_general_infor(self):
@@ -134,6 +131,15 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.dialog_group = Combo_Dialog(self.current_engine)
         self.dialog_group.exec()
 
+    @qtc.Slot()
+    def get_all_force(self):
+        df_combo_selection = read_loadComboSelectionDB(self.current_engine)
+        list_combo_selection=df_combo_selection["selectedLoadCombos"].dropna().unique().tolist()
+        # get pier design force and then put into database
+        df_pier_design_force = get_pier_force_infor(self.sap_model, self.etabs_object, list_combo_selection)
+        get_pier_design_force_to_db(self.current_engine, df_pier_design_force)
+ 
+
     @qtc.Slot(Engine)
     def set_current_engine(self, engine: Engine):
         self.current_engine = engine
@@ -152,16 +158,18 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.a_GeneralInfor.setEnabled(mode)
         self.a_MaterialProp.setEnabled(mode)
         self.a_BarSet.setEnabled(mode)
-        self.a_Groups.setEnabled(False)
-        self.a_Cases.setEnabled(False)
-        self.a_GetAllForce.setEnabled(False)
-        self.a_MakeSPcolumn.setEnabled(False)
-        self.a_BatchProcessor.setEnabled(False)
+        self.a_Groups.setEnabled(mode)
+        self.a_Cases.setEnabled(mode)
+        self.actionDesign_Combos_Selection.setEnabled(mode)
+        self.a_GetAllForce.setEnabled(mode)
+        self.a_MakeSPcolumn.setEnabled(mode)
+        self.a_BatchProcessor.setEnabled(mode)
 
     @qtc.Slot()
     def set_active_action_postEtabs(self, mode: bool):
         self.a_Groups.setEnabled(mode)
         self.a_Cases.setEnabled(mode)
+        self.actionDesign_Combos_Selection.setEnabled(mode)
         self.a_GetAllForce.setEnabled(mode)
         self.a_MakeSPcolumn.setEnabled(mode)
         self.a_BatchProcessor.setEnabled(mode)

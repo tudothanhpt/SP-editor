@@ -1,11 +1,15 @@
 import pandas as pd
 import numpy as np
+from sp_editor.crud.cr_pier_force import read_pierdesign_forceDB
+from sp_editor.crud.cr_level_group import read_groupDB
+from sqlmodel import create_engine
+from sqlalchemy.engine import Engine
 
 #ENSURE THE 2 GIVEN DATAFRAMES' HEADERS TO BE ADDRESSED CORRECTLY FOLLOWING THE BELOW CONVENTION
 HEADER_STORY = "Story"
 HEADER_PIER = "Pier"
-HEADER_TIER = "Tier"
-HEADER_LOADCASE = "Load Case/Combo"
+HEADER_TIER = "tier"
+HEADER_LOADCASE = "Combo"
 HEADER_LOCATION = "Location"
 HEADER_P = "P"
 HEADER_M2 = "M2"
@@ -31,9 +35,11 @@ def create_force_filter_df(df_PierForces: pd.DataFrame, df_Tier: pd.DataFrame) -
         df_FilteredForces[HEADER_LOADCASE] + 
         df_FilteredForces[HEADER_LOCATION]
     )
-    df_FilteredForces['P_SPCol'] = np.round(df_FilteredForces[HEADER_P], 0) * (-1)
-    df_FilteredForces['Mx_SPCol'] = np.round(df_FilteredForces[HEADER_M2], 0)
-    df_FilteredForces['My_SPCol'] = np.round(df_FilteredForces[HEADER_M3], 0)
+    print(df_FilteredForces['P'])
+    
+    df_FilteredForces['P_SPCol'] = np.round(df_FilteredForces['P'], 0).astype(float)*(-1)
+    df_FilteredForces['Mx_SPCol'] = np.round(df_FilteredForces[HEADER_M2], 0).astype(float)
+    df_FilteredForces['My_SPCol'] = np.round(df_FilteredForces[HEADER_M3], 0).astype(float)
     
     return df_FilteredForces
 
@@ -76,27 +82,21 @@ def force_filter_SPformat(df3: pd.DataFrame, pier_value: str, tier: str) -> tupl
 
 def main():
     #PSEUDO DATA
-    file_path = r'C:\Users\AnhBui\Desktop\SPeditor\SPeditor\data\Excel\_TempSPManagement.xlsm'
-    sheet_name = 'PierForces' 
-    skip_rows = 3
-    use_cols1 = 'A:J'
-    use_cols2 = 'T:U'
-
-    df1 = pd.read_excel(file_path, sheet_name=sheet_name, skiprows=skip_rows, usecols=use_cols1)
-    last_row1 = df1['Story'].last_valid_index()
-    df2 = pd.read_excel(file_path, sheet_name=sheet_name, skiprows=skip_rows, usecols=use_cols2)
-    last_row2 = df2['Unique Story'].last_valid_index()
-    df2.rename(columns={'Unique Story': HEADER_STORY, 'Force Grouping': HEADER_TIER}, inplace=True)
+    engine_temppath = r"C:\Users\abui\Desktop\Git\Repo\SP-editor\tests\TestBM\1.spe"
+    engine: Engine = create_engine(f"sqlite:///{engine_temppath}")
     
     #MAIN
-    df_PierForces = df1.loc[:last_row1] #TO BE REPLACED WITH DF FROM UI
-    df_Tier = df2.loc[:last_row2] #TO BE REPLACED WITH DF FROM UI
+    df_PierForces = read_pierdesign_forceDB(engine)
+    df_Tier = read_groupDB(engine)
+
     
-    pier_value = "CORE 1A" #TO BE REPLACED WITH SELECTION FROM UI
-    tier = "L1-L2" #TO BE REPLACED WITH SELECTION FROM UI
+    pier_value = "P1" #TO BE REPLACED WITH SELECTION FROM UI
+    tier = "Tier1" #TO BE REPLACED WITH SELECTION FROM UI
     df_FilteredForces = create_force_filter_df(df_PierForces, df_Tier)
+
+    #print(df_FilteredForces)
     result_string, total_rows = force_filter_SPformat(df_FilteredForces, pier_value, tier)
-    print (result_string)
+    print(result_string)
 
 if __name__ == "__main__":
     main()

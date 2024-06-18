@@ -167,7 +167,7 @@ def main():
     df_sd= get_sdshape_pierPolygon(sap_model)
     lst_PierSDShape=restructure_sdshapeDF(df_sd)
     print(lst_PierSDShape)
-    tier_name = 'Tier1.0'
+    tier_name = 'Tier1'
     formatted_output = spColumn_CTI_PierPoint(lst_PierSDShape, tier_name)
     print(formatted_output)
     plot_polylines(lst_PierSDShape)
