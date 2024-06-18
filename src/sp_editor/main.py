@@ -130,7 +130,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def open_loadComboSelection(self):
         self.dialog_group = Combo_Dialog(self.current_engine)
         self.dialog_group.exec()
-        self.a_GetAllForce.setEnabled(False)
+        self.a_GetAllForce.setEnabled(True)
 
     @qtc.Slot()
     def get_all_force(self):
