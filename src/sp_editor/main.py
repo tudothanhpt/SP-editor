@@ -21,6 +21,7 @@ from sp_editor.core.connect_etabs import get_story_infor, get_pier_label_infor, 
 from sp_editor.crud.cr_level_group import get_level_to_db, get_pier_label_to_db, get_pier_design_force_to_db, \
     get_sds_to_db
 from sp_editor.crud.cr_load_combo import create_loadComboDB, create_loadComboSelectionDB, read_loadComboSelectionDB
+from sp_editor.crud.cr_SD_shape import get_SDCoordinates_CTI_todb
 
 
 class MainWindow(qtw.QMainWindow, Ui_mw_Main):
@@ -94,7 +95,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         # get section designer shape into db
         df_sds_shape = get_section_designer_shape_infor(self.sap_model, self.etabs_object)
         get_sds_to_db(self.current_engine, df_sds_shape)
-
+        get_SDCoordinates_CTI_todb(self.current_engine)
         # get Load combination from API and then put into database
         df_LC, df_LCselection = get_loadCombo_df_fromE(self.sap_model)
         create_loadComboDB(self.current_engine, df_LC)
