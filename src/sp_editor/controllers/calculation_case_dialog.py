@@ -25,11 +25,12 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
 
         self.update_group_box()
         self.update_section_designer_shape()
-        self.update_concrete_fc()
-        self.update_steel_fy()
+        self.update_concrete()
+        self.update_steel()
         self.update_rebar_size()
-        
+
         self.cb_tier.currentTextChanged.connect(self.update_level_list)
+        self.cb_fc.currentTextChanged.connect(self.update_fc_from_concrete)
 
     @qtc.Slot()
     def update_group_box(self):
@@ -56,12 +57,16 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.lview_level.setModel(self.level_list_model)
 
     @qtc.Slot()
-    def update_concrete_fc(self):
+    def update_concrete(self):
         self.concrete_list = get_concrete_name(self.engine)
         self.cb_fc.addItems(self.concrete_list)
 
     @qtc.Slot()
-    def update_steel_fy(self):
+    def update_fc_from_concrete(self):
+        self.concrete_fc = get_concrete_fc(self.engine)
+
+    @qtc.Slot()
+    def update_steel(self):
         # TODO: get fy from material database and display into combobox
         self.steel_list = get_steel_name(self.engine)
         self.cb_fy.addItems(self.steel_list)
