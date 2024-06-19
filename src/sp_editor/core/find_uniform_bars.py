@@ -75,22 +75,6 @@ def offset_sdshapeDF(list_PierSDShape: LST_PIERSDSHAPE, PierSDName: str, offset_
     
     return lst_offsetted_shapes
 
-def extract_segments(lst_offsetted_shapes):
-
-    """
-    Input polyline to be extracted as list
-    Return Values:
-    list_segments (list) : List of  segments forming the polyline
-
-    """
-    segments_shapes = []
-    for shape in lst_offsetted_shapes:
-        num_points = len(shape)
-        for i in range(num_points - 1):
-            segment = [shape[i], shape[i + 1]]
-            segments_shapes.append(segment)          
-    return segments_shapes
-
 def calculate_rebarpoints_for_segments(lst_offsetted_shapes, spacing):
     """
     @lst_polyline: list of offsetted polyline (with cover and half rebar diameter)
@@ -165,7 +149,6 @@ def find_key_index(data_list, key_to_find):
             break
     return index
 
-
 def get_rebarCoordinates_db(engine, cover, bar_dia, spacing, SDname):
     # Calculate offset distance
     offset_distance = (cover + (bar_dia / 2)) * (-1)
@@ -204,12 +187,14 @@ def get_rebarCoordinates_db(engine, cover, bar_dia, spacing, SDname):
     # Store DataFrame to SQL database table 'rebarcoordinates_CTI'
     #df_rebar_coordinates.to_sql("rebarcoordinates_CTI", con=engine, if_exists='append', index=False)
 
-    
-if __name__ == "__main__":
+def main():
     engine_temppath = r"tests\TestBM\DemoNo1.spe"
     engine: Engine = create_engine(f"sqlite:///{engine_temppath}")
-    cover=0.75
-    bar_dia=0.5
-    spacing=25
-    SDname="TIER1_P2"
+    cover=0.75 #fromUI
+    bar_dia=0.5 #fromUI
+    spacing=25 #fromUI
+    SDname="TIER1_P2" #fromUI
     get_rebarCoordinates_db(engine, cover, bar_dia, spacing, SDname) 
+    
+if __name__ == "__main__":
+    main()
