@@ -149,7 +149,7 @@ def find_key_index(data_list, key_to_find):
             break
     return index
 
-def get_rebarCoordinates_db(engine, cover, bar_dia, spacing, SDname):
+def get_rebarCoordinates_str(engine, cover, bar_dia, spacing, SDname):
     # Calculate offset distance
     offset_distance = (cover + (bar_dia / 2)) * (-1)
     
@@ -181,20 +181,22 @@ def get_rebarCoordinates_db(engine, cover, bar_dia, spacing, SDname):
     # Plot polygons (assuming plot_polygons is defined)
     plot_polygons(offsetted_shapes, PierSDShape[SDname], rebar_list)
     
+    
     # Convert dictionary to DataFrame
     #df_rebar_coordinates = pd.DataFrame(list(sd_rebarcoordinates_dict_todb.items()), columns=['SDName', 'Coordinates'])
     
     # Store DataFrame to SQL database table 'rebarcoordinates_CTI'
     #df_rebar_coordinates.to_sql("rebarcoordinates_CTI", con=engine, if_exists='append', index=False)
+    return multiline_string_rebarPts
 
 def main():
-    engine_temppath = r"tests\TestBM\DemoNo1.spe"
+    engine_temppath = r"tests\TestBM\DemoNo3.spe"
     engine: Engine = create_engine(f"sqlite:///{engine_temppath}")
     cover=0.75 #fromUI
-    bar_dia=0.5 #fromUI
-    spacing=25 #fromUI
+    bar_dia=1 #fromUI
+    spacing=12 #fromUI
     SDname="TIER1_P2" #fromUI
-    get_rebarCoordinates_db(engine, cover, bar_dia, spacing, SDname) 
+    rebar_str=get_rebarCoordinates_str(engine, cover, bar_dia, spacing, SDname) 
     
 if __name__ == "__main__":
     main()
