@@ -12,7 +12,7 @@ from sp_editor.controllers.new_file_dialog import NewFile_Dialog
 from sp_editor.controllers.barest_dialog import BarSet_Dialog
 from sp_editor.controllers.material_dialog import Material_Dialog
 from sp_editor.controllers.combos_dialog import Combo_Dialog
-from sp_editor.core.groups_dialog import Group_Dialog
+from sp_editor.controllers.groups_dialog import Group_Dialog
 from sp_editor.controllers.calculation_case_dialog import CalculationCase_Dialog
 
 from sqlalchemy.engine.base import Engine
