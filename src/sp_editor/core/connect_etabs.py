@@ -10,6 +10,7 @@ from sp_editor.crud.cr_general_infor import get_infor
 
 import comtypes.client
 import pandas as pd
+import numpy as np
 from pandas import DataFrame
 from typing import *
 
@@ -172,6 +173,12 @@ def get_pier_force_infor(sap_model: Any, etabs_object: Any, design_combo: list[s
 
 
 def get_section_designer_shape_infor(sap_model: Any, etabs_object: Any) -> DataFrame:
+    
+    """
+    
+    Return list of corresponding [X,Y] values forming each pier SD shape
+
+    """
     SapModel = sap_model
     EtabsObject = etabs_object
     
@@ -198,10 +205,15 @@ def get_section_designer_shape_infor(sap_model: Any, etabs_object: Any) -> DataF
     rows = [data_values[i:i + len(header)] for i in range(0, len(data_values), len(header))]
 
     # Create the DataFrame
-    df = pd.DataFrame(rows, columns=header)
-    df_selected = df[['SectionType', 'SectionName', 'ShapeName', 'X', 'Y']]
+    df_SD = pd.DataFrame(rows, columns=header)
+    
+    df_SD['X'] = pd.to_numeric(df_SD['X'], errors='coerce')
+    df_SD['X'] = np.round(df_SD['X'], 2)
+    df_SD['Y'] = pd.to_numeric(df_SD['Y'], errors='coerce')
+    df_SD['Y'] = np.round(df_SD['Y'], 2)
+    df_SD = df_SD[['SectionType', 'SectionName', 'ShapeName', 'X', 'Y']]
 
-    return df_selected
+    return df_SD
 
 def show_warning(message: str):
     msg_box = qtw.QMessageBox()

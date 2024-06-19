@@ -1,9 +1,13 @@
 import math
 from typing import List, Tuple, Dict
-from find_pier import connect_to_etabs, get_sdshape_pierPolygon, restructure_sdshapeDF, spColumn_CTI_PierPoint
+from sp_editor.core.find_pier import restructure_sdshapeDF
+from sp_editor.crud.cr_SD_shape import read_sdsDB
 from shapely.geometry import Polygon
 from shapely.geometry.polygon import LinearRing
 import matplotlib.pyplot as plt
+import pandas as pd
+from sqlmodel import create_engine
+from sqlalchemy.engine.base import Engine
 
 # Define type aliases for better readability and maintainability
 X = float
@@ -43,7 +47,7 @@ def plot_polygons(polygons,shapes,rebar_list):
 
     plt.show()
 
-def offset_sdshapeDF(lst_PierSDShape, tier_name='Tier1.0', offset_distance=-5):
+def offset_sdshapeDF(list_PierSDShape: LST_PIERSDSHAPE, PierSDName: str, offset_distance):
     """
     Processes the input DataFrame to extract shapes, apply an offset, and return the modified coordinates.
 
@@ -56,9 +60,9 @@ def offset_sdshapeDF(lst_PierSDShape, tier_name='Tier1.0', offset_distance=-5):
     lst_offsetted_shapes = []
     area = 0
     # Iterate over the extracted shapes
-    for tier_dict in lst_PierSDShape:
-        if tier_name in tier_dict:
-            shapes = tier_dict[tier_name]
+    for tier_dict in list_PierSDShape:
+        if PierSDName in tier_dict:
+            shapes = tier_dict[PierSDName]
             for shape in shapes:
                 # Create a polygon and apply the offset
                 polygon = Polygon(shape)
@@ -68,7 +72,6 @@ def offset_sdshapeDF(lst_PierSDShape, tier_name='Tier1.0', offset_distance=-5):
                 offset_polygon_coords = [(round(x, 2), round(y, 2)) for x, y in offset_polygon.exterior.coords]
                 lst_offsetted_shapes.append(offset_polygon_coords)
 
-    print(area)
     
     return lst_offsetted_shapes
 
@@ -96,8 +99,13 @@ def calculate_rebarpoints_for_segments(lst_offsetted_shapes, spacing):
     list_rebarsPts (list) : List of rebars' coordinates based on polyline segments and user-specified spacing
     """
     # Break polyline into segments 
-    segments_shapes = extract_segments(lst_offsetted_shapes)
-    
+    segments_shapes = []
+    for shape in lst_offsetted_shapes:
+        num_points = len(shape)
+        for i in range(num_points - 1):
+            segment = [shape[i], shape[i + 1]]
+            segments_shapes.append(segment)          
+       
     temp_list_rebarsPts = []
     for segment in segments_shapes:
         start_point, end_point = segment
@@ -149,24 +157,59 @@ def spColumn_CTI_Rebar(list_rebarsPts, rebarArea):
     
     return multiline_string_rebarPts
 
-def main():
-    sap_model = connect_to_etabs(model_is_open=True)[0]
-    df_sd= get_sdshape_pierPolygon(sap_model)
-    lst_PierSDShape=restructure_sdshapeDF(df_sd)
-    tier_name = 'Tier1'
+def find_key_index(data_list, key_to_find):
+    index = None
+    for idx, data_dict in enumerate(data_list):
+        if key_to_find in data_dict:
+            index = idx
+            break
+    return index
+
+
+def get_rebarCoordinates_db(engine, cover, bar_dia, spacing, SDname):
+    # Calculate offset distance
+    offset_distance = (cover + (bar_dia / 2)) * (-1)
     
-    offsetted_shapes = offset_sdshapeDF(lst_PierSDShape, tier_name=tier_name, offset_distance=-0.25)
-    print(offsetted_shapes)
-    formatted_output = spColumn_CTI_PierPoint(lst_PierSDShape, tier_name)
-    segments_shapes=extract_segments(offsetted_shapes)
+    # Calculate rebar area
+    rebarArea = math.pi * ((bar_dia * 0.5) ** 2)
     
-    rebar_list = calculate_rebarpoints_for_segments(offsetted_shapes, 0.5)
-    multiline_string_rebarPts = spColumn_CTI_Rebar(rebar_list, 0.5)
-    with open('sample.txt', 'w') as file:
-        file.write(multiline_string_rebarPts)
-    #print(formatted_output)
-    #print(multiline_string_rebarPts)
-    plot_polygons(offsetted_shapes,lst_PierSDShape[0][tier_name],rebar_list)
+    # Read SDS DB and restructure SD shape
+    df_sd = read_sdsDB(engine)
+    lst_PierSDShape = restructure_sdshapeDF(df_sd)
+    
+    # Find index of SDname in lst_PierSDShape
+    idx = find_key_index(lst_PierSDShape, SDname)
+    
+    # Get the PierSDShape for the specified SDname
+    PierSDShape = lst_PierSDShape[idx]
+    
+    # Offset SD shapes
+    offsetted_shapes = offset_sdshapeDF(lst_PierSDShape, SDname, offset_distance)
+    
+    # Calculate rebar points for segments with given spacing
+    rebar_list = calculate_rebarpoints_for_segments(offsetted_shapes, spacing)
+    
+    # Generate multiline string rebar points
+    multiline_string_rebarPts = spColumn_CTI_Rebar(rebar_list, rebarArea)
+    
+    # Prepare dictionary for database storage
+    sd_rebarcoordinates_dict_todb = {SDname: multiline_string_rebarPts}
+    
+    # Plot polygons (assuming plot_polygons is defined)
+    plot_polygons(offsetted_shapes, PierSDShape[SDname], rebar_list)
+    
+    # Convert dictionary to DataFrame
+    #df_rebar_coordinates = pd.DataFrame(list(sd_rebarcoordinates_dict_todb.items()), columns=['SDName', 'Coordinates'])
+    
+    # Store DataFrame to SQL database table 'rebarcoordinates_CTI'
+    #df_rebar_coordinates.to_sql("rebarcoordinates_CTI", con=engine, if_exists='append', index=False)
+
     
 if __name__ == "__main__":
-    main() 
+    engine_temppath = r"tests\TestBM\DemoNo1.spe"
+    engine: Engine = create_engine(f"sqlite:///{engine_temppath}")
+    cover=0.75
+    bar_dia=0.5
+    spacing=25
+    SDname="TIER1_P2"
+    get_rebarCoordinates_db(engine, cover, bar_dia, spacing, SDname) 
