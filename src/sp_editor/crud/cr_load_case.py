@@ -23,12 +23,22 @@ def get_concrete_name(engine: Engine):
         return concrete_name
 
 
-def get_concrete_fc(engine: Engine, name: str):
+def get_concrete_fc_Ec(engine: Engine, name: str):
     with Session(engine) as session:
-        statement = select(MaterialConcrete.fc).where(MaterialConcrete.name == name)
+        statement = select(MaterialConcrete.fc, MaterialConcrete.Ec).where(MaterialConcrete.name == name)
         results = session.exec(statement)
-        fc = results.one()
-        return fc
+        output = results.one()
+        fc, Ec = output
+        return fc, Ec
+
+
+def get_steel_fy_Es(engine: Engine, name: str):
+    with Session(engine) as session:
+        statement = select(MaterialRebar.fy, MaterialRebar.Es).where(MaterialRebar.name == name)
+        results = session.exec(statement)
+        output = results.one()
+        fy, Es = output
+        return fy, Es
 
 
 def get_steel_name(engine: Engine):
@@ -53,3 +63,11 @@ def get_rebar_size_name(engine: Engine):
         results = session.exec(statement)
         barset_name = results.all()
         return barset_name
+
+
+def get_rebar_area_from_name(engine: Engine, name: str):
+    with Session(engine) as session:
+        statement = select(BarSet.area).where(BarSet.size == name)
+        results = session.exec(statement)
+        barset_area = results.one()
+        return barset_area

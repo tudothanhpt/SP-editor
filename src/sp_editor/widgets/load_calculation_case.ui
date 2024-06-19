@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1080</width>
-    <height>771</height>
+    <height>773</height>
    </rect>
   </property>
   <property name="font">
@@ -105,7 +105,7 @@
               <property name="frameShadow">
                <enum>QFrame::Shadow::Raised</enum>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,95">
+              <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,95">
                <item>
                 <widget class="QGroupBox" name="groupBox_5">
                  <property name="title">
@@ -114,6 +114,18 @@
                  <layout class="QGridLayout" name="gridLayout_11">
                   <item row="0" column="0">
                    <widget class="QComboBox" name="cb_sectionDesignerShape"/>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="groupBox_4">
+                 <property name="title">
+                  <string>Pier data</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_9">
+                  <item row="0" column="0">
+                   <widget class="QComboBox" name="cb_pierdata"/>
                   </item>
                  </layout>
                 </widget>
@@ -173,7 +185,7 @@
                  </property>
                  <layout class="QFormLayout" name="formLayout">
                   <item row="1" column="1">
-                   <widget class="QComboBox" name="cb_fc">
+                   <widget class="QComboBox" name="cb_concrete">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -183,7 +195,7 @@
                    </widget>
                   </item>
                   <item row="2" column="1">
-                   <widget class="QComboBox" name="cb_fy">
+                   <widget class="QComboBox" name="cb_steel">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>

@@ -25,7 +25,7 @@ class Ui_calculationCase_dialog(object):
     def setupUi(self, calculationCase_dialog):
         if not calculationCase_dialog.objectName():
             calculationCase_dialog.setObjectName(u"calculationCase_dialog")
-        calculationCase_dialog.resize(1080, 771)
+        calculationCase_dialog.resize(1080, 773)
         font = QFont()
         font.setPointSize(12)
         calculationCase_dialog.setFont(font)
@@ -83,6 +83,18 @@ class Ui_calculationCase_dialog(object):
 
         self.verticalLayout_4.addWidget(self.groupBox_5)
 
+        self.groupBox_4 = QGroupBox(self.frame_4)
+        self.groupBox_4.setObjectName(u"groupBox_4")
+        self.gridLayout_9 = QGridLayout(self.groupBox_4)
+        self.gridLayout_9.setObjectName(u"gridLayout_9")
+        self.cb_pierdata = QComboBox(self.groupBox_4)
+        self.cb_pierdata.setObjectName(u"cb_pierdata")
+
+        self.gridLayout_9.addWidget(self.cb_pierdata, 0, 0, 1, 1)
+
+
+        self.verticalLayout_4.addWidget(self.groupBox_4)
+
         self.groupBox_3 = QGroupBox(self.frame_4)
         self.groupBox_3.setObjectName(u"groupBox_3")
         self.gridLayout_6 = QGridLayout(self.groupBox_3)
@@ -95,7 +107,7 @@ class Ui_calculationCase_dialog(object):
 
         self.verticalLayout_4.addWidget(self.groupBox_3)
 
-        self.verticalLayout_4.setStretch(1, 95)
+        self.verticalLayout_4.setStretch(2, 95)
 
         self.gridLayout_2.addWidget(self.frame_4, 2, 0, 1, 1)
 
@@ -130,17 +142,17 @@ class Ui_calculationCase_dialog(object):
         self.groupBox_6.setObjectName(u"groupBox_6")
         self.formLayout = QFormLayout(self.groupBox_6)
         self.formLayout.setObjectName(u"formLayout")
-        self.cb_fc = QComboBox(self.groupBox_6)
-        self.cb_fc.setObjectName(u"cb_fc")
-        self.cb_fc.setMinimumSize(QSize(0, 28))
+        self.cb_concrete = QComboBox(self.groupBox_6)
+        self.cb_concrete.setObjectName(u"cb_concrete")
+        self.cb_concrete.setMinimumSize(QSize(0, 28))
 
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.cb_fc)
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.cb_concrete)
 
-        self.cb_fy = QComboBox(self.groupBox_6)
-        self.cb_fy.setObjectName(u"cb_fy")
-        self.cb_fy.setMinimumSize(QSize(0, 28))
+        self.cb_steel = QComboBox(self.groupBox_6)
+        self.cb_steel.setObjectName(u"cb_steel")
+        self.cb_steel.setMinimumSize(QSize(0, 28))
 
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.cb_fy)
+        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.cb_steel)
 
         self.label_23 = QLabel(self.groupBox_6)
         self.label_23.setObjectName(u"label_23")
@@ -514,6 +526,7 @@ class Ui_calculationCase_dialog(object):
         calculationCase_dialog.setWindowTitle(QCoreApplication.translate("calculationCase_dialog", u"Dialog", None))
         self.groupBox.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Tier", None))
         self.groupBox_5.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Section Designer Shape", None))
+        self.groupBox_4.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Pier data", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Level Information", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Folder name", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Material", None))
