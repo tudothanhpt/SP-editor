@@ -1,10 +1,16 @@
 import math
 from typing import List, Tuple, Dict
+
+from PySide6 import QtCore as qtc
+from PySide6 import QtWidgets as qtw
+from PySide6 import QtGui as qtg
+
 from sp_editor.core.find_pier import restructure_sdshapeDF
 from sp_editor.crud.cr_SD_shape import read_sdsDB
 from shapely.geometry import Polygon
-from shapely.geometry.polygon import LinearRing
-import matplotlib.pyplot as plt
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.figure import Figure
 import pandas as pd
 from sqlmodel import create_engine
 from sqlalchemy.engine.base import Engine
@@ -17,35 +23,55 @@ POLYLINE = List[POINT]
 PIERSDSHAPE = Dict[str, List[POLYLINE]]
 LST_PIERSDSHAPE = List[PIERSDSHAPE]
 
-def plot_polygons(polygons,shapes,rebar_list):
+
+def plot_polygons(frame: qtw.QFrame, polygons, shapes, rebar_list):
     """
     Plots a list of Shapely polygons using Matplotlib.
 
+    :param frame: The QFrame object to embed the plot in.
     :param polygons: List of Shapely Polygon objects to be plotted.
-    :param fill: Boolean indicating whether to fill the polygons.
-    :param alpha: Alpha value for polygon fill transparency.
-    :param edge_color: Color of the polygon edges.
-    :param edge_width: Width of the polygon edges.
+    :param shapes: List of shapes to be plotted.
+    :param rebar_list: List of rebar coordinates to be plotted.
     """
-    
-    plt.figure(figsize=(8, 8))
-    
+    # Clear the layout if it already has widgets
+    if frame.layout() is not None:
+        for i in reversed(range(frame.layout().count())):
+            widget = frame.layout().itemAt(i).widget()
+            if widget is not None:
+                widget.setParent(None)
+
+    # Create a Matplotlib figure
+    fig = Figure(figsize=(8, 8), dpi=100)
+    canvas = FigureCanvas(fig)
+    toolbar = NavigationToolbar(canvas, frame)
+
+    # Create a layout for the QFrame
+    layout = qtw.QVBoxLayout()
+    layout.addWidget(toolbar)
+    layout.addWidget(canvas)
+
+    # Set the layout to the frame
+    frame.setLayout(layout)
+
+    ax = fig.add_subplot(111)
+
     for polygon in polygons:
         x, y = zip(*polygon)
-        #plt.plot(x, y, color='b', linewidth=1, linestyle='--')
+        # ax.plot(x, y, color='b', linewidth=1, linestyle='--')
 
     for shape in shapes:
         x, y = zip(*shape)
-        plt.plot(x, y, color='r', linewidth=1.5)
-    
-    x, y = zip(*rebar_list)
-    plt.scatter(x, y, color='g',s=1)
-    
-    plt.title('Polygons')
-    plt.xlabel('X')
-    plt.ylabel('Y')
+        ax.plot(x, y, color='r', linewidth=1.5)
 
-    plt.show()
+    x, y = zip(*rebar_list)
+    ax.scatter(x, y, color='g', s=1)
+
+    ax.set_title('Plot')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+
+    canvas.draw()
+
 
 def offset_sdshapeDF(list_PierSDShape: LST_PIERSDSHAPE, PierSDName: str, offset_distance):
     """
@@ -72,8 +98,8 @@ def offset_sdshapeDF(list_PierSDShape: LST_PIERSDSHAPE, PierSDName: str, offset_
                 offset_polygon_coords = [(round(x, 2), round(y, 2)) for x, y in offset_polygon.exterior.coords]
                 lst_offsetted_shapes.append(offset_polygon_coords)
 
-    
     return lst_offsetted_shapes
+
 
 def calculate_rebarpoints_for_segments(lst_offsetted_shapes, spacing):
     """
@@ -88,8 +114,8 @@ def calculate_rebarpoints_for_segments(lst_offsetted_shapes, spacing):
         num_points = len(shape)
         for i in range(num_points - 1):
             segment = [shape[i], shape[i + 1]]
-            segments_shapes.append(segment)          
-       
+            segments_shapes.append(segment)
+
     temp_list_rebarsPts = []
     for segment in segments_shapes:
         start_point, end_point = segment
@@ -101,19 +127,19 @@ def calculate_rebarpoints_for_segments(lst_offsetted_shapes, spacing):
         x_diff = (end_point[0] - start_point[0]) / (num_points - 1)
         y_diff = (end_point[1] - start_point[1]) / (num_points - 1)
         control_points = [(round(start_point[0] + i * x_diff, 2), round(start_point[1] + i * y_diff, 2)) for i
-                            in range(num_points)]
+                          in range(num_points)]
         # Append the calculated rebars point to the list of unique values
         temp_list_rebarsPts.append(control_points)
-        
-        
+
         # Remove duplicates from the list of rebars point
     list_rebarsPts = []
 
     for sublist in temp_list_rebarsPts:
         for lst_coordinates in sublist:
             list_rebarsPts.append(lst_coordinates)
-    list_rebarsPts =list(set(list_rebarsPts))        
+    list_rebarsPts = list(set(list_rebarsPts))
     return list_rebarsPts
+
 
 def spColumn_CTI_Rebar(list_rebarsPts, rebarArea):
     """
@@ -130,16 +156,17 @@ def spColumn_CTI_Rebar(list_rebarsPts, rebarArea):
         modified_list = [(rebarArea,) + item for item in list_rebarsPts]
         modified_list = [(f"{area:.6f}", f"{x:.6f}", f"{y:.6f}") for (area, x, y) in modified_list]
     elif isinstance(list_rebarsPts[0], list):
-        modified_list= [[rebarArea] + item for item in list_rebarsPts]
+        modified_list = [[rebarArea] + item for item in list_rebarsPts]
         modified_list = [(f"{area:.6f}", f"{x:.6f}", f"{y:.6f}") for [area, x, y] in modified_list]
     else:
         raise TypeError("Unsupported data format. Must be list of tuples or lists.")
-    
+
     multiline_string_rebarPts = '\n'.join([','.join(map(str, item)) for item in modified_list])
     total_rebar = len(modified_list)
     multiline_string_rebarPts = str(total_rebar) + '\n' + multiline_string_rebarPts
-    
+
     return multiline_string_rebarPts
+
 
 def find_key_index(data_list, key_to_find):
     index = None
@@ -149,54 +176,59 @@ def find_key_index(data_list, key_to_find):
             break
     return index
 
-def get_rebarCoordinates_str(engine, cover, bar_dia, spacing, SDname):
+
+def get_rebarCoordinates_str(frame: qtw.QFrame, engine, cover, bar_area, spacing, SDname):
+    # Calculate bar diameter
+    bar_dia = math.sqrt(bar_area / math.pi) * 2
+
     # Calculate offset distance
     offset_distance = (cover + (bar_dia / 2)) * (-1)
-    
+
     # Calculate rebar area
-    rebarArea = math.pi * ((bar_dia * 0.5) ** 2)
-    
+    rebarArea = bar_area
+
     # Read SDS DB and restructure SD shape
     df_sd = read_sdsDB(engine)
     lst_PierSDShape = restructure_sdshapeDF(df_sd)
-    
+
     # Find index of SDname in lst_PierSDShape
     idx = find_key_index(lst_PierSDShape, SDname)
-    
+
     # Get the PierSDShape for the specified SDname
     PierSDShape = lst_PierSDShape[idx]
-    
+
     # Offset SD shapes
     offsetted_shapes = offset_sdshapeDF(lst_PierSDShape, SDname, offset_distance)
-    
+
     # Calculate rebar points for segments with given spacing
     rebar_list = calculate_rebarpoints_for_segments(offsetted_shapes, spacing)
-    
+
     # Generate multiline string rebar points
     multiline_string_rebarPts = spColumn_CTI_Rebar(rebar_list, rebarArea)
-    
+
     # Prepare dictionary for database storage
     sd_rebarcoordinates_dict_todb = {SDname: multiline_string_rebarPts}
-    
+
     # Plot polygons (assuming plot_polygons is defined)
-    plot_polygons(offsetted_shapes, PierSDShape[SDname], rebar_list)
-    
-    
+    plot_polygons(frame, offsetted_shapes, PierSDShape[SDname], rebar_list)
+
     # Convert dictionary to DataFrame
-    #df_rebar_coordinates = pd.DataFrame(list(sd_rebarcoordinates_dict_todb.items()), columns=['SDName', 'Coordinates'])
-    
+    # df_rebar_coordinates = pd.DataFrame(list(sd_rebarcoordinates_dict_todb.items()), columns=['SDName', 'Coordinates'])
+
     # Store DataFrame to SQL database table 'rebarcoordinates_CTI'
-    #df_rebar_coordinates.to_sql("rebarcoordinates_CTI", con=engine, if_exists='append', index=False)
+    # df_rebar_coordinates.to_sql("rebarcoordinates_CTI", con=engine, if_exists='append', index=False)
     return multiline_string_rebarPts
+
 
 def main():
     engine_temppath = r"tests\TestBM\DemoNo3.spe"
     engine: Engine = create_engine(f"sqlite:///{engine_temppath}")
-    cover=0.75 #fromUI
-    bar_dia=1 #fromUI
-    spacing=12 #fromUI
-    SDname="TIER1_P2" #fromUI
-    rebar_str=get_rebarCoordinates_str(engine, cover, bar_dia, spacing, SDname) 
-    
+    cover = 0.75  # fromUI
+    bar_dia = 1  # fromUI
+    spacing = 12  # fromUI
+    SDname = "TIER1_P2"  # fromUI
+    rebar_str = get_rebarCoordinates_str(engine, cover, bar_dia, spacing, SDname)
+
+
 if __name__ == "__main__":
     main()
