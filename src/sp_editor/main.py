@@ -12,12 +12,12 @@ from sp_editor.controllers.new_file_dialog import NewFile_Dialog
 from sp_editor.controllers.barest_dialog import BarSet_Dialog
 from sp_editor.controllers.material_dialog import Material_Dialog
 from sp_editor.controllers.combos_dialog import Combo_Dialog
-from sp_editor.controllers.groups_dialog import Group_Dialog
+from sp_editor.core.groups_dialog import Group_Dialog
 from sp_editor.controllers.calculation_case_dialog import CalculationCase_Dialog
 
 from sqlalchemy.engine.base import Engine
 from sp_editor.core.connect_etabs import get_story_infor, get_pier_label_infor, get_pier_force_infor, \
-    get_loadCombo_df_fromE, get_section_designer_shape_infor
+    get_loadCombo_df_fromE, get_section_designer_shape_infor, set_global_unit
 from sp_editor.crud.cr_level_group import get_level_to_db, get_pier_label_to_db, get_pier_design_force_to_db, \
     get_sds_to_db
 from sp_editor.crud.cr_load_combo import create_loadComboDB, create_loadComboSelectionDB, read_loadComboSelectionDB
@@ -80,6 +80,10 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
 
         self.sap_model = self.dialog_import_etabs.SapModel
         self.etabs_object = self.dialog_import_etabs.EtabsObject
+        
+        #Set ETABS units = engine units
+        set_global_unit(self.sap_model,self.current_engine)
+        print(self.sap_model.GetPresentUnits())
         # TODO: add widget to get load combo and story infor pierlabel below
         # get story label from api and then put into database
         df_story = get_story_infor(self.sap_model, self.etabs_object)

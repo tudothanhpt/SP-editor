@@ -22,7 +22,7 @@ class Combo_Dialog(qtw.QDialog, Ui_combosSelection_dialog):
         self.engine = engine
 
         self.INIT_DF = read_loadComboDB(self.engine)
-        print(self.INIT_DF)
+
         self.INIT_LIST = self.INIT_DF["uniqueloadCombos"].to_list()
         self.ORDER_DICT = {string: index for index, string in enumerate(self.INIT_LIST)}
 
@@ -48,7 +48,6 @@ class Combo_Dialog(qtw.QDialog, Ui_combosSelection_dialog):
         """
 
         self.tmpDF: pd.DataFrame = read_loadComboSelectionDB(engine)
-        print(self.tmpDF)
 
         self.lview_combos_list: list[str] = self.tmpDF.iloc[:, 0].dropna().tolist()
         self.lview_selectedCombos_list: list[str] = self.tmpDF.iloc[:, 1].dropna().tolist()

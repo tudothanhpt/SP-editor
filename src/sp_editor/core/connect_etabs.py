@@ -5,11 +5,13 @@ import sys
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
+from sqlalchemy.engine.base import Engine
+from sp_editor.crud.cr_general_infor import get_infor
 
 import comtypes.client
 import pandas as pd
 from pandas import DataFrame
-from typing import List, Optional, Tuple
+from typing import *
 
 
 def connect_to_etabs(model_is_open: bool, file_path: str | None = None) -> tuple:
@@ -53,6 +55,34 @@ def connect_to_etabs(model_is_open: bool, file_path: str | None = None) -> tuple
 
     return SapModel, EtabsObject
 
+def set_global_unit(SapModel, engine:Engine):
+    general_infor = get_infor(engine)
+    CTI_unit = general_infor.unit_system
+    if CTI_unit == "English Unit":
+        SapModel.SetPresentUnits(1)
+    elif CTI_unit == "Metric Units":
+        SapModel.SetPresentUnits(5)
+
+def get_current_unit(SapModel) -> Tuple[int, int, int]:
+    current_units = SapModel.GetPresentUnits()
+    """    
+    LB_IN = 1
+    LB_FT = 2
+    KIP_IN = 3
+    KIP_FT = 4
+    KN_MM = 5
+    KN_M = 6
+    N_MM = 7
+    N_M = 8
+    """
+    
+    if current_units < 4:
+        enum_force = 4
+        enum_Section = 1
+    else:
+        enum_force = 6
+        enum_Section = 7
+    return enum_force, enum_Section
 
 def get_story_infor(sap_model: Any, etabs_object: Any) -> DataFrame:
     """
@@ -103,12 +133,15 @@ def get_pier_label_infor(sap_model: Any, etabs_object: Any) -> DataFrame:
 
     return df
 
-
 def get_pier_force_infor(sap_model: Any, etabs_object: Any, design_combo: list[str]) -> DataFrame:
     SapModel = sap_model
     EtabsObject = etabs_object
     table_key = 'Design Forces - Piers'
-
+    
+    enum_force, enum_Section = get_current_unit(SapModel)
+    
+    sap_model.SetPresentUnits(enum_force)
+    
     # Set load combination selected for display
     SapModel.DatabaseTables.SetLoadCombinationsSelectedForDisplay(design_combo)
 
@@ -141,6 +174,11 @@ def get_pier_force_infor(sap_model: Any, etabs_object: Any, design_combo: list[s
 def get_section_designer_shape_infor(sap_model: Any, etabs_object: Any) -> DataFrame:
     SapModel = sap_model
     EtabsObject = etabs_object
+    
+    enum_force, enum_Section = get_current_unit(SapModel)
+    
+    sap_model.SetPresentUnits(enum_Section)
+    
     table_key = 'Section Designer Shapes - Concrete Polygon'
 
     # Get the database table
@@ -165,7 +203,6 @@ def get_section_designer_shape_infor(sap_model: Any, etabs_object: Any) -> DataF
 
     return df_selected
 
-
 def show_warning(message: str):
     msg_box = qtw.QMessageBox()
     msg_box.setIcon(qtw.QMessageBox.Warning)
@@ -182,7 +219,6 @@ def show_information(message: str):
 
 
 lst_PierSDShape = list[dict[str, list[list[float]]]]
-
 
 def get_sdshape_pierPolygon() -> lst_PierSDShape:
     """
@@ -224,30 +260,6 @@ def get_sdshape_pierPolygon() -> lst_PierSDShape:
         lst_PierSDShape.append(dict_Section)
 
     return lst_PierSDShape;
-
-
-def get_current_unit(SapModel) -> Tuple[str, str, str]:
-    force_units_ETABS: dict[str, int] = {"lb": 1, "kip": 2, "Kip": 2, "N": 3, "kN": 4, "KN": 4, "kgf": 5, "Kgf": 5,
-                                         "tonf": 6, "Tonf": 6}
-    length_units_ETABS: dict[str, int] = {"inch": 1, "ft": 2, "micron": 3, "mm": 4, "cm": 5, "m": 6}
-    force: str = "lb"
-    length: str = "inch"
-    force_enum, len_enum, *argv = SapModel.GetPresentUnits_2()
-    for key, value in force_units_ETABS.items():
-        if force_enum == value:
-            force = key
-            break
-    for key, value in length_units_ETABS.items():
-        if len_enum == value:
-            length = key
-            break
-    if force_enum <= 2 and len_enum <= 2:
-        unitsystem = "English Unit"
-    elif force_enum > 2 and len_enum > 2:
-        unitsystem = "Metric Units"
-    else:
-        unitsystem = "Blend"
-    return force, length, unitsystem
 
 
 def read_table(SapModel, table_key: str) -> list[list[str]]:

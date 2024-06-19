@@ -6,14 +6,27 @@ from sqlmodel import create_engine
 from sqlalchemy.engine import Engine
 
 #ENSURE THE 2 GIVEN DATAFRAMES' HEADERS TO BE ADDRESSED CORRECTLY FOLLOWING THE BELOW CONVENTION
-HEADER_STORY = "Story"
-HEADER_PIER = "Pier"
-HEADER_TIER = "Tier"
-HEADER_LOADCASE = "Combo"
-HEADER_LOCATION = "Location"
-HEADER_P = "P"
-HEADER_M2 = "M2"
-HEADER_M3 = "M3"
+
+def set_units_in_etabs_model(sap_model):
+    """
+    Set the units in an ETABS model.
+
+    Parameters:
+    sap_model (comtypes.client._compointer): The ETABS model object.
+    unit_system (int): The unit system to set.
+
+    Returns:
+    str: Success message or error message.
+    """
+    # Set the present units
+    ret = sap_model.SetPresentUnits(3)
+    
+    # Check if the units were successfully set
+    if ret == 0:
+        return "Units successfully set."
+    else:
+        return "Error setting units."
+
 
 def create_force_filter_df(df_PierForces: pd.DataFrame, df_Tier: pd.DataFrame) -> pd.DataFrame:
     """
@@ -27,19 +40,18 @@ def create_force_filter_df(df_PierForces: pd.DataFrame, df_Tier: pd.DataFrame) -
     Returns:
     df3 (pd.DataFrame: The merged DataFrame with new columns.
     """
-    df_FilteredForces = df_PierForces.merge(df_Tier, on=HEADER_STORY, how='left')
+    df_FilteredForces = df_PierForces.merge(df_Tier, on="Story", how='left')
     
     df_FilteredForces['ID3'] = (
-        df_FilteredForces[HEADER_STORY] + 
-        df_FilteredForces[HEADER_PIER] + 
-        df_FilteredForces[HEADER_LOADCASE] + 
-        df_FilteredForces[HEADER_LOCATION]
+        df_FilteredForces["Story"] + 
+        df_FilteredForces["Pier"] + 
+        df_FilteredForces["Combo"] + 
+        df_FilteredForces["Location"]
     )
-    print(df_FilteredForces['P'])
     
     df_FilteredForces['P_SPCol'] = np.round(df_FilteredForces['P'], 0).astype(float)*(-1)
-    df_FilteredForces['Mx_SPCol'] = np.round(df_FilteredForces[HEADER_M2], 0).astype(float)
-    df_FilteredForces['My_SPCol'] = np.round(df_FilteredForces[HEADER_M3], 0).astype(float)
+    df_FilteredForces['Mx_SPCol'] = np.round(df_FilteredForces["M2"], 0).astype(float)
+    df_FilteredForces['My_SPCol'] = np.round(df_FilteredForces["M3"], 0).astype(float)
     
     return df_FilteredForces
 
@@ -58,7 +70,7 @@ def force_filter_SPformat(df3: pd.DataFrame, pier_value: str, tier: str) -> tupl
     """
     
     # Filter rows based on specific conditions
-    filter_cond = (df3[HEADER_PIER] == pier_value) & (df3[HEADER_TIER] == tier)
+    filter_cond = (df3["Pier"] == pier_value) & (df3["Tier"] == tier)
     filter_df = df3.loc[filter_cond, ['P_SPCol', 'Mx_SPCol', 'My_SPCol']]
     
     # Create the 'Combined_Col' column by concatenating 'P_SPCol', 'Mx_SPCol', 'My_SPCol'
@@ -80,20 +92,24 @@ def force_filter_SPformat(df3: pd.DataFrame, pier_value: str, tier: str) -> tupl
     
     return result_string, total_rows
 
+
+
+
 def main():
     #PSEUDO DATA
-    engine_temppath = r"C:\Users\abui\Desktop\Git\Repo\SP-editor\tests\TestBM\1.spe"
+    engine_temppath = r"C:\Users\abui\Desktop\Git\Repo\SP-editor\tests\DemoNo1.spe"
     engine: Engine = create_engine(f"sqlite:///{engine_temppath}")
-    
+  
     #MAIN
     df_PierForces = read_pierdesign_forceDB(engine)
     df_Tier = read_groupDB(engine)
 
+
+    df_FilteredForces = create_force_filter_df(df_PierForces, df_Tier)
     
     pier_value = "P1" #TO BE REPLACED WITH SELECTION FROM UI
     tier = "Tier1" #TO BE REPLACED WITH SELECTION FROM UI
-    df_FilteredForces = create_force_filter_df(df_PierForces, df_Tier)
-
+    
     #print(df_FilteredForces)
     result_string, total_rows = force_filter_SPformat(df_FilteredForces, pier_value, tier)
     print(result_string)
