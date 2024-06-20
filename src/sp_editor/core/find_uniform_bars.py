@@ -171,7 +171,7 @@ def spColumn_CTI_Rebar(list_rebarsPts, rebarArea):
     total_rebar = len(modified_list)
     multiline_string_rebarPts = str(total_rebar) + '\n' + multiline_string_rebarPts
 
-    return multiline_string_rebarPts
+    return total_rebar,multiline_string_rebarPts
 
 
 def find_key_index(data_list, key_to_find):
@@ -211,7 +211,7 @@ def get_rebarCoordinates_str(frame: qtw.QFrame, engine: Engine, cover: float, ba
     rebar_list = calculate_rebarpoints_for_segments(offsetted_shapes, spacing)
 
     # Generate multiline string rebar points
-    multiline_string_rebarPts = spColumn_CTI_Rebar(rebar_list, rebarArea)
+    total_rebar,multiline_string_rebarPts = spColumn_CTI_Rebar(rebar_list, rebarArea)
 
     # Prepare dictionary for database storage
     sd_rebarcoordinates_dict_todb = {SDname: multiline_string_rebarPts}
@@ -224,7 +224,7 @@ def get_rebarCoordinates_str(frame: qtw.QFrame, engine: Engine, cover: float, ba
 
     # Store DataFrame to SQL database table 'rebarcoordinates_CTI'
     # df_rebar_coordinates.to_sql("rebarcoordinates_CTI", con=engine, if_exists='append', index=False)
-    return multiline_string_rebarPts
+    return total_rebar,multiline_string_rebarPts
 
 
 def main():
