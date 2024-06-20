@@ -5,6 +5,7 @@ from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 
+from crud.cr_SD_shape import read_area
 from sp_editor.widgets.load_calculation_case import Ui_calculationCase_dialog
 
 from crud.cr_level_group import get_group_level, get_level_from_group, get_pierlabel_with_level
@@ -14,27 +15,26 @@ from crud.cr_load_case import get_sds_section_name, get_concrete_name, get_steel
 from core.connect_etabs import show_warning
 from core.find_uniform_bars import get_rebarCoordinates_str
 
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
-
 from sqlalchemy.engine.base import Engine
 
 
 class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
     def __init__(self, engine: Engine | None = None, path: str | None = None, unit: str | None = None):
         super().__init__()
-        self.folder_name = None
         self.tier_name = None
-        self.pier_name = None
+        self.folder_name = None
         self.sds_name = None
+        self.pier_name = None
+        self.concrete_Ag = None
         self.bar_area = None
         self.bar_cover = None
         self.bar_spacing = None
-        self.material_fy = None
         self.material_fc = None
-        self.material_Es = None
+        self.material_fy = None
         self.material_Ec = None
+        self.material_Es = None
+        self.to_level = None
+        self.from_level = None
 
         self.sds_rebar_list = None
 
@@ -47,6 +47,9 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.engine = engine
         self.current_path = path
         self.current_unit = unit
+        self.base_dir = None
+        self.case_dir_name = None
+        self.case_path = None
 
         self.setupUi(self)
 
@@ -88,6 +91,8 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
     def update_level_list(self):
         # TODO: get level list based on selected tier
         self.level_list = get_level_from_group(self.engine, self.cb_tier.currentText())
+        self.get_top_and_bottom_level_of_tier()
+
         self.level_list_model = qtc.QStringListModel()
         self.level_list_model.setStringList(self.level_list)
         self.lview_level.setModel(self.level_list_model)
@@ -110,6 +115,7 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.steel_list = get_steel_name(self.engine)
         self.cb_steel.clear()
         self.cb_steel.addItems(self.steel_list)
+        self.cb_steel.setCurrentIndex(0)
 
     @qtc.Slot()
     def update_data_from_steel(self):
@@ -134,24 +140,48 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
 
     @qtc.Slot()
     def make_section(self):
-        # TODO: make section from provided information then display 2D view of the section
-        #  and calculated properties then display into widget
-        # check data input from user only check if any need data is None
-        self.check_input()
-        # get bar area from UI
-        self.bar_area = self.get_bar_area()
-        # get all other data need
-        self.get_data_for_plot()
-        # plot function
-        self.sds_rebar_list = get_rebarCoordinates_str(self.f_3dview, self.engine, self.bar_cover, self.bar_area,
-                                                       self.bar_spacing, self.sds_name)
+        try:
+            # TODO: make section from provided information then display 2D view of the section
+            #  and calculated properties then display into widget
+            # check data input from user only check if any need data is None
+            self.check_input()
+            # get bar area from UI
+            self.bar_area = self.get_bar_area()
+            # get all other data need
+            self.get_data_for_plot()
+            # plot function
+            self.sds_rebar_list = get_rebarCoordinates_str(self.f_3dview, self.engine, self.bar_cover, self.bar_area,
+                                                           self.bar_spacing, self.sds_name)
+            self.concrete_Ag = round(read_area(self.engine, self.sds_name), 2)
+            self.lb_Ag.setText(str(self.concrete_Ag))
+        except ValueError as ve:
+            # Handle missing value error
+            print(f"ValueError in make_section: {ve}")
+        except TypeError as te:
+            # Handle type error
+            print(f"TypeError in make_section: {te}")
 
     @qtc.Slot()
     def create_folder(self):
-        path = f"{self.current_path}"
-        dir_list = path.split("/")
-        self.root_dir = dir_list[:-1]
-        print(self.root_dir)
+        if self.current_path:
+            # Extract the directory from the file path
+            self.base_dir = os.path.dirname(self.current_path)
+
+            if self.folder_name and self.tier_name:
+                # Define the new folders to be created
+                self.case_dir_name = [self.tier_name, self.folder_name]
+
+                self.case_path = os.path.join(self.base_dir, *self.case_dir_name)
+                try:
+                    # Create the new directories
+                    os.makedirs(self.case_path, exist_ok=True)
+                except Exception as e:
+                    qtw.QMessageBox.critical(self, 'Error', f'An error occurred: {str(e)}')
+            else:
+                self.check_input()
+
+        else:
+            qtw.QMessageBox.warning(self, 'No Input', 'Please open a file first')
 
     @qtc.Slot()
     def confirm_action(self):
@@ -159,7 +189,7 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
 
     @qtc.Slot()
     def cacel_all_action(self):
-        pass
+        self.close()
 
     @qtc.Slot()
     def get_unique_items(self, items):
@@ -184,10 +214,18 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
 
     @qtc.Slot()
     def get_top_and_bottom_level_of_tier(self):
-        pass
+        self.from_level = self.level_list[-1]
+        self.to_level = self.level_list[0]
+        print(self.level_list)
 
     def check_input(self):
-        check_folder_name = {"Folder name": self.le_folderName.text()}
+        status = qtg.Qt.CheckState.Checked
+        if self.checkb_userPierName.checkState() == status:
+            folder_name = self.cb_pierdata.currentText()
+        else:
+            folder_name = self.le_folderName.text()
+
+        check_folder_name = {"Folder name": folder_name}
 
         check_material = {"fc": self.lb_fc.text(),
                           "fy": self.lb_fy.text(),
@@ -205,14 +243,22 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
                                      f"<p> 1. Ensure you entered enough data <p>"
                                      f"<p> Input data: {key} is missing.<p>")
                     show_warning(error_message)
-                    break
-            self.folder_name = check_folder_name["Folder name"]
+                    raise ValueError
+        try:
+            self.folder_name = str(check_folder_name["Folder name"])
             self.bar_cover = float(check_geometry["Cover"])
             self.bar_spacing = float(check_geometry["Spacing"])
             self.material_fc = float(check_material["fc"])
             self.material_fy = float(check_material["fy"])
             self.material_Ec = float(check_material["Ec"])
             self.material_Es = float(check_material["Es"])
+        except ValueError as e:
+            error_message = (f"<b>Failed to make section for display.<b> "
+                             f"<p>Please make sure: <p>"
+                             f"<p>2. Ensure all numerical inputs are valid numbers.<p>"
+                             f"<p>Invalid data: {e}<p>")
+            show_warning(error_message)
+            raise TypeError(f"Invalid data type: {e}")
 
     def get_data_for_plot(self):
         self.tier_name = self.cb_tier.currentText()

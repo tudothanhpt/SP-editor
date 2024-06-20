@@ -37,7 +37,7 @@ def plot_polygons(frame: qtw.QFrame, polygons, shapes, rebar_list):
     # Create or get the canvas
     if not hasattr(frame, 'canvas'):
         # Create a Matplotlib figure
-        frame.canvas = MplCanvas(frame, width=12, height=12, dpi=100)
+        frame.canvas = MplCanvas(frame, width=14, height=12, dpi=100)
         frame.toolbar = NavigationToolbar(frame.canvas, frame)
 
         # Create a layout for the QFrame
@@ -106,6 +106,7 @@ def offset_sdshapeDF(list_PierSDShape: LST_PIERSDSHAPE, PierSDName: str, offset_
                 lst_offsetted_shapes.append(offset_polygon_coords)
 
     return lst_offsetted_shapes
+
 
 def calculate_rebarpoints_for_segments(lst_offsetted_shapes, spacing):
     """

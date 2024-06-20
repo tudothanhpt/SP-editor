@@ -15,17 +15,17 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QDialog, QFormLayout,
-    QFrame, QGridLayout, QGroupBox, QHBoxLayout,
-    QLabel, QLineEdit, QListView, QPushButton,
-    QSizePolicy, QSpacerItem, QStackedWidget, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDialog,
+    QFormLayout, QFrame, QGridLayout, QGroupBox,
+    QHBoxLayout, QLabel, QLineEdit, QListView,
+    QPushButton, QSizePolicy, QSpacerItem, QStackedWidget,
+    QVBoxLayout, QWidget)
 
 class Ui_calculationCase_dialog(object):
     def setupUi(self, calculationCase_dialog):
         if not calculationCase_dialog.objectName():
             calculationCase_dialog.setObjectName(u"calculationCase_dialog")
-        calculationCase_dialog.resize(1080, 773)
+        calculationCase_dialog.resize(1080, 805)
         font = QFont()
         font.setPointSize(12)
         calculationCase_dialog.setFont(font)
@@ -128,6 +128,11 @@ class Ui_calculationCase_dialog(object):
         self.le_folderName.setObjectName(u"le_folderName")
 
         self.gridLayout_5.addWidget(self.le_folderName, 0, 0, 1, 1)
+
+        self.checkb_userPierName = QCheckBox(self.groupBox_2)
+        self.checkb_userPierName.setObjectName(u"checkb_userPierName")
+
+        self.gridLayout_5.addWidget(self.checkb_userPierName, 1, 0, 1, 1)
 
 
         self.gridLayout_3.addWidget(self.groupBox_2, 0, 0, 1, 1)
@@ -396,12 +401,12 @@ class Ui_calculationCase_dialog(object):
 
         self.gridLayout_7.addWidget(self.lb_unitArea, 0, 2, 1, 1)
 
-        self.lb_maxCapacity = QLabel(self.groupBox_8)
-        self.lb_maxCapacity.setObjectName(u"lb_maxCapacity")
-        self.lb_maxCapacity.setFrameShape(QFrame.Shape.StyledPanel)
-        self.lb_maxCapacity.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.lb_maxDCR = QLabel(self.groupBox_8)
+        self.lb_maxDCR.setObjectName(u"lb_maxDCR")
+        self.lb_maxDCR.setFrameShape(QFrame.Shape.StyledPanel)
+        self.lb_maxDCR.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.gridLayout_7.addWidget(self.lb_maxCapacity, 3, 1, 1, 1)
+        self.gridLayout_7.addWidget(self.lb_maxDCR, 3, 1, 1, 1)
 
         self.label_15 = QLabel(self.groupBox_8)
         self.label_15.setObjectName(u"label_15")
@@ -424,12 +429,12 @@ class Ui_calculationCase_dialog(object):
 
         self.gridLayout_7.addWidget(self.label_4, 1, 0, 1, 1)
 
-        self.lb_grossArea = QLabel(self.groupBox_8)
-        self.lb_grossArea.setObjectName(u"lb_grossArea")
-        self.lb_grossArea.setFrameShape(QFrame.Shape.StyledPanel)
-        self.lb_grossArea.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.lb_Ag = QLabel(self.groupBox_8)
+        self.lb_Ag.setObjectName(u"lb_Ag")
+        self.lb_Ag.setFrameShape(QFrame.Shape.StyledPanel)
+        self.lb_Ag.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.gridLayout_7.addWidget(self.lb_grossArea, 0, 1, 1, 1)
+        self.gridLayout_7.addWidget(self.lb_Ag, 0, 1, 1, 1)
 
         self.label_7 = QLabel(self.groupBox_8)
         self.label_7.setObjectName(u"label_7")
@@ -437,12 +442,12 @@ class Ui_calculationCase_dialog(object):
 
         self.gridLayout_7.addWidget(self.label_7, 2, 0, 1, 1)
 
-        self.lb_totalAs = QLabel(self.groupBox_8)
-        self.lb_totalAs.setObjectName(u"lb_totalAs")
-        self.lb_totalAs.setFrameShape(QFrame.Shape.StyledPanel)
-        self.lb_totalAs.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.lb_As = QLabel(self.groupBox_8)
+        self.lb_As.setObjectName(u"lb_As")
+        self.lb_As.setFrameShape(QFrame.Shape.StyledPanel)
+        self.lb_As.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.gridLayout_7.addWidget(self.lb_totalAs, 1, 1, 1, 1)
+        self.gridLayout_7.addWidget(self.lb_As, 1, 1, 1, 1)
 
         self.label_9 = QLabel(self.groupBox_8)
         self.label_9.setObjectName(u"label_9")
@@ -515,6 +520,7 @@ class Ui_calculationCase_dialog(object):
 
         self.retranslateUi(calculationCase_dialog)
         self.cb_barType.currentIndexChanged.connect(self.stackW_bar.setCurrentIndex)
+        self.checkb_userPierName.toggled.connect(self.le_folderName.setHidden)
 
         self.stackW_bar.setCurrentIndex(0)
 
@@ -526,9 +532,10 @@ class Ui_calculationCase_dialog(object):
         calculationCase_dialog.setWindowTitle(QCoreApplication.translate("calculationCase_dialog", u"Dialog", None))
         self.groupBox.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Tier", None))
         self.groupBox_5.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Section Designer Shape", None))
-        self.groupBox_4.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Pier data", None))
+        self.groupBox_4.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Pier Data", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Level Information", None))
-        self.groupBox_2.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Folder name", None))
+        self.groupBox_2.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Folder Name", None))
+        self.checkb_userPierName.setText(QCoreApplication.translate("calculationCase_dialog", u"Use Pier Name", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Material", None))
         self.label_23.setText(QCoreApplication.translate("calculationCase_dialog", u"Ec", None))
         self.lb_Ec.setText("")
@@ -560,13 +567,13 @@ class Ui_calculationCase_dialog(object):
         self.lb_unitAs.setText("")
         self.label.setText(QCoreApplication.translate("calculationCase_dialog", u"Gross area", None))
         self.lb_unitArea.setText("")
-        self.lb_maxCapacity.setText(QCoreApplication.translate("calculationCase_dialog", u"0.00", None))
+        self.lb_maxDCR.setText(QCoreApplication.translate("calculationCase_dialog", u"0.00", None))
         self.label_15.setText("")
         self.lb_Rho.setText(QCoreApplication.translate("calculationCase_dialog", u"0.00", None))
         self.label_4.setText(QCoreApplication.translate("calculationCase_dialog", u"Total As", None))
-        self.lb_grossArea.setText(QCoreApplication.translate("calculationCase_dialog", u"0.00", None))
+        self.lb_Ag.setText(QCoreApplication.translate("calculationCase_dialog", u"0.00", None))
         self.label_7.setText(QCoreApplication.translate("calculationCase_dialog", u"Rho", None))
-        self.lb_totalAs.setText(QCoreApplication.translate("calculationCase_dialog", u"0.00", None))
+        self.lb_As.setText(QCoreApplication.translate("calculationCase_dialog", u"0.00", None))
         self.label_9.setText(QCoreApplication.translate("calculationCase_dialog", u"%", None))
         self.label_27.setText(QCoreApplication.translate("calculationCase_dialog", u"Unit:", None))
         self.lb_globalUnit.setText("")
