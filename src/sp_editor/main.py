@@ -18,10 +18,12 @@ from sp_editor.controllers.calculation_case_dialog import CalculationCase_Dialog
 from sqlalchemy.engine.base import Engine
 from sp_editor.core.connect_etabs import get_story_infor, get_pier_label_infor, get_pier_force_infor, \
     get_loadCombo_df_fromE, get_section_designer_shape_infor, set_global_unit
+from sp_editor.core.force_filter import get_pierforces_CTI_todb    
 from sp_editor.crud.cr_level_group import get_level_to_db, get_pier_label_to_db, get_pier_design_force_to_db, \
     get_sds_to_db
 from sp_editor.crud.cr_load_combo import create_loadComboDB, create_loadComboSelectionDB, read_loadComboSelectionDB
 from sp_editor.crud.cr_SD_shape import get_SDCoordinates_CTI_todb
+
 
 
 class MainWindow(qtw.QMainWindow, Ui_mw_Main):
@@ -144,6 +146,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         # get pier design force and then put into database
         df_pier_design_force = get_pier_force_infor(self.sap_model, self.etabs_object, list_combo_selection)
         get_pier_design_force_to_db(self.current_engine, df_pier_design_force)
+        get_pierforces_CTI_todb(self.current_engine)
  
 
     @qtc.Slot(Engine)

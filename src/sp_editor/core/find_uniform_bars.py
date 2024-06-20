@@ -12,7 +12,7 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 
-from core.mpl_canvas import MplCanvas
+from sp_editor.core.mpl_canvas import MplCanvas
 
 from sqlmodel import create_engine
 from sqlalchemy.engine.base import Engine
@@ -107,7 +107,6 @@ def offset_sdshapeDF(list_PierSDShape: LST_PIERSDSHAPE, PierSDName: str, offset_
                 lst_offsetted_shapes.append(offset_polygon_coords)
 
     return lst_offsetted_shapes
-
 
 def calculate_rebarpoints_for_segments(lst_offsetted_shapes, spacing):
     """
