@@ -37,6 +37,8 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.from_level = None
 
         self.sds_rebar_list = None
+        self.sds_total_bars = None
+        self.rho = None
 
         self.concrete_list = None
         self.piers_list = None
@@ -150,10 +152,18 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
             # get all other data need
             self.get_data_for_plot()
             # plot function
-            self.sds_rebar_list = get_rebarCoordinates_str(self.f_3dview, self.engine, self.bar_cover, self.bar_area,
+            self.sds_total_bars,self.sds_rebar_list = get_rebarCoordinates_str(self.f_3dview, self.engine, self.bar_cover, self.bar_area,
                                                            self.bar_spacing, self.sds_name)
+            
             self.concrete_Ag = round(read_area(self.engine, self.sds_name), 2)
+            self.sds_total_As=round(self.bar_area*self.sds_total_bars,2)
+            self.rho = round((self.sds_total_As/self.concrete_Ag)*100,2)
+            
+            self.lb_quantities.setText(str(self.sds_total_bars))
+            self.lb_As.setText(str(self.sds_total_As))
             self.lb_Ag.setText(str(self.concrete_Ag))
+            self.lb_Rho.setText(str(self.rho))
+            
         except ValueError as ve:
             # Handle missing value error
             print(f"ValueError in make_section: {ve}")

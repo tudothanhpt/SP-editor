@@ -225,7 +225,7 @@ def get_rebarCoordinates_str(frame: qtw.QFrame, engine: Engine, cover: float, ba
 
     # Store DataFrame to SQL database table 'rebarcoordinates_CTI'
     # df_rebar_coordinates.to_sql("rebarcoordinates_CTI", con=engine, if_exists='append', index=False)
-    return total_rebar,multiline_string_rebarPts
+    return total_rebar, multiline_string_rebarPts
 
 
 def main():
