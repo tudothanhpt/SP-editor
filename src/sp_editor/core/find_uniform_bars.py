@@ -8,15 +8,14 @@ from PySide6 import QtGui as qtg
 from sp_editor.core.find_pier import restructure_sdshapeDF
 from sp_editor.crud.cr_SD_shape import read_sdsDB
 from shapely.geometry import Polygon
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
-from matplotlib.figure import Figure
-
+import seaborn as sns
 from sp_editor.core.mpl_canvas import MplCanvas
 
 from sqlmodel import create_engine
 from sqlalchemy.engine.base import Engine
 
+sns.set_style("darkgrid")
 # Define type aliases for better readability and maintainability
 X = float
 Y = float
@@ -38,7 +37,7 @@ def plot_polygons(frame: qtw.QFrame, polygons, shapes, rebar_list):
     # Create or get the canvas
     if not hasattr(frame, 'canvas'):
         # Create a Matplotlib figure
-        frame.canvas = MplCanvas(frame, width=8, height=8, dpi=100)
+        frame.canvas = MplCanvas(frame, width=12, height=12, dpi=100)
         frame.toolbar = NavigationToolbar(frame.canvas, frame)
 
         # Create a layout for the QFrame
@@ -62,7 +61,7 @@ def plot_polygons(frame: qtw.QFrame, polygons, shapes, rebar_list):
     x, y = zip(*rebar_list)
     ax.scatter(x, y, color='g', s=1)
 
-    ax.set_title('Plot')
+    ax.set_title('Cross Section')
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
 
@@ -74,8 +73,8 @@ def plot_polygons(frame: qtw.QFrame, polygons, shapes, rebar_list):
             [coord[1] for shape in shapes for coord in shape] + \
             [coord[1] for coord in rebar_list]
 
-    ax.set_xlim(min(all_x) - 10, max(all_x) + 10)
-    ax.set_ylim(min(all_y) - 10, max(all_y) + 10)
+    ax.set_xlim(min(all_x) - 100, max(all_x) + 100)
+    ax.set_ylim(min(all_y) - 100, max(all_y) + 100)
 
     # Trigger the canvas to update and redraw.
     frame.canvas.draw()

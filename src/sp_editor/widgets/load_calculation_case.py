@@ -494,17 +494,17 @@ class Ui_calculationCase_dialog(object):
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer)
 
-        self.pushButton = QPushButton(self.frame_6)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setMinimumSize(QSize(100, 0))
+        self.pb_OK = QPushButton(self.frame_6)
+        self.pb_OK.setObjectName(u"pb_OK")
+        self.pb_OK.setMinimumSize(QSize(100, 0))
 
-        self.horizontalLayout_2.addWidget(self.pushButton)
+        self.horizontalLayout_2.addWidget(self.pb_OK)
 
-        self.pushButton_2 = QPushButton(self.frame_6)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-        self.pushButton_2.setMinimumSize(QSize(100, 0))
+        self.pb_Cancel = QPushButton(self.frame_6)
+        self.pb_Cancel.setObjectName(u"pb_Cancel")
+        self.pb_Cancel.setMinimumSize(QSize(100, 0))
 
-        self.horizontalLayout_2.addWidget(self.pushButton_2)
+        self.horizontalLayout_2.addWidget(self.pb_Cancel)
 
 
         self.verticalLayout_2.addWidget(self.frame_6)
@@ -570,7 +570,7 @@ class Ui_calculationCase_dialog(object):
         self.label_9.setText(QCoreApplication.translate("calculationCase_dialog", u"%", None))
         self.label_27.setText(QCoreApplication.translate("calculationCase_dialog", u"Unit:", None))
         self.lb_globalUnit.setText("")
-        self.pushButton.setText(QCoreApplication.translate("calculationCase_dialog", u"OK", None))
-        self.pushButton_2.setText(QCoreApplication.translate("calculationCase_dialog", u"Cancel", None))
+        self.pb_OK.setText(QCoreApplication.translate("calculationCase_dialog", u"OK", None))
+        self.pb_Cancel.setText(QCoreApplication.translate("calculationCase_dialog", u"Cancel", None))
     # retranslateUi
 
