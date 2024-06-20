@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sqlmodel import create_engine
 from sqlalchemy.engine.base import Engine
-
+from shapely.geometry import Polygon
 
 X = float
 Y = float
@@ -16,6 +16,13 @@ POLYLINE = List[POINT]
 PIERSDSHAPE = Dict[str, List[POLYLINE]]
 LST_PIERSDSHAPE = List[PIERSDSHAPE]
 
+def find_key_index(data_list, key_to_find):
+    index = None
+    for idx, data_dict in enumerate(data_list):
+        if key_to_find in data_dict:
+            index = idx
+            break
+    return index
 def restructure_sdshapeDF(df: pd.DataFrame) -> LST_PIERSDSHAPE:
 
     list_SD: LST_PIERSDSHAPE = []
@@ -71,6 +78,20 @@ def spColumn_CTI_PierPoint(list_PierSDShape: LST_PIERSDSHAPE, PierSDName: str) -
     str_CTI_pierpoint = "\n".join(list_CTI_pierpoint)
 
     return str_CTI_pierpoint
+
+def shape_area(list_PierSDShape: LST_PIERSDSHAPE, PierSDName: str) -> str:
+    
+    area = 0
+
+    for PierSDShape_dict in list_PierSDShape:
+        if PierSDName in PierSDShape_dict:
+            shapes = PierSDShape_dict[PierSDName]
+            for shape in shapes:
+                polygon = Polygon(shape)
+                area += (polygon.area)
+    
+    return area
+  
 
 if __name__ == "__main__":
     main()
