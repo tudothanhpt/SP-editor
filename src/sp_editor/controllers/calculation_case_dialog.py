@@ -1,3 +1,4 @@
+import os
 import sys
 
 from PySide6 import QtCore as qtc
@@ -61,6 +62,9 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.cb_steel.currentTextChanged.connect(self.update_data_from_steel)
 
         self.pb_makeSection.clicked.connect(self.make_section)
+
+        self.pb_OK.clicked.connect(self.confirm_action)
+        self.pb_Cancel.clicked.connect(self.cacel_all_action)
 
     @qtc.Slot()
     def update_group_box(self):
@@ -144,13 +148,14 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
 
     @qtc.Slot()
     def create_folder(self):
-        # TODO: Folder outer will be tier's name, folder inner will be
-        #  pier's name(section desinger shape's name)
-        pass
+        path = f"{self.current_path}"
+        dir_list = path.split("/")
+        self.root_dir = dir_list[:-1]
+        print(self.root_dir)
 
     @qtc.Slot()
     def confirm_action(self):
-        pass
+        self.create_folder()
 
     @qtc.Slot()
     def cacel_all_action(self):
@@ -176,6 +181,10 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
                 error_message = f"Area must be a positive number"
                 show_warning(error_message)
         return float(self.bar_area)
+
+    @qtc.Slot()
+    def get_top_and_bottom_level_of_tier(self):
+        pass
 
     def check_input(self):
         check_folder_name = {"Folder name": self.le_folderName.text()}
