@@ -11,7 +11,9 @@ from shapely.geometry import Polygon
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
-import pandas as pd
+
+from core.mpl_canvas import MplCanvas
+
 from sqlmodel import create_engine
 from sqlalchemy.engine.base import Engine
 
@@ -33,27 +35,21 @@ def plot_polygons(frame: qtw.QFrame, polygons, shapes, rebar_list):
     :param shapes: List of shapes to be plotted.
     :param rebar_list: List of rebar coordinates to be plotted.
     """
-    # Clear the layout if it already has widgets
-    if frame.layout() is not None:
-        for i in reversed(range(frame.layout().count())):
-            widget = frame.layout().itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)
+    # Create or get the canvas
+    if not hasattr(frame, 'canvas'):
+        # Create a Matplotlib figure
+        frame.canvas = MplCanvas(frame, width=8, height=8, dpi=100)
+        frame.toolbar = NavigationToolbar(frame.canvas, frame)
 
-    # Create a Matplotlib figure
-    fig = Figure(figsize=(8, 8), dpi=100)
-    canvas = FigureCanvas(fig)
-    toolbar = NavigationToolbar(canvas, frame)
+        # Create a layout for the QFrame
+        frame.layout = qtw.QVBoxLayout()
+        frame.layout.addWidget(frame.toolbar)
+        frame.layout.addWidget(frame.canvas)
+        frame.setLayout(frame.layout)
+    else:
+        frame.canvas.axes.clear()
 
-    # Create a layout for the QFrame
-    layout = qtw.QVBoxLayout()
-    layout.addWidget(toolbar)
-    layout.addWidget(canvas)
-
-    # Set the layout to the frame
-    frame.setLayout(layout)
-
-    ax = fig.add_subplot(111)
+    ax = frame.canvas.axes
 
     for polygon in polygons:
         x, y = zip(*polygon)
@@ -70,7 +66,19 @@ def plot_polygons(frame: qtw.QFrame, polygons, shapes, rebar_list):
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
 
-    canvas.draw()
+    # Automatically set limits
+    all_x = [coord[0] for polygon in polygons for coord in polygon] + \
+            [coord[0] for shape in shapes for coord in shape] + \
+            [coord[0] for coord in rebar_list]
+    all_y = [coord[1] for polygon in polygons for coord in polygon] + \
+            [coord[1] for shape in shapes for coord in shape] + \
+            [coord[1] for coord in rebar_list]
+
+    ax.set_xlim(min(all_x) - 10, max(all_x) + 10)
+    ax.set_ylim(min(all_y) - 10, max(all_y) + 10)
+
+    # Trigger the canvas to update and redraw.
+    frame.canvas.draw()
 
 
 def offset_sdshapeDF(list_PierSDShape: LST_PIERSDSHAPE, PierSDName: str, offset_distance):
@@ -177,7 +185,8 @@ def find_key_index(data_list, key_to_find):
     return index
 
 
-def get_rebarCoordinates_str(frame: qtw.QFrame, engine, cover, bar_area, spacing, SDname):
+def get_rebarCoordinates_str(frame: qtw.QFrame, engine: Engine, cover: float, bar_area: float, spacing: float,
+                             SDname: str):
     # Calculate bar diameter
     bar_dia = math.sqrt(bar_area / math.pi) * 2
 

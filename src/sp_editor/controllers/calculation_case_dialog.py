@@ -141,7 +141,6 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         # plot function
         self.sds_rebar_list = get_rebarCoordinates_str(self.f_3dview, self.engine, self.bar_cover, self.bar_area,
                                                        self.bar_spacing, self.sds_name)
-        # re-plot the new data
 
     @qtc.Slot()
     def create_folder(self):
