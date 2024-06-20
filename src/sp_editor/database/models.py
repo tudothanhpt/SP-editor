@@ -99,6 +99,23 @@ class GroupLevel(SQLModel, table=True):
     pierlabel: PierLabel = Relationship(back_populates="grouplevels")
 
 
+class CalculationCase(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    tier: str | None = Field(default=None)
+    folder: str | None = Field(default=None)
+    sds: str | None = Field(default=None)
+    pier: str | None = Field(default=None)
+    barArea: float | None = Field(default=None)
+    barCover: float | None = Field(default=None)
+    barSpacing: float | None = Field(default=None)
+    materialFc: float | None = Field(default=None)
+    materialFy: float | None = Field(default=None)
+    materialEc: float | None = Field(default=None)
+    materialEs: float | None = Field(default=None)
+    fromLevel: str | None = Field(default=None)
+    toLevel: str | None = Field(default=None)
+
+
 class LoadCombinationsSelection(SQLModel, table=True):
     """
     Bar set material properties
@@ -114,7 +131,8 @@ class LoadCombinations(SQLModel, table=True):
     """
     id: int | None = Field(default=None, primary_key=True)
     uniqueloadCombos: Optional[str] = Field(default=None)
-    
+
+
 class SDCoordinates_CTI(SQLModel, table=True):
     """
     Bar set material properties
@@ -122,4 +140,3 @@ class SDCoordinates_CTI(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     SDName: Optional[str] = Field(default=None)
     Coordinates: Optional[str] = Field(default=None)
-    
