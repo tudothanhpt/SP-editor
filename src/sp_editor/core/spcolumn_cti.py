@@ -290,7 +290,6 @@ class CTIfile:
         ]
         self.__MaterialProperties = ','.join(map(str, properties))
 
-
     def set_reduction_factors(self,confinement_type: str="Tied") -> None:
         '''There are 5 values separated by commas in one line in this section. These values are described 
         below in the order they appear from left to right. (Capacity Reduction Factors/Material Resistance 
@@ -344,7 +343,6 @@ class CTIfile:
     def set_reinforcement_bars(self, CTI_RebarCoordinates : str) -> None:
         self.__ReinforcementBars = CTI_RebarCoordinates
             
-
     def set_factored_loads(self, CTT_force: str) -> None:
         self.__FactoredLoads = CTT_force
 
@@ -663,7 +661,6 @@ class CTIfile:
                f"[User Defined Bars]\n{self.__UserDefinedBars}\n" \
                f"[Sustained Load Factors]\n{self.__SustainedLoadFactors}\n"
 
-
     def write_CTIfile_to_file(self, folder_path: str, file_name: str) -> None:
         file_path = os.path.join(folder_path, file_name+".cti")
 
@@ -671,28 +668,3 @@ class CTIfile:
         with open(file_path, "w") as file:
             file.write(self.CTIbuilder())
 
-
-def main():
-    return True
-
-
-if __name__ == "__main__":
-
-    newCTIfile = CTIfile()
-    newCTIfile.set_engineer("ABui")
-    newCTIfile.set_column_id("Test")
-
-    newCTIfile.set_material_properties(f_c=6, E_c=4415.21, beta1=0.75, 
-                                       fy=80, Ey=29000)
-
-    newCTIfile.set_user_options(unit_system= 0, design_code=8,
-                                confinement=0,
-                                num_irregular_bars=999,num_factored_loads=999,
-                                section_capacity_method=0)
-    newCTIfile.set_external_points("ngu")
-    newCTIfile.set_reinforcement_bars("ngu")
-    newCTIfile.set_factored_loads("ngu")
-    newCTIfile.set_bar_group_type(bar_group_type=1)
-    
-    
-    print(newCTIfile.CTIbuilder())
