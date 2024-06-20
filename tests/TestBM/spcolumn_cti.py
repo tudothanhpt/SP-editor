@@ -2,6 +2,7 @@ import math
 import sys
 import os
 
+
 class CTIfile:
     """
     Represents a CTI (spColumn Text Input) file for managing column design and investigation data.
