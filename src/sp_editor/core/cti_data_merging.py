@@ -13,7 +13,7 @@ TB_SDSHAPE_ETABS = str(SectionDesignerShape.__name__).lower()
 TB_SDSHAPE_CTI = str(SDCoordinates_CTI.__name__).lower()
 TB_PIERFORCE = str(PierForce.__name__).lower()
 
-# Define the data from the provided image
+
 data = {
     "tier": ["Tier2", "Tier1", "Tier1", "Tier1", "Tier1", "Tier1", "Tier1"],
     "pier": ["P7", "P1", "P2", "P3", "P4", "P5", "P6"],
