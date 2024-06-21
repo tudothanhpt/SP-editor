@@ -1,33 +1,35 @@
 import pandas as pd
 import sys
-
-from sp_editor.database.models import SectionDesignerShape, SDCoordinates_CTI, PierForce
+import os
+from sp_editor.database.models import SectionDesignerShape, SDCoordinates_CTI, PierForce,CalculationCase
 from PySide6.QtWidgets import QApplication, QFileDialog
-from sp_editor.core.find_pier import restructure_sdshapeDF, spColumn_CTI_PierPoint, shape_area
+
 from sp_editor.core.find_uniform_bars import get_rebarCoordinates_str2
+from sp_editor.core.engineering_funcs import calculate_beta1
+from sp_editor.crud.cr_general_infor import get_infor
 from sqlalchemy.engine.base import Engine
+from sp_editor.core.global_variables import *
+
 from sqlmodel import create_engine
+from sp_editor.core.spcolumn_cti import CTIfile
+from PyQt6.QtWidgets import QApplication, QMessageBox
 
-from spcolumn_cti import CTIfile
-
+TB_CALCULATIONCASE = str(CalculationCase.__name__).lower()
 TB_SDSHAPE_ETABS = str(SectionDesignerShape.__name__).lower()
 TB_SDSHAPE_CTI = str(SDCoordinates_CTI.__name__).lower()
 TB_PIERFORCE = str(PierForce.__name__).lower()
 
-data = {
-    "tier": ["Tier2", "Tier1", "Tier1", "Tier1", "Tier1", "Tier1", "Tier1"],
-    "pier": ["P7", "P1", "P2", "P3", "P4", "P5", "P6"],
-    "sds": ["T2_P7", "T1_P1", "T1_P2", "T1_P3", "T1_P4", "T1_P5", "T1_P6"],
-    "barArea": [0.5, 1, 0.5, 1, 0.75, 0.5, 1],
-    "barSpacing": [6, 8, 12, 10, 6, 6, 6],
-    "barCover": [1, 1, 1, 1, 1, 1, 1],
-    "barSpacing": [12, 12, 12, 12, 12, 12, 12],
-    "ec": [5719.1269, 5104.4513, 5719.1269, 5104.4513, 5719.1269, 5104.4513, 5719.1269],
-    "fc": [10, 8, 10, 8, 10, 8, 10],
-    "beta1": [0.65, 0.65, 0.65, 0.65, 0.65, 0.65, 0.65],
-    "fy": [80, 80, 80, 80, 80, 80, 80],
-    "ey": [29000, 29000, 29000, 29000, 29000, 29000, 29000]
-}
+
+
+def create_file_and_notify(content):
+
+    # Display notification
+    msg_box = QMessageBox()
+    msg_box.setIcon(QMessageBox.Icon.Information)
+    msg_box.setText(content)
+    msg_box.setWindowTitle("Notification")
+    msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
+    msg_box.exec()
 
 
 def read_sdsCTI_DB(engine):
@@ -38,33 +40,43 @@ def read_sdsCTI_DB(engine):
     )
     return df_SD
 
+def read_calculationCase_DB(engine):
+    # Read SQL table into a DataFrame
+    df_Case = pd.read_sql_table(
+        table_name= TB_CALCULATIONCASE,  # The table to read
+        con=engine,  # The SQLAlchemy engine
+        columns=['tier', 'pier', 'sds', 'barArea', 'barSpacing', 'barCover', 
+                 'materialEc', 'materialFc', 'materialFy', 'materialEs','casePath']
+    )
+    return df_Case
 
 def read_pierdesignCTI_forceDB(engine):
     """
-    Reads the SQL table `TB_PIERFORCE` into a pandas DataFrame.
-
-    Parameters:
-    engine (sqlalchemy.engine.Engine): The SQLAlchemy engine connected to the database.
-
-    Returns:
-    pd.DataFrame: The DataFrame containing the table data.
     """
     # Read SQL table into a DataFrame
     df = pd.read_sql_table(
         table_name="pierforces_cti",  # The table to read
         con=engine  # The SQLAlchemy engine
     )
-
     return df  # The DataFrame containing the table data
 
+def read_summaryCTI_DB(engine):
+    """
+    """
+    # Read SQL table into a DataFrame
+    df = pd.read_sql_table(
+        table_name="ctisummary",  # The table to read
+        con=engine  # The SQLAlchemy engine
+    )
+    return df  # The DataFrame containing the table data
 
-def Test1():
-    engine_temppath = r"tests\TestBM\demono1.spe"
-    engine: Engine = create_engine(f"sqlite:///{engine_temppath}")
+def create_cti_summary_df(engine):
 
     df_SD = read_sdsCTI_DB(engine)
+    
     df_designforce = read_pierdesignCTI_forceDB(engine)
-    df_loadcalculationCase = pd.DataFrame(data)  # tobereplaced
+    
+    df_loadcalculationCase = read_calculationCase_DB(engine)  
 
     merged_df = pd.merge(df_loadcalculationCase, df_SD, how='left',
                          left_on='sds', right_on='SDName')
@@ -87,63 +99,65 @@ def Test1():
     merged_df['totalbars'] = lst_totalbarsCTI
     merged_df['rebarcoordinates'] = lst_rebarcoordinatesCTI
 
-    merged_df = merged_df[["ID2", "Tier", "Pier",
-                           "ec", "fc", "beta1", "fy", "ey",
+    df_summaryCTI = merged_df[["ID2", "Tier", "Pier",
+                           "materialEc", "materialFc", "materialFy", "materialEs",
                            "SDName", "Coordinates",
                            "totalbars", "rebarcoordinates",
-                           "Total Combos", "Filtered Forces"]]
+                           "Total Combos", "Filtered Forces",
+                           'casePath']]
 
-    pd.set_option('display.max_colwidth', 20)
+    df_summaryCTI.to_sql("ctisummary", con=engine, if_exists='replace')
 
-    return merged_df
+def CTI_creation(engine):
+    
+    df_summaryCTI = read_summaryCTI_DB(engine)
+    general_infor = get_infor(engine)
+    
+    d_code = DesignCode.from_string(general_infor.design_code).value
+    u_sys = UnitSystem.from_string(general_infor.unit_system).value
+    b_set = BarGroupType.from_string(general_infor.bar_set).value
+    confi = ConfinementType.from_string(general_infor.confinement).value
+    s_capacity = SectionCapacityMethod.from_string(general_infor.section_capacity).value
 
-
-def get_folder_path() -> str:
-    app = QApplication(sys.argv)
-
-    # Open folder selection dialog
-    folder_path = QFileDialog.getExistingDirectory(None, "Select Folder")
-
-    app.exit()
-    return folder_path
-
-
-def main():
-    merged_df = Test1()
-    folder_path = get_folder_path()
-    for index, row in merged_df.iterrows():
+    for index, row in df_summaryCTI.iterrows():
         Col_id = row['ID2']
-        ec = row['ec']
-        fc = row['fc']
-        beta1 = row['beta1']
-        fy = row['fy']
-        ey = row['ey']
+        ec = row['materialEc']
+        fc = row['materialFc']
+        beta1 = calculate_beta1(float(fc))
+        fy = row['materialFy']
+        ey = row['materialEs']
         SDCoordinates = row['Coordinates']
         totalbars = row['totalbars']
         rebarcoordinates = row['rebarcoordinates']
         Total_Combos = row['Total Combos']
         Filtered_Forces = row['Filtered Forces']
+        case_path = os.path.normpath(row["casePath"])
+    
 
         newCTIfile = CTIfile()
-        newCTIfile.set_project_name("SP-Editor")
-        newCTIfile.set_engineer("ABui")
+        newCTIfile.set_project_name("SP-Editor_Automation")
+        newCTIfile.set_engineer("SP-Editor")
         newCTIfile.set_column_id(Col_id)
 
         newCTIfile.set_material_properties(f_c=fc, E_c=ec, beta1=beta1,
                                            fy=fy, Ey=ey)
 
-        newCTIfile.set_user_options(unit_system=0, design_code=8,
-                                    confinement=0,
+        newCTIfile.set_user_options(unit_system=u_sys, design_code=d_code,
+                                    confinement=confi,
                                     num_irregular_bars=totalbars, num_factored_loads=Total_Combos,
-                                    section_capacity_method=0)
+                                    section_capacity_method=s_capacity)
+
         newCTIfile.set_external_points(SDCoordinates)
         newCTIfile.set_reinforcement_bars(rebarcoordinates)
         newCTIfile.set_factored_loads(Filtered_Forces)
-        newCTIfile.set_bar_group_type(bar_group_type=1)
-        newCTIfile.write_CTIfile_to_file(folder_path, Col_id)
+        newCTIfile.set_bar_group_type(bar_group_type=b_set)
+        newCTIfile.write_CTIfile_to_file(case_path, Col_id)
 
-        print("Information about CTIfile " + Col_id + " has been written")
+    create_file_and_notify(f"{len(df_summaryCTI)} CTI files created successfully!")
 
 
 if __name__ == "__main__":
-    main()
+    engine_temppath = r"tests\TestBM\demono2.spe"
+    engine: Engine = create_engine(f"sqlite:///{engine_temppath}")
+    create_cti_summary_df(engine)
+    CTI_creation(engine)

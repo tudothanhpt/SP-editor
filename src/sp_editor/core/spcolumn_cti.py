@@ -272,7 +272,7 @@ class CTIfile:
         concrete_strength = f_c                         # Concrete strength, f’c
         concrete_modulus = E_c                           # Concrete modulus of elasticity, Ec
         concrete_max_stress = 0.65*f_c                                       # Concrete maximum stress (assumed constant 8)
-        beta1 = 0.85                                                   # Beta (1) for concrete stress block
+        beta1 = beta1                                                   # Beta (1) for concrete stress block
         concrete_ultimate_strain = 0.003                                  # Concrete ultimate strain
         steel_yield_strength = fy                   # Steel yield strength, fy
         steel_modulus = Ey                                 # Steel modulus of elasticity, Es
@@ -662,6 +662,10 @@ class CTIfile:
                f"[Sustained Load Factors]\n{self.__SustainedLoadFactors}\n"
 
     def write_CTIfile_to_file(self, folder_path: str, file_name: str) -> None:
+
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+        
         file_path = os.path.join(folder_path, file_name+".cti")
 
         # Write the content to the file

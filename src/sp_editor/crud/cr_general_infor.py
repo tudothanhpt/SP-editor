@@ -1,6 +1,6 @@
 from typing import Type
 
-from sqlmodel import Session, select
+from sqlmodel import Session, select, create_engine
 from sqlalchemy.engine.base import Engine
 
 from sp_editor.database.models import GeneralInfor
@@ -43,3 +43,13 @@ def get_infor(engine: Engine) -> Type[GeneralInfor] | None:
     with Session(engine) as session:
         infor = session.get(GeneralInfor, 1)
         return infor
+
+
+
+if __name__ == "__main__":
+    engine_temppath = r"tests\TestBM\demono2.spe"
+    engine: Engine = create_engine(f"sqlite:///{engine_temppath}")
+
+    a = get_infor(engine)
+    a.confinement
+    print(a.confinement)

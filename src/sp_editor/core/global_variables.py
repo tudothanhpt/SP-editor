@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 class DesignCode(Enum):
     ACI_318_02 = 0
     CSA_A23_3_94 = 1
@@ -34,6 +33,22 @@ class DesignCode(Enum):
             return "ACI 318-19"
         elif self == DesignCode.CSA_A23_3_19:
             return "CSA A23.3-19"
+    
+    @classmethod
+    def from_string(cls, code_str):
+        str_code_map = {
+            "ACI 318-02": cls.ACI_318_02,
+            "CSA A23.3-94": cls.CSA_A23_3_94,
+            "ACI 318-05": cls.ACI_318_05,
+            "CSA A23.3-04": cls.CSA_A23_3_04,
+            "ACI 318-08": cls.ACI_318_08,
+            "ACI 318-11": cls.ACI_318_11,
+            "ACI 318-14": cls.ACI_318_14,
+            "CSA A23.3-14": cls.CSA_A23_3_14,
+            "ACI 318-19": cls.ACI_318_19,
+            "CSA A23.3-19": cls.CSA_A23_3_19,
+        }
+        return str_code_map.get(code_str, None)
 
 
 class BarGroupType(Enum):
@@ -55,6 +70,17 @@ class BarGroupType(Enum):
         elif self == BarGroupType.ASTM615M:
             return "ASTM615M"
 
+    @classmethod
+    def from_string(cls, type_str):
+        str_type_map = {
+            "User Defined": cls.USER_DEFINED,
+            "ASTM615": cls.ASTM615,
+            "CSA G30.18": cls.CSA_G30_18,
+            "prEN 10080": cls.PR_EN_10080,
+            "ASTM615M": cls.ASTM615M,
+        }
+        return str_type_map.get(type_str, None)
+
 
 class UnitSystem(Enum):
     ENGLISH = 0
@@ -66,6 +92,14 @@ class UnitSystem(Enum):
         elif self == UnitSystem.METRIC:
             return "Metric Units"
 
+    @classmethod
+    def from_string(cls, type_str):
+        str_type_map = {
+            "English Unit": cls.ENGLISH,
+            "Metric Units": cls.METRIC,
+        }
+        return str_type_map.get(type_str, None)
+
 
 class SectionCapacityMethod(Enum):
     MOMENT_CAPACITY = 0
@@ -76,6 +110,14 @@ class SectionCapacityMethod(Enum):
             return "Moment capacity"
         elif self == SectionCapacityMethod.CRITICAL_CAPACITY:
             return "Critical Capacity"
+
+    @classmethod
+    def from_string(cls, type_str):
+        str_type_map = {
+            "Moment capacity": cls.MOMENT_CAPACITY,
+            "Critical Capacity": cls.CRITICAL_CAPACITY,
+        }
+        return str_type_map.get(type_str, None)
 
 
 class ConfinementType(Enum):
@@ -90,3 +132,12 @@ class ConfinementType(Enum):
             return "Spiral"
         elif self == ConfinementType.OTHER:
             return "Other"
+
+    @classmethod
+    def from_string(cls, type_str):
+        str_type_map = {
+            "Tied": cls.TIED,
+            "Spiral": cls.SPIRAL,
+            "Other": cls.OTHER,
+        }
+        return str_type_map.get(type_str, None)

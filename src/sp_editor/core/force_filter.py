@@ -53,7 +53,7 @@ def create_force_filter_df(df_PierForces: pd.DataFrame, df_Tier: pd.DataFrame) -
         df_FilteredForces["Location"]
     )
     
-    print(df_FilteredForces)
+
     df_FilteredForces['P_SPCol'] = np.round(df_FilteredForces['P'], 0).astype(float)*(-1)
     df_FilteredForces['Mx_SPCol'] = np.round(df_FilteredForces["M2"], 0).astype(float)
     df_FilteredForces['My_SPCol'] = np.round(df_FilteredForces["M3"], 0).astype(float)
@@ -96,8 +96,6 @@ def force_filter_SPformat(df3: pd.DataFrame, group_value: str) -> tuple:
     result_string = f"{total_rows}\n{load_string}"
     
     return result_string, total_rows
-
-
 
 
 def get_pierforces_CTI_todb(engine: Engine):

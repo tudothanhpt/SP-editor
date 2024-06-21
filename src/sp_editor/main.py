@@ -21,6 +21,7 @@ from sp_editor.core.connect_etabs import get_story_infor, get_pier_label_infor, 
 from sp_editor.crud.cr_level_group import get_level_to_db, get_pier_label_to_db, get_pier_design_force_to_db, \
     get_sds_to_db
 from sp_editor.core.force_filter import get_pierforces_CTI_todb
+from sp_editor.core.cti_data_merging import create_cti_summary_df, CTI_creation
 from sp_editor.crud.cr_load_combo import create_loadComboDB, create_loadComboSelectionDB, read_loadComboSelectionDB
 from sp_editor.crud.cr_SD_shape import get_SDCoordinates_CTI_todb
 
@@ -53,6 +54,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.a_Cases.triggered.connect(self.open_calculation_cases)
         self.actionDesign_Combos_Selection.triggered.connect(self.open_loadComboSelection)
         self.a_GetAllForce.triggered.connect(self.get_all_force)
+        self.a_MakeSPcolumn.triggered.connect(self.make_spcolumn)
 
     @qtc.Slot()
     def new_file(self):
@@ -85,7 +87,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
 
         # Set ETABS units = engine units
         set_global_unit(self.sap_model, self.current_engine)
-        print(self.sap_model.GetPresentUnits())
+
         # TODO: add widget to get load combo and story infor pierlabel below
         # get story label from api and then put into database
         df_story = get_story_infor(self.sap_model, self.etabs_object)
@@ -132,6 +134,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.dialog_group = CalculationCase_Dialog(self.current_engine, self.current_path)
         self.dialog_group.case_init.connect(self.update_message)
         self.dialog_group.exec()
+        self.a_MakeSPcolumn.setEnabled(True)
 
     @qtc.Slot()
     def open_loadComboSelection(self):
@@ -147,6 +150,13 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         df_pier_design_force = get_pier_force_infor(self.sap_model, self.etabs_object, list_combo_selection)
         get_pier_design_force_to_db(self.current_engine, df_pier_design_force)
         get_pierforces_CTI_todb(self.current_engine)
+        
+        
+    @qtc.Slot()
+    def make_spcolumn(self):
+        create_cti_summary_df(self.current_engine)
+        CTI_creation(self.current_engine)
+        
 
     @qtc.Slot(Engine)
     def set_current_engine(self, engine: Engine):
@@ -170,8 +180,8 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.a_Cases.setEnabled(mode)
         self.actionDesign_Combos_Selection.setEnabled(mode)
         self.a_GetAllForce.setEnabled(False)
-        self.a_MakeSPcolumn.setEnabled(mode)
-        self.a_BatchProcessor.setEnabled(mode)
+        self.a_MakeSPcolumn.setEnabled(False)
+        self.a_BatchProcessor.setEnabled(False)
 
     @qtc.Slot()
     def set_active_action_postEtabs(self, mode: bool):
@@ -179,8 +189,8 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.a_Cases.setEnabled(mode)
         self.actionDesign_Combos_Selection.setEnabled(mode)
         self.a_GetAllForce.setEnabled(False)
-        self.a_MakeSPcolumn.setEnabled(mode)
-        self.a_BatchProcessor.setEnabled(mode)
+        self.a_MakeSPcolumn.setEnabled(False)
+        self.a_BatchProcessor.setEnabled(False)
 
 
 if __name__ == '__main__':
