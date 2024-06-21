@@ -105,15 +105,24 @@ class CalculationCase(SQLModel, table=True):
     folder: str | None = Field(default=None)
     sds: str | None = Field(default=None)
     pier: str | None = Field(default=None)
-    barArea: float | None = Field(default=None)
+
     barCover: float | None = Field(default=None)
+    barArea: float | None = Field(default=None)
     barSpacing: float | None = Field(default=None)
+    concreteAg: float | None = Field(default=None)
+    sdsAs: float | None = Field(default=None)
+    rho: float | None = Field(default=None)
+
     materialFc: float | None = Field(default=None)
     materialFy: float | None = Field(default=None)
     materialEc: float | None = Field(default=None)
     materialEs: float | None = Field(default=None)
+
     fromLevel: str | None = Field(default=None)
     toLevel: str | None = Field(default=None)
+
+    casePath: str | None = Field(default=None)
+    spColumnFile: str | None = Field(default=None)
 
 
 class LoadCombinationsSelection(SQLModel, table=True):

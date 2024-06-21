@@ -10,7 +10,7 @@ from sp_editor.widgets.load_calculation_case import Ui_calculationCase_dialog
 
 from crud.cr_level_group import get_group_level, get_level_from_group, get_pierlabel_with_level
 from crud.cr_load_case import get_sds_section_name, get_concrete_name, get_steel_name, get_rebar_size_name, \
-    get_concrete_fc_Ec, get_steel_fy_Es, get_rebar_area_from_name
+    get_concrete_fc_Ec, get_steel_fy_Es, get_rebar_area_from_name, create_calculation_case
 
 from core.connect_etabs import show_warning
 from core.find_uniform_bars import get_rebarCoordinates_str
@@ -19,6 +19,8 @@ from sqlalchemy.engine.base import Engine
 
 
 class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
+    case_init = qtc.Signal(str)
+
     def __init__(self, engine: Engine | None = None, path: str | None = None, unit: str | None = None):
         super().__init__()
         self.tier_name = None
@@ -26,6 +28,7 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.sds_name = None
         self.pier_name = None
         self.concrete_Ag = None
+        self.sds_total_As = None
         self.bar_area = None
         self.bar_cover = None
         self.bar_spacing = None
@@ -49,9 +52,10 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.engine = engine
         self.current_path = path
         self.current_unit = unit
-        self.base_dir = None
-        self.case_dir_name = None
+
         self.case_path = None
+
+        self.calculation_case = None
 
         self.setupUi(self)
 
@@ -113,9 +117,14 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
 
     @qtc.Slot()
     def update_data_from_concrete(self, text: str):
-        self.concrete_fc, self.concrete_Ec = get_concrete_fc_Ec(self.engine, text)
-        self.lb_fc.setText(str(self.concrete_fc))
-        self.lb_Ec.setText(str(self.concrete_Ec))
+        concrete_fc, concrete_Ec = get_concrete_fc_Ec(self.engine, text)
+        if concrete_fc is None or concrete_Ec is None:
+            qtw.QMessageBox.critical(self, 'Error', "Failed to retrieve concrete properties.")
+        else:
+            self.material_fc = concrete_fc
+            self.material_Ec = concrete_Ec
+        self.lb_fc.setText(str(self.material_fc))
+        self.lb_Ec.setText(str(self.material_Ec))
 
     @qtc.Slot()
     def update_steel(self):
@@ -127,9 +136,15 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
 
     @qtc.Slot()
     def update_data_from_steel(self, text: str):
-        self.concrete_fy, self.concrete_Es = get_steel_fy_Es(self.engine, text)
-        self.lb_fy.setText(str(self.concrete_fy))
-        self.lb_Es.setText(str(self.concrete_Es))
+        steel_fy, steel_Es = get_steel_fy_Es(self.engine, text)
+        if steel_fy is None or steel_Es is None:
+            qtw.QMessageBox.critical(self, 'Error', "Failed to retrieve rebar properties.",
+                                     )
+        else:
+            self.material_fy = steel_fy
+            self.material_Es = steel_Es
+        self.lb_fy.setText(str(self.material_fy))
+        self.lb_Es.setText(str(self.material_Es))
 
     @qtc.Slot()
     def update_rebar_size(self):
@@ -182,13 +197,13 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
     def create_folder(self):
         if self.current_path:
             # Extract the directory from the file path
-            self.base_dir = os.path.dirname(self.current_path)
+            base_dir = os.path.dirname(self.current_path)
 
             if self.folder_name and self.tier_name:
                 # Define the new folders to be created
-                self.case_dir_name = [self.tier_name, self.folder_name]
+                case_dir_name = [self.tier_name, self.folder_name]
 
-                self.case_path = os.path.join(self.base_dir, *self.case_dir_name)
+                self.case_path = os.path.join(base_dir, *case_dir_name)
                 try:
                     # Create the new directories
                     os.makedirs(self.case_path, exist_ok=True)
@@ -202,7 +217,13 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
 
     @qtc.Slot()
     def confirm_action(self):
-        self.create_folder()
+        try:
+            self.create_folder()
+            self.calculation_case = self.add_calculation_case()
+            self.case_init.emit(f"Calculation case for {self.tier_name} {self.pier_name} added")
+            self.close()
+        except ValueError:
+            print("Can't not create calculation case")
 
     @qtc.Slot()
     def cacel_all_action(self):
@@ -281,6 +302,15 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.tier_name = self.cb_tier.currentText()
         self.pier_name = self.cb_pierdata.currentText()
         self.sds_name = self.cb_sectionDesignerShape.currentText()
+
+    def add_calculation_case(self):
+        case = [self.tier_name, self.folder_name, self.sds_name, self.pier_name,
+                self.bar_cover, self.bar_area, self.bar_spacing, self.concrete_Ag, self.sds_total_As, self.rho,
+                self.material_fc, self.material_fy, self.material_Ec, self.material_Es,
+                self.from_level, self.to_level,
+                self.case_path]
+        cal_case = create_calculation_case(self.engine, case)
+        return cal_case
 
 
 if __name__ == '__main__':

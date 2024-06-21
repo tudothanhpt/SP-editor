@@ -20,7 +20,7 @@ from sp_editor.core.connect_etabs import get_story_infor, get_pier_label_infor, 
     get_loadCombo_df_fromE, get_section_designer_shape_infor, set_global_unit
 from sp_editor.crud.cr_level_group import get_level_to_db, get_pier_label_to_db, get_pier_design_force_to_db, \
     get_sds_to_db
-from sp_editor.core.force_filter import get_pierforces_CTI_todb    
+from sp_editor.core.force_filter import get_pierforces_CTI_todb
 from sp_editor.crud.cr_load_combo import create_loadComboDB, create_loadComboSelectionDB, read_loadComboSelectionDB
 from sp_editor.crud.cr_SD_shape import get_SDCoordinates_CTI_todb
 
@@ -82,9 +82,9 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
 
         self.sap_model = self.dialog_import_etabs.SapModel
         self.etabs_object = self.dialog_import_etabs.EtabsObject
-        
-        #Set ETABS units = engine units
-        set_global_unit(self.sap_model,self.current_engine)
+
+        # Set ETABS units = engine units
+        set_global_unit(self.sap_model, self.current_engine)
         print(self.sap_model.GetPresentUnits())
         # TODO: add widget to get load combo and story infor pierlabel below
         # get story label from api and then put into database
@@ -130,6 +130,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     @qtc.Slot()
     def open_calculation_cases(self):
         self.dialog_group = CalculationCase_Dialog(self.current_engine, self.current_path)
+        self.dialog_group.case_init.connect(self.update_message)
         self.dialog_group.exec()
 
     @qtc.Slot()
@@ -141,7 +142,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     @qtc.Slot()
     def get_all_force(self):
         df_combo_selection = read_loadComboSelectionDB(self.current_engine)
-        list_combo_selection=df_combo_selection["selectedLoadCombos"].dropna().unique().tolist()
+        list_combo_selection = df_combo_selection["selectedLoadCombos"].dropna().unique().tolist()
         # get pier design force and then put into database
         df_pier_design_force = get_pier_force_infor(self.sap_model, self.etabs_object, list_combo_selection)
         get_pier_design_force_to_db(self.current_engine, df_pier_design_force)

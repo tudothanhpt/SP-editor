@@ -1,9 +1,10 @@
 from pandas import DataFrame
 from sqlalchemy import func
+from sqlalchemy.exc import NoResultFound, MultipleResultsFound
 
 from sqlmodel import Session, select
 from sp_editor.database.models import GroupLevel, PierLabel, Level, SectionDesignerShape, MaterialConcrete, \
-    MaterialRebar, BarSet
+    MaterialRebar, BarSet, CalculationCase
 from sqlalchemy.engine.base import Engine
 
 
@@ -24,21 +25,41 @@ def get_concrete_name(engine: Engine):
 
 
 def get_concrete_fc_Ec(engine: Engine, name: str):
-    with Session(engine) as session:
-        statement = select(MaterialConcrete.fc, MaterialConcrete.Ec).where(MaterialConcrete.name == name)
-        results = session.exec(statement)
-        output = results.one()
-        fc, Ec = output
-        return fc, Ec
+    try:
+        with Session(engine) as session:
+            statement = select(MaterialConcrete.fc, MaterialConcrete.Ec).where(MaterialConcrete.name == name)
+            results = session.exec(statement)
+            output = results.one()
+            fc, Ec = output
+            return fc, Ec
+    except NoResultFound:
+        print(f"No result found for the concrete name: {name}")
+        return None, None
+    except MultipleResultsFound:
+        print(f"Multiple results found for the concrete name: {name}")
+        return None, None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None, None
 
 
 def get_steel_fy_Es(engine: Engine, name: str):
-    with Session(engine) as session:
-        statement = select(MaterialRebar.fy, MaterialRebar.Es).where(MaterialRebar.name == name)
-        results = session.exec(statement)
-        output = results.one()
-        fy, Es = output
-        return fy, Es
+    try:
+        with Session(engine) as session:
+            statement = select(MaterialRebar.fy, MaterialRebar.Es).where(MaterialRebar.name == name)
+            results = session.exec(statement)
+            output = results.one()
+            fy, Es = output
+            return fy, Es
+    except NoResultFound:
+        print(f"No result found for the steel name: {name}")
+        return None, None
+    except MultipleResultsFound:
+        print(f"Multiple results found for the steel name: {name}")
+        return None, None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None, None
 
 
 def get_steel_name(engine: Engine):
@@ -71,3 +92,37 @@ def get_rebar_area_from_name(engine: Engine, name: str):
         results = session.exec(statement)
         barset_area = results.one()
         return barset_area
+
+
+def create_calculation_case(engine: Engine, params: list[str | float]):
+    (tier, folder, sds, pier, bar_cover, bar_area, bar_spacing, concrete_ag, sds_as, rho,
+     material_fc, material_fy, material_ec, material_es, from_level, to_level, case_path) = params
+
+    with Session(engine) as session:
+        calculation_case = CalculationCase(
+            tier=tier,
+            folder=folder,
+            sds=sds,
+            pier=pier,
+            barCover=bar_cover,
+            barArea=bar_area,
+            barSpacing=bar_spacing,
+            concreteAg=concrete_ag,
+            sdsAs=sds_as,
+            rho=rho,
+            materialFc=material_fc,
+            materialFy=material_fy,
+            materialEc=material_ec,
+            materialEs=material_es,
+
+            fromLevel=from_level,
+            toLevel=to_level,
+            
+            casePath=case_path,
+            spColumnFile=None
+        )
+
+        session.add(calculation_case)
+        session.commit()
+        session.refresh(calculation_case)
+        return calculation_case
