@@ -227,6 +227,38 @@ def get_rebarCoordinates_str(frame: qtw.QFrame, engine: Engine, cover: float, ba
     # df_rebar_coordinates.to_sql("rebarcoordinates_CTI", con=engine, if_exists='append', index=False)
     return total_rebar, multiline_string_rebarPts
 
+def get_rebarCoordinates_str2(engine: Engine, cover: float, bar_area: float, spacing: float,
+                             SDname: str):
+    # Calculate bar diameter
+    bar_dia = math.sqrt(bar_area / math.pi) * 2
+
+    # Calculate offset distance
+    offset_distance = (cover + (bar_dia / 2)) * (-1)
+
+    # Calculate rebar area
+    rebarArea = bar_area
+
+    # Read SDS DB and restructure SD shape
+    df_sd = read_sdsDB(engine)
+    lst_PierSDShape = restructure_sdshapeDF(df_sd)
+
+    # Find index of SDname in lst_PierSDShape
+    idx = find_key_index(lst_PierSDShape, SDname)
+
+    # Get the PierSDShape for the specified SDname
+    PierSDShape = lst_PierSDShape[idx]
+
+    # Offset SD shapes
+    offsetted_shapes = offset_sdshapeDF(lst_PierSDShape, SDname, offset_distance)
+
+    # Calculate rebar points for segments with given spacing
+    rebar_list = calculate_rebarpoints_for_segments(offsetted_shapes, spacing)
+
+    # Generate multiline string rebar points
+    total_rebar,multiline_string_rebarPts = spColumn_CTI_Rebar(rebar_list, rebarArea)
+
+    return total_rebar, multiline_string_rebarPts
+
 
 def main():
     engine_temppath = r"tests\TestBM\DemoNo3.spe"

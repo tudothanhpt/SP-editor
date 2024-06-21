@@ -2,6 +2,7 @@ import math
 import sys
 import os
 
+
 class CTIfile:
     """
     Represents a CTI (spColumn Text Input) file for managing column design and investigation data.
@@ -44,7 +45,7 @@ class CTIfile:
 
     def __init__(self):
         self.__SpColumnVersion: str = "10.000"
-        self.__ProjectName: str = "Name"
+        self.__ProjectName: str = ""
         self.__ColumnID: str = ""
         self.__Engineer: str = ""
         self.__InvestigationRunFlag: int = 15  # DEFAULT
@@ -235,9 +236,33 @@ class CTIfile:
     def set_design_reinforcement(self) -> None:
         # This section applies to design mode only
         # DesignReinforcement's options are not applied for Irregular options, options are set to default. We do not use regular section for this API
-        # Option 1-12: Reserved. Do not edit. 
+        # Option 1: Reserved. Do not edit. 
+        option1 = 0
+        # Option 2: Reserved. Do not edit. 
+        option2 = 0
+        # Option 3: Reserved. Do not edit.
+        option3 = 0
+        # Option 4: Reserved. Do not edit. 
+        option4 = 0
+        # Option 5: Reserved. Do not edit. 
+        option5 = 0
+        # Option 6: Reserved. Do not edit. 
+        option6 = 0
+        # Option 7: Reserved. Do not edit. 
+        option7 = 0
+        # Option 8: Reserved. Do not edit. 
+        option8 = 0
+        # Option 9: Reserved. Do not edit. 
+        option9 = 0
+        # Option 10: Reserved. Do not edit. 
+        option10 = 0
+        # Option 11: Reserved. Do not edit. 
+        option11 = 0
+        # Option 12:  Reserved. Do not edit. 
+        option12 = 0
 
-        options = [0,0,0,0,0,0,0,0,0,0,0,0]
+        options = [option1, option2, option3, option4, option5, option6, option7, option8, option9, option10, option11,
+                   option12]
         self.__DesignReinforcement = ','.join(map(str, options))
 
     def set_investigation_section_dimensions(self) -> None:
@@ -252,9 +277,19 @@ class CTIfile:
     def set_design_section_dimensions(self) -> None:
         # This section applies to design mode only
         # DesignSectionDimensions's options are not applied for Irregular options, options are set to default. We do not use regular section for this API
-        # Option 1-6: Reserved. Do not edit. 
+        option1 = 0
+        # Option 2: Reserved. Do not edit. 
+        option2 = 0
+        # Option 3: Reserved. Do not edit.
+        option3 = 0
+        # Option 4: Reserved. Do not edit. 
+        option4 = 0
+        # Option 5: Reserved. Do not edit. 
+        option5 = 0
+        # Option 6: Reserved. Do not edit. 
+        option6 = 0
 
-        options = [0,0,0,0,0,0]
+        options = [option1, option2, option3, option4, option5, option6]
         self.__DesignSectionDimensions = ','.join(map(str, options))
 
     def set_material_properties(self, f_c: float = 6, E_c: float= 4415.21, beta1: float = 0.75,
@@ -289,6 +324,7 @@ class CTIfile:
             compression_controlled_strain_limit
         ]
         self.__MaterialProperties = ','.join(map(str, properties))
+
 
     def set_reduction_factors(self,confinement_type: str="Tied") -> None:
         '''There are 5 values separated by commas in one line in this section. These values are described 
@@ -343,6 +379,7 @@ class CTIfile:
     def set_reinforcement_bars(self, CTI_RebarCoordinates : str) -> None:
         self.__ReinforcementBars = CTI_RebarCoordinates
             
+
     def set_factored_loads(self, CTT_force: str) -> None:
         self.__FactoredLoads = CTT_force
 
@@ -661,6 +698,7 @@ class CTIfile:
                f"[User Defined Bars]\n{self.__UserDefinedBars}\n" \
                f"[Sustained Load Factors]\n{self.__SustainedLoadFactors}\n"
 
+
     def write_CTIfile_to_file(self, folder_path: str, file_name: str) -> None:
         file_path = os.path.join(folder_path, file_name+".cti")
 
@@ -668,3 +706,28 @@ class CTIfile:
         with open(file_path, "w") as file:
             file.write(self.CTIbuilder())
 
+
+def main():
+    return True
+
+
+if __name__ == "__main__":
+
+    newCTIfile = CTIfile()
+    newCTIfile.set_engineer("ABui")
+    newCTIfile.set_column_id("Test")
+
+    newCTIfile.set_material_properties(f_c=6, E_c=4415.21, beta1=0.75, 
+                                       fy=80, Ey=29000)
+
+    newCTIfile.set_user_options(unit_system= 0, design_code=8,
+                                confinement=0,
+                                num_irregular_bars=999,num_factored_loads=999,
+                                section_capacity_method=0)
+    newCTIfile.set_external_points("ngu")
+    newCTIfile.set_reinforcement_bars("ngu")
+    newCTIfile.set_factored_loads("ngu")
+    newCTIfile.set_bar_group_type(bar_group_type=1)
+    
+    
+    print(newCTIfile.CTIbuilder())
