@@ -62,7 +62,7 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.update_rebar_size()
 
         self.cb_tier.currentTextChanged.connect(self.update_level_list)
-        self.cb_tier.currentTextChanged.connect(self.update_pier_infor)
+        self.cb_tier.currentTextChanged.connect(lambda text: self.update_pier_infor(text, self.level_list))
         self.cb_concrete.currentTextChanged.connect(self.update_data_from_concrete)
         self.cb_steel.currentTextChanged.connect(self.update_data_from_steel)
 
@@ -70,6 +70,12 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
 
         self.pb_OK.clicked.connect(self.confirm_action)
         self.pb_Cancel.clicked.connect(self.cacel_all_action)
+
+        # Manually trigger the slot for the initial current text
+        self.update_level_list(self.cb_tier.currentText())
+        self.update_pier_infor(self.cb_tier.currentText(), self.level_list)
+        self.update_data_from_concrete(self.cb_concrete.currentText())
+        self.update_data_from_steel(self.cb_steel.currentText())
 
     @qtc.Slot()
     def update_group_box(self):
@@ -90,9 +96,9 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.cb_sectionDesignerShape.addItems(sds_names_unique)
 
     @qtc.Slot()
-    def update_level_list(self):
+    def update_level_list(self, text):
         # TODO: get level list based on selected tier
-        self.level_list = get_level_from_group(self.engine, self.cb_tier.currentText())
+        self.level_list = get_level_from_group(self.engine, text)
         self.get_top_and_bottom_level_of_tier()
 
         self.level_list_model = qtc.QStringListModel()
@@ -106,8 +112,8 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.cb_concrete.addItems(self.concrete_list)
 
     @qtc.Slot()
-    def update_data_from_concrete(self):
-        self.concrete_fc, self.concrete_Ec = get_concrete_fc_Ec(self.engine, self.cb_concrete.currentText())
+    def update_data_from_concrete(self, text: str):
+        self.concrete_fc, self.concrete_Ec = get_concrete_fc_Ec(self.engine, text)
         self.lb_fc.setText(str(self.concrete_fc))
         self.lb_Ec.setText(str(self.concrete_Ec))
 
@@ -120,8 +126,8 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.cb_steel.setCurrentIndex(0)
 
     @qtc.Slot()
-    def update_data_from_steel(self):
-        self.concrete_fy, self.concrete_Es = get_steel_fy_Es(self.engine, self.cb_steel.currentText())
+    def update_data_from_steel(self, text: str):
+        self.concrete_fy, self.concrete_Es = get_steel_fy_Es(self.engine, text)
         self.lb_fy.setText(str(self.concrete_fy))
         self.lb_Es.setText(str(self.concrete_Es))
 
@@ -133,9 +139,9 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.cb_barSize.addItems(self.rebar_list)
 
     @qtc.Slot()
-    def update_pier_infor(self):
+    def update_pier_infor(self, text: str, level):
         # TODO: get pier infor from selected tier from database and display into listview
-        self.piers_list = get_pierlabel_with_level(self.engine, self.level_list)
+        self.piers_list = get_pierlabel_with_level(self.engine, level)
         pier_names_unique = self.get_unique_items(self.piers_list)
         self.cb_pierdata.clear()
         self.cb_pierdata.addItems(pier_names_unique)
@@ -152,18 +158,19 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
             # get all other data need
             self.get_data_for_plot()
             # plot function
-            self.sds_total_bars,self.sds_rebar_list = get_rebarCoordinates_str(self.f_3dview, self.engine, self.bar_cover, self.bar_area,
-                                                           self.bar_spacing, self.sds_name)
-            
+            self.sds_total_bars, self.sds_rebar_list = get_rebarCoordinates_str(self.f_3dview, self.engine,
+                                                                                self.bar_cover, self.bar_area,
+                                                                                self.bar_spacing, self.sds_name)
+
             self.concrete_Ag = round(read_area(self.engine, self.sds_name), 2)
-            self.sds_total_As=round(self.bar_area*self.sds_total_bars,2)
-            self.rho = round((self.sds_total_As/self.concrete_Ag)*100,2)
-            
+            self.sds_total_As = round(self.bar_area * self.sds_total_bars, 2)
+            self.rho = round((self.sds_total_As / self.concrete_Ag) * 100, 2)
+
             self.lb_quantities.setText(str(self.sds_total_bars))
             self.lb_As.setText(str(self.sds_total_As))
             self.lb_Ag.setText(str(self.concrete_Ag))
             self.lb_Rho.setText(str(self.rho))
-            
+
         except ValueError as ve:
             # Handle missing value error
             print(f"ValueError in make_section: {ve}")

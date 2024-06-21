@@ -1,40 +1,59 @@
-from typing import Any
-
-import pandas as pd
-from pandas import DataFrame
-
-from core.connect_etabs import show_warning, connect_to_etabs
+import sys
+from PySide6.QtWidgets import QApplication, QMainWindow, QComboBox, QVBoxLayout, QWidget, QLabel, QDialog
 
 
-def get_section_designer_shape_infor(sap_model: Any, etabs_object: Any) -> DataFrame:
-    SapModel = sap_model
-    EtabsObject = etabs_object
-    table_key = 'Section Designer Shapes - Concrete Polygon'
+class CalculationWindow(QDialog):
+    def __init__(self, text):
+        super().__init__()
+        self.setWindowTitle("Calculation Result")
+        layout = QVBoxLayout()
 
-    # Get the database table
-    SDS_db = SapModel.DatabaseTables.GetTableForDisplayArray(table_key, GroupName='')
-    if SDS_db[-1] != 0:
-        error_message = (f"<b>Failed to get table for display.<b> "
-                         f"<p>PLease make sure you defined general pier sections. <p>"
-                         f"<p> Return code: {SDS_db[-1]}.<p>")
-        show_warning(error_message)
-        return pd.DataFrame()
+        # Perform a simple calculation based on the current text
+        try:
+            number = int(text.split()[-1])  # Assuming the text format is "Item X"
+            result = number * 2
+            calculation_label = QLabel(f"The double of {number} is {result}")
+        except ValueError:
+            calculation_label = QLabel("Invalid number format")
 
-    # Extract header and data
-    header = SDS_db[2]
-    data_values = SDS_db[4]
-
-    # Group the data values into rows
-    rows = [data_values[i:i + len(header)] for i in range(0, len(data_values), len(header))]
-
-    # Create the DataFrame
-    df = pd.DataFrame(rows, columns=header)
-    df_selected = df[['SectionType', 'SectionName', 'ShapeName', 'X', 'Y']]
-
-    return df_selected
+        layout.addWidget(calculation_label)
+        self.setLayout(layout)
 
 
-if __name__ == '__main__':
-    sap_model, etabs_object = connect_to_etabs(model_is_open=True)
-    df = get_section_designer_shape_infor(sap_model, etabs_object)
-    print(df)
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.comboBox = QComboBox()
+        self.comboBox.addItems(["Item 1", "Item 2", "Item 3"])
+
+        # Connect the currentTextChanged signal to a slot
+        self.comboBox.currentTextChanged.connect(self.on_current_text_changed)
+
+        # Layout setup
+        layout = QVBoxLayout()
+        layout.addWidget(self.comboBox)
+
+        container = QWidget()
+        container.setLayout(layout)
+        self.setCentralWidget(container)
+
+        # Manually trigger the slot for the initial current text
+        self.on_current_text_changed(self.comboBox.currentText())
+
+    def on_current_text_changed(self, text):
+        print(f"Current text: {text}")
+
+        # Display another window and perform some calculation
+        self.display_calculation_window(text)
+
+    def display_calculation_window(self, text):
+        calculation_window = CalculationWindow(text)
+        calculation_window.exec()
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
