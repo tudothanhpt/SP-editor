@@ -14,6 +14,7 @@ from sp_editor.controllers.material_dialog import Material_Dialog
 from sp_editor.controllers.combos_dialog import Combo_Dialog
 from sp_editor.controllers.groups_dialog import Group_Dialog
 from sp_editor.controllers.calculation_case_dialog import CalculationCase_Dialog
+from sp_editor.controllers.cti_file_making_dialog import CTIMakingDialog
 
 from sqlalchemy.engine.base import Engine
 from sp_editor.core.connect_etabs import get_story_infor, get_pier_label_infor, get_pier_force_infor, \
@@ -155,7 +156,8 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     @qtc.Slot()
     def make_spcolumn(self):
         create_cti_summary_df(self.current_engine)
-        CTI_creation(self.current_engine)
+        self.cti_making = CTIMakingDialog(self.current_engine)
+        self.cti_making.exec()
         
 
     @qtc.Slot(Engine)

@@ -154,10 +154,60 @@ def CTI_creation(engine):
         newCTIfile.write_CTIfile_to_file(case_path, Col_id)
 
     create_file_and_notify(f"{len(df_summaryCTI)} CTI files created successfully!")
+    
+def CTI_creation2(engine, listCTIfile: list):
+    
+    df_summaryCTI = read_summaryCTI_DB(engine)
+    df_summaryCTI=df_summaryCTI[df_summaryCTI['ID2'].isin(listCTIfile)]
+    general_infor = get_infor(engine)
+    
+    d_code = DesignCode.from_string(general_infor.design_code).value
+    u_sys = UnitSystem.from_string(general_infor.unit_system).value
+    b_set = BarGroupType.from_string(general_infor.bar_set).value
+    confi = ConfinementType.from_string(general_infor.confinement).value
+    s_capacity = SectionCapacityMethod.from_string(general_infor.section_capacity).value
+    lst_CTIfile_fullpath = []
+    for index, row in df_summaryCTI.iterrows():
+        Col_id = row['ID2']
+        ec = row['materialEc']
+        fc = row['materialFc']
+        beta1 = calculate_beta1(float(fc))
+        fy = row['materialFy']
+        ey = row['materialEs']
+        SDCoordinates = row['Coordinates']
+        totalbars = row['totalbars']
+        rebarcoordinates = row['rebarcoordinates']
+        Total_Combos = row['Total Combos']
+        Filtered_Forces = row['Filtered Forces']
+        case_path = os.path.normpath(row["casePath"])
+    
+
+        newCTIfile = CTIfile()
+        newCTIfile.set_project_name("SP-Editor_Automation")
+        newCTIfile.set_engineer("SP-Editor")
+        newCTIfile.set_column_id(Col_id)
+
+        newCTIfile.set_material_properties(f_c=fc, E_c=ec, beta1=beta1,
+                                           fy=fy, Ey=ey)
+
+        newCTIfile.set_user_options(unit_system=u_sys, design_code=d_code,
+                                    confinement=confi,
+                                    num_irregular_bars=totalbars, num_factored_loads=Total_Combos,
+                                    section_capacity_method=s_capacity)
+
+        newCTIfile.set_external_points(SDCoordinates)
+        newCTIfile.set_reinforcement_bars(rebarcoordinates)
+        newCTIfile.set_factored_loads(Filtered_Forces)
+        newCTIfile.set_bar_group_type(bar_group_type=b_set)
+        newCTIfile.write_CTIfile_to_file(case_path, Col_id)
+        
+        lst_CTIfile_fullpath.append(os.path.join(case_path, Col_id+".cti"))
+    
+    return lst_CTIfile_fullpath
 
 
 if __name__ == "__main__":
-    engine_temppath = r"tests\TestBM\demono2.spe"
+    engine_temppath = r"tests\TestBM\demono1.spe"
     engine: Engine = create_engine(f"sqlite:///{engine_temppath}")
     create_cti_summary_df(engine)
     CTI_creation(engine)
