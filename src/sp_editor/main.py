@@ -151,14 +151,12 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         df_pier_design_force = get_pier_force_infor(self.sap_model, self.etabs_object, list_combo_selection)
         get_pier_design_force_to_db(self.current_engine, df_pier_design_force)
         get_pierforces_CTI_todb(self.current_engine)
-        
-        
+
     @qtc.Slot()
     def make_spcolumn(self):
         create_cti_summary_df(self.current_engine)
         self.cti_making = CTIMakingDialog(self.current_engine)
         self.cti_making.exec()
-        
 
     @qtc.Slot(Engine)
     def set_current_engine(self, engine: Engine):

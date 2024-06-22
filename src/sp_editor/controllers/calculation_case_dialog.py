@@ -252,9 +252,12 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
 
     @qtc.Slot()
     def get_top_and_bottom_level_of_tier(self):
-        self.from_level = self.level_list[-1]
-        self.to_level = self.level_list[0]
-        print(self.level_list)
+        try:
+            self.from_level = self.level_list[-1]
+            self.to_level = self.level_list[0]
+        except IndexError:
+            error_message = f"<p>No level found please define your Tier first<p>"
+            show_warning(error_message)
 
     def check_input(self):
         status = qtg.Qt.CheckState.Checked

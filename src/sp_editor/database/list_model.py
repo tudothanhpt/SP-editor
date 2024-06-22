@@ -1,7 +1,6 @@
 from typing import *
+
 from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex
-from PySide6.QtWidgets import  QListView, QAbstractItemView
-from PyQt6.QtGui import QStandardItemModel, QStandardItem
 
 
 class ListModel(QAbstractListModel):
@@ -115,4 +114,3 @@ class ListModel(QAbstractListModel):
         current_item: List[Tuple[str, int]] = [(item, self.original_order[item]) for item, _ in
                                                zip(self.items, self.original_order.values())]
         return current_item
-

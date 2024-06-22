@@ -1,7 +1,7 @@
 import pandas as pd
 import sys
 import os
-from sp_editor.database.models import SectionDesignerShape, SDCoordinates_CTI, PierForce,CalculationCase
+from sp_editor.database.models import SectionDesignerShape, SDCoordinates_CTI, PierForce, CalculationCase
 from PySide6.QtWidgets import QApplication, QFileDialog
 
 from sp_editor.core.find_uniform_bars import get_rebarCoordinates_str2
@@ -12,7 +12,7 @@ from sp_editor.core.global_variables import *
 
 from sqlmodel import create_engine
 from sp_editor.core.spcolumn_cti import CTIfile
-from PyQt6.QtWidgets import QApplication, QMessageBox
+from PySide6.QtWidgets import QApplication, QMessageBox
 
 TB_CALCULATIONCASE = str(CalculationCase.__name__).lower()
 TB_SDSHAPE_ETABS = str(SectionDesignerShape.__name__).lower()
@@ -20,9 +20,7 @@ TB_SDSHAPE_CTI = str(SDCoordinates_CTI.__name__).lower()
 TB_PIERFORCE = str(PierForce.__name__).lower()
 
 
-
 def create_file_and_notify(content):
-
     # Display notification
     msg_box = QMessageBox()
     msg_box.setIcon(QMessageBox.Icon.Information)
@@ -40,15 +38,17 @@ def read_sdsCTI_DB(engine):
     )
     return df_SD
 
+
 def read_calculationCase_DB(engine):
     # Read SQL table into a DataFrame
     df_Case = pd.read_sql_table(
-        table_name= TB_CALCULATIONCASE,  # The table to read
+        table_name=TB_CALCULATIONCASE,  # The table to read
         con=engine,  # The SQLAlchemy engine
-        columns=['tier', 'pier', 'sds', 'barArea', 'barSpacing', 'barCover', 
-                 'materialEc', 'materialFc', 'materialFy', 'materialEs','casePath']
+        columns=['tier', 'pier', 'sds', 'barArea', 'barSpacing', 'barCover',
+                 'materialEc', 'materialFc', 'materialFy', 'materialEs', 'casePath']
     )
     return df_Case
+
 
 def read_pierdesignCTI_forceDB(engine):
     """
@@ -60,6 +60,7 @@ def read_pierdesignCTI_forceDB(engine):
     )
     return df  # The DataFrame containing the table data
 
+
 def read_summaryCTI_DB(engine):
     """
     """
@@ -70,13 +71,13 @@ def read_summaryCTI_DB(engine):
     )
     return df  # The DataFrame containing the table data
 
-def create_cti_summary_df(engine):
 
+def create_cti_summary_df(engine):
     df_SD = read_sdsCTI_DB(engine)
-    
+
     df_designforce = read_pierdesignCTI_forceDB(engine)
-    
-    df_loadcalculationCase = read_calculationCase_DB(engine)  
+
+    df_loadcalculationCase = read_calculationCase_DB(engine)
 
     merged_df = pd.merge(df_loadcalculationCase, df_SD, how='left',
                          left_on='sds', right_on='SDName')
@@ -100,19 +101,19 @@ def create_cti_summary_df(engine):
     merged_df['rebarcoordinates'] = lst_rebarcoordinatesCTI
 
     df_summaryCTI = merged_df[["ID2", "Tier", "Pier",
-                           "materialEc", "materialFc", "materialFy", "materialEs",
-                           "SDName", "Coordinates",
-                           "totalbars", "rebarcoordinates",
-                           "Total Combos", "Filtered Forces",
-                           'casePath']]
+                               "materialEc", "materialFc", "materialFy", "materialEs",
+                               "SDName", "Coordinates",
+                               "totalbars", "rebarcoordinates",
+                               "Total Combos", "Filtered Forces",
+                               'casePath']]
 
     df_summaryCTI.to_sql("ctisummary", con=engine, if_exists='replace')
 
+
 def CTI_creation(engine):
-    
     df_summaryCTI = read_summaryCTI_DB(engine)
     general_infor = get_infor(engine)
-    
+
     d_code = DesignCode.from_string(general_infor.design_code).value
     u_sys = UnitSystem.from_string(general_infor.unit_system).value
     b_set = BarGroupType.from_string(general_infor.bar_set).value
@@ -132,7 +133,6 @@ def CTI_creation(engine):
         Total_Combos = row['Total Combos']
         Filtered_Forces = row['Filtered Forces']
         case_path = os.path.normpath(row["casePath"])
-    
 
         newCTIfile = CTIfile()
         newCTIfile.set_project_name("SP-Editor_Automation")
