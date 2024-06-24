@@ -5,7 +5,7 @@ from PySide6 import QtGui as qtg
 import pandas as pd
 
 from sp_editor.widgets.cti_file_making_dialog_ui import Ui_cti_making_dialog
-from sp_editor.core.cti_data_merging import read_summaryCTI_DB,CTI_creation2
+from sp_editor.core.cti_data_merging import read_summaryCTI_DB,create_cti_summary_df,CTI_creation_from_list
 
 from sqlmodel import create_engine
 from typing import *
@@ -21,6 +21,7 @@ class CTIMakingDialog(qtw.QDialog, Ui_cti_making_dialog):
 
         try:
             self.engine = engine
+            create_cti_summary_df(self.engine)
             self.df_summaryCTI = read_summaryCTI_DB(engine)
             items = self.df_summaryCTI["ID2"].unique().tolist()
         except Exception as e:
@@ -52,11 +53,13 @@ class CTIMakingDialog(qtw.QDialog, Ui_cti_making_dialog):
         if not checked_items:
             self.show_warning()
         else:
-            lst_CTIfile_fullpath=CTI_creation2(self.engine, checked_items)
-            message = "Create file successfully" + '\n' + "---------------------------------------------"
-            text_with_message = '\n'.join([message + '\n' + path for path in lst_CTIfile_fullpath])
-            self.t_action.setText(text_with_message)  
-    
+            lst_CTIfile_fullpath=CTI_creation_from_list(self.engine, checked_items)
+            message = "CTI file created and stored:"+ '\n' 
+            blank = "---------------------------------------------"
+
+            text_with_message = '\n'.join([message +'\n' + path +'\n'+ blank for path in lst_CTIfile_fullpath])
+            self.t_action.setText(text_with_message + '\n')  
+
     def on_pb_selectall_clicked(self):
         model = self.lview_availCTI.model()
         for row in range(model.rowCount()):
@@ -78,6 +81,6 @@ if __name__ == "__main__":
     engine_temppath = r"tests\TestBM\demono1.spe"
     engine: Engine = create_engine(f"sqlite:///{engine_temppath}")
     app = qtw.QApplication(sys.argv)
-    dialog = CTIMakingDialog()
+    dialog = CTIMakingDialog(engine)
     dialog.show()
     sys.exit(app.exec())

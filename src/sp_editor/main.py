@@ -154,7 +154,6 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
 
     @qtc.Slot()
     def make_spcolumn(self):
-        create_cti_summary_df(self.current_engine)
         self.cti_making = CTIMakingDialog(self.current_engine)
         self.cti_making.exec()
 

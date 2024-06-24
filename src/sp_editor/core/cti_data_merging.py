@@ -155,7 +155,7 @@ def CTI_creation(engine):
 
     create_file_and_notify(f"{len(df_summaryCTI)} CTI files created successfully!")
     
-def CTI_creation2(engine, listCTIfile: list):
+def CTI_creation_from_list(engine, listCTIfile: list):
     
     df_summaryCTI = read_summaryCTI_DB(engine)
     df_summaryCTI=df_summaryCTI[df_summaryCTI['ID2'].isin(listCTIfile)]
