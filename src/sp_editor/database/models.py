@@ -149,3 +149,20 @@ class SDCoordinates_CTI(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     SDName: Optional[str] = Field(default=None)
     Coordinates: Optional[str] = Field(default=None)
+
+class CTISummary(SQLModel, table=True):
+    ID2: Optional[str] = Field(default=None,primary_key=True)
+    Tier: Optional[str] = Field(default=None)
+    Pier: Optional[str] = Field(default=None)
+    materialEc: Optional[float] = Field(default=None)
+    materialFc: Optional[float] = Field(default=None)
+    materialFy: Optional[float] = Field(default=None)
+    materialEs: Optional[float] = Field(default=None)
+    SDName: Optional[str] = Field(default=None)
+    Coordinates: Optional[str] = Field(default=None)  # This can be a JSON or TEXT field
+    totalbars: Optional[int] = Field(default=None)
+    rebarcoordinates: Optional[str] = Field(default=None)  # This can be a JSON or TEXT field
+    Total_Combos: Optional[int] = Field(default=None)
+    Filtered_Forces: Optional[str] = Field(default=None)  # This can be a JSON or TEXT field
+    casePath: Optional[str] = Field(default=None)
+    PathAfterCreation: Optional[str] = Field(default=None)

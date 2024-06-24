@@ -203,7 +203,7 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
                 # Define the new folders to be created
                 case_dir_name = [self.tier_name, self.folder_name]
 
-                self.case_path = os.path.join(base_dir, *case_dir_name)
+                self.case_path = os.path.join(*case_dir_name)
                 try:
                     # Create the new directories
                     os.makedirs(self.case_path, exist_ok=True)
