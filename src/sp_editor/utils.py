@@ -9,6 +9,7 @@ from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 from io import StringIO
+from sqlalchemy.engine.url import make_url
 
 def get_new_filename(suffix) -> str:
     rv, _ = qtw.QFileDialog.getSaveFileName(caption="New File", filter=suffix)
@@ -91,3 +92,25 @@ def read_json_to_df(json_file_path: str) -> pd.DataFrame:
         df = df.drop(columns=['id'])
     
     return df
+
+def write_string_to_file(folder_path, file_name, string_to_write):
+    # Ensure the folder exists
+    os.makedirs(folder_path, exist_ok=True)
+    
+    # Create the full file path
+    file_path = os.path.join(folder_path, file_name+".txt")
+    
+    # Write the text to the file
+    with open(file_path, "w") as file:
+        file.write(string_to_write)
+        
+def get_engine_path(engine):
+    # Parse the engine's URL using SQLAlchemy's make_url
+    url = make_url(engine.url)
+    
+    # Extract the path (for SQLite, the path starts with '/', so we strip the first character)
+    db_path = url.database if url.drivername == 'sqlite' else url.database
+    # Extract the folder that stores the database
+    db_folder = os.path.dirname(db_path)
+    
+    return db_folder
