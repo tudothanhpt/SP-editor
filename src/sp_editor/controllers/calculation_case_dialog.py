@@ -37,8 +37,8 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.material_fy = None
         self.material_Ec = None
         self.material_Es = None
-        self.to_level = None
-        self.from_level = None
+        self.to_story = None
+        self.from_story = None
 
         self.sds_rebar_list = None
         self.sds_total_bars = None
@@ -255,8 +255,8 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
     @qtc.Slot()
     def get_top_and_bottom_level_of_tier(self):
         try:
-            self.from_level = self.level_list[-1]
-            self.to_level = self.level_list[0]
+            self.from_story = self.level_list[-1]
+            self.to_story = self.level_list[0]
         except IndexError:
             error_message = f"<p>No level found please define your Tier first<p>"
             show_warning(error_message)
@@ -312,7 +312,7 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         case = [self.tier_name, self.folder_name, self.sds_name, self.pier_name,
                 self.bar_cover, self.bar_no, self.bar_area, self.bar_spacing, self.concrete_Ag, self.sds_total_As,
                 self.rho, self.material_fc, self.material_fy, self.material_Ec, self.material_Es,
-                self.from_level, self.to_level,
+                self.from_story, self.to_story,
                 self.case_path]
         cal_case = create_calculation_case(self.engine, case)
         return cal_case
