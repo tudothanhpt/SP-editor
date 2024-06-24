@@ -237,7 +237,8 @@ def CTI_creation_from_list(engine, listCTIfile: list):
         
         lst_CTIfile_fullpath.append(newCTI_path_after_creation)
         df_summaryCTI.loc[df_summaryCTI['ID2']==Col_id, "PathAfterCreation"] = newCTI_path_after_creation
-        df_summaryCTI.to_sql(TB_CTISUMMARY, engine, if_exists="replace", index=False)
+    
+    df_summaryCTI.to_sql(TB_CTISUMMARY, engine, if_exists="replace", index=False)
         
 
     return lst_CTIfile_fullpath
