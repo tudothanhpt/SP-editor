@@ -4,6 +4,7 @@ from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from sqlalchemy.engine.base import Engine
 
+from crud.cr_mainwindow import update_path_after_creation
 from sp_editor.controllers.barest_dialog import BarSet_Dialog
 from sp_editor.controllers.calculation_case_dialog import CalculationCase_Dialog
 from sp_editor.controllers.combos_dialog import Combo_Dialog
@@ -153,18 +154,23 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def make_spcolumn(self):
         self.cti_making = CTIMakingDialog(self.current_engine)
         self.cti_making.exec()
+        self.display_results()
+
+    @qtc.Slot()
+    def display_results(self):
+        update_path_after_creation(self.current_engine)
 
     @qtc.Slot(Engine)
     def set_current_engine(self, engine: Engine):
         self.current_engine = engine
 
     @qtc.Slot(str)
-    def set_current_path(self, path: str):
-        self.current_path = path
-
-    @qtc.Slot(str)
     def update_message(self, message: str):
         self.statusbar.showMessage(message)
+
+    @qtc.Slot(str)
+    def set_current_path(self, path: str):
+        self.current_path = path
 
     @qtc.Slot()
     def set_active_action(self, mode: bool):
