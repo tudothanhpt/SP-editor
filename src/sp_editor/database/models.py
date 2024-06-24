@@ -164,10 +164,10 @@ class CTISummary(SQLModel, table=True):
     materialFy: Optional[float] = Field(default=None)
     materialEs: Optional[float] = Field(default=None)
     SDName: Optional[str] = Field(default=None)
-    Coordinates: Optional[str] = Field(default=None)  # This can be a JSON or TEXT field
+    Coordinates: Optional[str] = Field(default=None)
     totalbars: Optional[int] = Field(default=None)
-    rebarcoordinates: Optional[str] = Field(default=None)  # This can be a JSON or TEXT field
+    rebarcoordinates: Optional[str] = Field(default=None)
     Total_Combos: Optional[int] = Field(default=None)
-    Filtered_Forces: Optional[str] = Field(default=None)  # This can be a JSON or TEXT field
+    Filtered_Forces: Optional[str] = Field(default=None)
     casePath: Optional[str] = Field(default=None)
     PathAfterCreation: Optional[str] = Field(default=None)

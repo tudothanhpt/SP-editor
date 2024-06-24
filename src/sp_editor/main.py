@@ -2,29 +2,26 @@ import sys
 
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
-
-from sp_editor.widgets.main_window import Ui_mw_Main
-
-from sp_editor.controllers.import_etabs_dialog import ImportEtabs_Dialog
-from sp_editor.controllers.general_infor_dialog import GeneralInfor_Dialog
-from sp_editor.controllers.open_file_dialog import OpenFile_Dialog
-from sp_editor.controllers.new_file_dialog import NewFile_Dialog
-from sp_editor.controllers.barest_dialog import BarSet_Dialog
-from sp_editor.controllers.material_dialog import Material_Dialog
-from sp_editor.controllers.combos_dialog import Combo_Dialog
-from sp_editor.controllers.groups_dialog import Group_Dialog
-from sp_editor.controllers.calculation_case_dialog import CalculationCase_Dialog
-from sp_editor.controllers.cti_file_making_dialog import CTIMakingDialog
-
 from sqlalchemy.engine.base import Engine
+
+from sp_editor.controllers.barest_dialog import BarSet_Dialog
+from sp_editor.controllers.calculation_case_dialog import CalculationCase_Dialog
+from sp_editor.controllers.combos_dialog import Combo_Dialog
+from sp_editor.controllers.cti_file_making_dialog import CTIMakingDialog
+from sp_editor.controllers.general_infor_dialog import GeneralInfor_Dialog
+from sp_editor.controllers.groups_dialog import Group_Dialog
+from sp_editor.controllers.import_etabs_dialog import ImportEtabs_Dialog
+from sp_editor.controllers.material_dialog import Material_Dialog
+from sp_editor.controllers.new_file_dialog import NewFile_Dialog
+from sp_editor.controllers.open_file_dialog import OpenFile_Dialog
 from sp_editor.core.connect_etabs import get_story_infor, get_pier_label_infor, get_pier_force_infor, \
     get_loadCombo_df_fromE, get_section_designer_shape_infor, set_global_unit
+from sp_editor.core.force_filter import get_pierforces_CTI_todb
+from sp_editor.crud.cr_SD_shape import get_SDCoordinates_CTI_todb
 from sp_editor.crud.cr_level_group import get_level_to_db, get_pier_label_to_db, get_pier_design_force_to_db, \
     get_sds_to_db
-from sp_editor.core.force_filter import get_pierforces_CTI_todb
-from sp_editor.core.cti_data_merging import create_cti_summary_df, CTI_creation
 from sp_editor.crud.cr_load_combo import create_loadComboDB, create_loadComboSelectionDB, read_loadComboSelectionDB
-from sp_editor.crud.cr_SD_shape import get_SDCoordinates_CTI_todb
+from sp_editor.widgets.main_window import Ui_mw_Main
 
 
 class MainWindow(qtw.QMainWindow, Ui_mw_Main):
