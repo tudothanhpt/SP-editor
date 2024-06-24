@@ -107,6 +107,7 @@ class CalculationCase(SQLModel, table=True):
     pier: str | None = Field(default=None)
 
     barCover: float | None = Field(default=None)
+    barNo: str | None = Field(default=None)
     barArea: float | None = Field(default=None)
     barSpacing: float | None = Field(default=None)
     concreteAg: float | None = Field(default=None)
@@ -118,8 +119,8 @@ class CalculationCase(SQLModel, table=True):
     materialEc: float | None = Field(default=None)
     materialEs: float | None = Field(default=None)
 
-    fromLevel: str | None = Field(default=None)
-    toLevel: str | None = Field(default=None)
+    fromStory: str | None = Field(default=None)
+    toStory: str | None = Field(default=None)
 
     casePath: str | None = Field(default=None)
     spColumnFile: str | None = Field(default=None)
@@ -153,8 +154,9 @@ class SDCoordinates_CTI(SQLModel, table=True):
     SDName: Optional[str] = Field(default=None)
     Coordinates: Optional[str] = Field(default=None)
 
+
 class CTISummary(SQLModel, table=True):
-    ID2: Optional[str] = Field(default=None,primary_key=True)
+    ID2: Optional[str] = Field(default=None, primary_key=True)
     Tier: Optional[str] = Field(default=None)
     Pier: Optional[str] = Field(default=None)
     materialEc: Optional[float] = Field(default=None)

@@ -8,12 +8,19 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QMetaObject, QRect,
-                            QSize, Qt)
-from PySide6.QtGui import (QAction, QFont, QIcon)
-from PySide6.QtWidgets import (QMenu, QMenuBar,
-                               QStatusBar, QToolBar, QWidget)
-
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
+    QCursor, QFont, QFontDatabase, QGradient,
+    QIcon, QImage, QKeySequence, QLinearGradient,
+    QPainter, QPalette, QPixmap, QRadialGradient,
+    QTransform)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QFrame, QGridLayout,
+    QHBoxLayout, QHeaderView, QLabel, QMainWindow,
+    QMenu, QMenuBar, QSizePolicy, QStatusBar,
+    QTableView, QToolBar, QVBoxLayout, QWidget)
+import icons_rc
 
 class Ui_mw_Main(object):
     def setupUi(self, mw_Main):
@@ -57,6 +64,8 @@ class Ui_mw_Main(object):
         self.a_Groups.setIcon(icon5)
         self.a_Cases = QAction(mw_Main)
         self.a_Cases.setObjectName(u"a_Cases")
+        self.a_Cases.setCheckable(False)
+        self.a_Cases.setChecked(False)
         icon6 = QIcon()
         icon6.addFile(u":/Btn/Calculation_Case.png", QSize(), QIcon.Normal, QIcon.Off)
         self.a_Cases.setIcon(icon6)
@@ -113,6 +122,69 @@ class Ui_mw_Main(object):
         self.actionDesign_Combos_Selection.setIcon(icon16)
         self.centralwidget = QWidget(mw_Main)
         self.centralwidget.setObjectName(u"centralwidget")
+        self.gridLayout = QGridLayout(self.centralwidget)
+        self.gridLayout.setSpacing(5)
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.gridLayout.setContentsMargins(9, 5, 9, 0)
+        self.frame_2 = QFrame(self.centralwidget)
+        self.frame_2.setObjectName(u"frame_2")
+        self.frame_2.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_2.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayout_3 = QGridLayout(self.frame_2)
+        self.gridLayout_3.setSpacing(6)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.gridLayout_3.setContentsMargins(9, 9, 9, 9)
+        self.table_sumaryResults = QTableView(self.frame_2)
+        self.table_sumaryResults.setObjectName(u"table_sumaryResults")
+        self.table_sumaryResults.setAutoFillBackground(False)
+        self.table_sumaryResults.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.table_sumaryResults.setSortingEnabled(False)
+
+        self.gridLayout_3.addWidget(self.table_sumaryResults, 0, 0, 1, 1)
+
+
+        self.gridLayout.addWidget(self.frame_2, 0, 0, 1, 1)
+
+        self.frame_3 = QFrame(self.centralwidget)
+        self.frame_3.setObjectName(u"frame_3")
+        self.frame_3.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_3.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_2 = QVBoxLayout(self.frame_3)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.frame_4 = QFrame(self.frame_3)
+        self.frame_4.setObjectName(u"frame_4")
+        self.frame_4.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_4.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_2 = QHBoxLayout(self.frame_4)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalLayout_2.setContentsMargins(0, 9, 0, 9)
+        self.label = QLabel(self.frame_4)
+        self.label.setObjectName(u"label")
+        self.label.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.label.setIndent(9)
+
+        self.horizontalLayout_2.addWidget(self.label)
+
+        self.lb_pierLabel = QLabel(self.frame_4)
+        self.lb_pierLabel.setObjectName(u"lb_pierLabel")
+        self.lb_pierLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.horizontalLayout_2.addWidget(self.lb_pierLabel)
+
+
+        self.verticalLayout_2.addWidget(self.frame_4)
+
+        self.table_CombosDCR = QTableView(self.frame_3)
+        self.table_CombosDCR.setObjectName(u"table_CombosDCR")
+        self.table_CombosDCR.setSortingEnabled(True)
+
+        self.verticalLayout_2.addWidget(self.table_CombosDCR)
+
+
+        self.gridLayout.addWidget(self.frame_3, 0, 1, 1, 1)
+
+        self.gridLayout.setColumnStretch(0, 8)
+        self.gridLayout.setColumnStretch(1, 3)
         mw_Main.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(mw_Main)
         self.menubar.setObjectName(u"menubar")
@@ -198,53 +270,53 @@ class Ui_mw_Main(object):
         self.retranslateUi(mw_Main)
 
         QMetaObject.connectSlotsByName(mw_Main)
-
     # setupUi
 
     def retranslateUi(self, mw_Main):
         mw_Main.setWindowTitle(QCoreApplication.translate("mw_Main", u"SP-editor", None))
         self.action_New.setText(QCoreApplication.translate("mw_Main", u"&New", None))
-        # if QT_CONFIG(shortcut)
+#if QT_CONFIG(shortcut)
         self.action_New.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+N", None))
-        # endif // QT_CONFIG(shortcut)
+#endif // QT_CONFIG(shortcut)
         self.action_Open.setText(QCoreApplication.translate("mw_Main", u"&Open", None))
-        # if QT_CONFIG(shortcut)
+#if QT_CONFIG(shortcut)
         self.action_Open.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+O", None))
-        # endif // QT_CONFIG(shortcut)
+#endif // QT_CONFIG(shortcut)
         self.action_Save.setText(QCoreApplication.translate("mw_Main", u"&Save", None))
-        # if QT_CONFIG(shortcut)
+#if QT_CONFIG(shortcut)
         self.action_Save.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+S", None))
-        # endif // QT_CONFIG(shortcut)
+#endif // QT_CONFIG(shortcut)
         self.action_Quit.setText(QCoreApplication.translate("mw_Main", u"&Quit", None))
-        # if QT_CONFIG(shortcut)
+#if QT_CONFIG(shortcut)
         self.action_Quit.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+Q", None))
-        # endif // QT_CONFIG(shortcut)
+#endif // QT_CONFIG(shortcut)
         self.a_GeneralInfor.setText(QCoreApplication.translate("mw_Main", u"&General Information", None))
         self.a_Groups.setText(QCoreApplication.translate("mw_Main", u"&Groups", None))
-        # if QT_CONFIG(shortcut)
+#if QT_CONFIG(shortcut)
         self.a_Groups.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+G", None))
-        # endif // QT_CONFIG(shortcut)
+#endif // QT_CONFIG(shortcut)
         self.a_Cases.setText(QCoreApplication.translate("mw_Main", u"Load Cases", None))
         self.a_GetAllForce.setText(QCoreApplication.translate("mw_Main", u"Get Forces", None))
         self.a_MakeSPcolumn.setText(QCoreApplication.translate("mw_Main", u"Generate SpCol Files", None))
         self.a_BatchProcessor.setText(QCoreApplication.translate("mw_Main", u"Batch Processor", None))
         self.a_Doc.setText(QCoreApplication.translate("mw_Main", u"Documentation", None))
-        # if QT_CONFIG(shortcut)
+#if QT_CONFIG(shortcut)
         self.a_Doc.setShortcut(QCoreApplication.translate("mw_Main", u"F1", None))
-        # endif // QT_CONFIG(shortcut)
+#endif // QT_CONFIG(shortcut)
         self.a_About.setText(QCoreApplication.translate("mw_Main", u"About SP-editor", None))
         self.a_ImportEtabs.setText(QCoreApplication.translate("mw_Main", u"Import", None))
-        # if QT_CONFIG(shortcut)
+#if QT_CONFIG(shortcut)
         self.a_ImportEtabs.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+E", None))
-        # endif // QT_CONFIG(shortcut)
+#endif // QT_CONFIG(shortcut)
         self.a_Print.setText(QCoreApplication.translate("mw_Main", u"Print", None))
-        # if QT_CONFIG(shortcut)
+#if QT_CONFIG(shortcut)
         self.a_Print.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+P", None))
-        # endif // QT_CONFIG(shortcut)
+#endif // QT_CONFIG(shortcut)
         self.a_MaterialProp.setText(QCoreApplication.translate("mw_Main", u"&Material Properties", None))
         self.a_BarSet.setText(QCoreApplication.translate("mw_Main", u"Bar Sets", None))
-        self.actionDesign_Combos_Selection.setText(
-            QCoreApplication.translate("mw_Main", u"Design Combos Selection", None))
+        self.actionDesign_Combos_Selection.setText(QCoreApplication.translate("mw_Main", u"Design Combos Selection", None))
+        self.label.setText(QCoreApplication.translate("mw_Main", u"Group", None))
+        self.lb_pierLabel.setText(QCoreApplication.translate("mw_Main", u"Name", None))
         self.menu_File.setTitle(QCoreApplication.translate("mw_Main", u"&File", None))
         self.m_Define.setTitle(QCoreApplication.translate("mw_Main", u"&Define", None))
         self.m_Analyze.setTitle(QCoreApplication.translate("mw_Main", u"Analyze", None))
@@ -254,3 +326,4 @@ class Ui_mw_Main(object):
         self.tb_Analyze.setWindowTitle(QCoreApplication.translate("mw_Main", u"Analyze", None))
         self.tb_Help.setWindowTitle(QCoreApplication.translate("mw_Main", u"Help", None))
     # retranslateUi
+

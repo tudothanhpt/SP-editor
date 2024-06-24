@@ -75,7 +75,17 @@
         <number>6</number>
        </property>
        <item row="0" column="0">
-        <widget class="QTableView" name="table_sumaryResults"/>
+        <widget class="QTableView" name="table_sumaryResults">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="editTriggers">
+          <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+         </property>
+         <property name="sortingEnabled">
+          <bool>false</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -126,7 +136,10 @@
           <item>
            <widget class="QLabel" name="lb_pierLabel">
             <property name="text">
-             <string/>
+             <string>Name</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -373,6 +386,12 @@
    </property>
   </action>
   <action name="a_Cases">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../../icons/icons.qrc">
      <normaloff>:/Btn/Calculation_Case.png</normaloff>:/Btn/Calculation_Case.png</iconset>

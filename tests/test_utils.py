@@ -1,151 +1,159 @@
 import sys
-import math
+from PySide6.QtCore import QAbstractTableModel, QModelIndex, Qt
+from PySide6.QtWidgets import QApplication, QMainWindow, QTableView, QMenu, QMessageBox
+from PySide6.QtGui import QStandardItemModel, QStandardItem, QAction
 import pandas as pd
-import plotly.graph_objects as go
-from PySide6.QtCore import QUrl, QTimer, Qt
-from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QFrame, QPushButton, \
-    QLineEdit, QLabel, QStatusBar, QProgressBar
-from PySide6.QtWebEngineWidgets import QWebEngineView
-from sqlalchemy import create_engine
-
-engine = create_engine('sqlite:///:memory:')  # Replace with your actual engine
+from typing import Sequence, Any
 
 
-def get_rebarCoordinates_str(frame: QFrame, engine, cover: float, bar_area: float, spacing: float, SDname: str):
-    bar_dia = math.sqrt(bar_area / math.pi) * 2
-    offset_distance = (cover + (bar_dia / 2)) * (-1)
-    rebarArea = bar_area
+class MainWindowPandasModel(QAbstractTableModel):
+    """A model to interface a Qt view with pandas DataFrame"""
 
-    df_sd = pd.DataFrame()  # Mock: replace with read_sdsDB(engine)
-    lst_PierSDShape = []  # Mock: replace with restructure_sdshapeDF(df_sd)
-    idx = 0  # Mock: replace with find_key_index(lst_PierSDShape, SDname)
-    PierSDShape = []  # Mock: replace with actual data
+    def __init__(self, dataframe: pd.DataFrame = pd.DataFrame(), parent=None, headers=None):
+        super().__init__(parent)
+        self._dataframe = dataframe
+        if headers:
+            self._dataframe.columns = headers
 
-    offsetted_shapes = []  # Mock: replace with offset_sdshapeDF(lst_PierSDShape, SDname, offset_distance)
-    rebar_list = [(0, 0)]  # Mock: replace with calculate_rebarpoints_for_segments(offsetted_shapes, spacing)
-    total_rebar, multiline_string_rebarPts = 0, ""  # Mock: replace with spColumn_CTI_Rebar(rebar_list, rebarArea)
-    plot_polygons(frame, offsetted_shapes, PierSDShape, rebar_list)
-    return total_rebar, multiline_string_rebarPts
+    def rowCount(self, parent=QModelIndex()) -> int:
+        """Return row count of the pandas DataFrame"""
+        return len(self._dataframe) if not parent.isValid() else 0
 
+    def columnCount(self, parent=QModelIndex()) -> int:
+        """Return column count of the pandas DataFrame"""
+        return len(self._dataframe.columns) if not parent.isValid() else 0
 
-def plot_polygons(frame: QFrame, polygons, shapes, rebar_list):
-    """
-    Plots a list of polygons using Plotly and embeds it into a QWebEngineView.
+    def data(self, index: QModelIndex, role=Qt.ItemDataRole.DisplayRole):
+        """Return data cell from the pandas DataFrame"""
+        if not index.isValid():
+            return None
 
-    :param frame: The QFrame object to embed the plot in.
-    :param polygons: List of polygon coordinates to be plotted.
-    :param shapes: List of shape coordinates to be plotted.
-    :param rebar_list: List of rebar coordinates to be plotted.
-    """
-    # Get the dimensions of the QFrame
-    frame_width = frame.size().width()
-    frame_height = frame.size().height()
+        if role == Qt.ItemDataRole.DisplayRole:
+            return str(self._dataframe.iloc[index.row(), index.column()])
 
-    # Create a Plotly figure
-    fig = go.Figure()
+        return None
 
-    for polygon in polygons:
-        x, y = zip(*polygon)
-        fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(color='blue', dash='dash')))
+    def headerData(self, section: int, orientation: Qt.Orientation, role=Qt.ItemDataRole.DisplayRole):
+        """Return DataFrame index as vertical header data and columns as horizontal header data"""
+        if role == Qt.ItemDataRole.DisplayRole:
+            if orientation == Qt.Orientation.Horizontal:
+                return str(self._dataframe.columns[section])
+            elif orientation == Qt.Orientation.Vertical:
+                return str(self._dataframe.index[section])
 
-    for shape in shapes:
-        x, y = zip(*shape)
-        fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(color='red', width=1.5)))
+        return None
 
-    if rebar_list:
-        x, y = zip(*rebar_list)
-        fig.add_trace(go.Scatter(x=x, y=y, mode='markers', marker=dict(color='green', size=5)))
+    def update_dataframe(self, dataframe: pd.DataFrame, headers=None):
+        """Update the model with a new DataFrame"""
+        self.beginResetModel()
+        self._dataframe = dataframe
+        if headers:
+            self._dataframe.columns = headers
+        self.endResetModel()
 
-    fig.update_layout(
-        title='Cross Section',
-        xaxis_title='X',
-        yaxis_title='Y',
-        showlegend=False,
-        width=frame_width,
-        height=frame_height
-    )
-
-    # Convert Plotly figure to HTML
-    html = fig.to_html(include_plotlyjs='cdn')
-
-    # Create or get the QWebEngineView
-    if not hasattr(frame, 'webview'):
-        frame.webview = QWebEngineView()
-        frame.layout = QVBoxLayout()
-        frame.layout.addWidget(frame.webview)
-        frame.setLayout(frame.layout)
-
-    # Set HTML content in QWebEngineView
-    frame.webview.setHtml(html)
+    @staticmethod
+    def sqlmodel_to_df(objects: Sequence[Any]) -> pd.DataFrame:
+        """Converts SQLModel objects into a Pandas DataFrame"""
+        if not objects:
+            return pd.DataFrame()  # Return an empty DataFrame if the list is empty
+        else:
+            # Extract data from SQLModel objects
+            data = [model.dict() for model in objects]
+            # Get the column order from the first SQLModel object
+            column_order = list(objects[0].__fields__.keys())
+            # Convert the list of dictionaries to a pandas DataFrame
+            df_out = pd.DataFrame(data)
+            # Apply the column order
+            df_out = df_out[column_order]
+        return df_out
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
-        super(MainWindow, self).__init__()
-        self.frame = QFrame(self)
-
-        self.cover_input = QLineEdit(self)
-        self.bar_area_input = QLineEdit(self)
-        self.spacing_input = QLineEdit(self)
-        self.sdname_input = QLineEdit(self)
-        self.update_button = QPushButton('Update Plot', self)
-
-        self.cover_input.setText('50')
-        self.bar_area_input.setText('200')
-        self.spacing_input.setText('100')
-        self.sdname_input.setText('SD1')
-
-        self.update_button.clicked.connect(self.update_plot)
-
-        input_layout = QHBoxLayout()
-        input_layout.addWidget(QLabel('Cover:'))
-        input_layout.addWidget(self.cover_input)
-        input_layout.addWidget(QLabel('Bar Area:'))
-        input_layout.addWidget(self.bar_area_input)
-        input_layout.addWidget(QLabel('Spacing:'))
-        input_layout.addWidget(self.spacing_input)
-        input_layout.addWidget(QLabel('SD Name:'))
-        input_layout.addWidget(self.sdname_input)
-        input_layout.addWidget(self.update_button)
-
-        layout = QVBoxLayout()
-        layout.addLayout(input_layout)
-        layout.addWidget(self.frame)
-
-        central_widget = QWidget()
-        central_widget.setLayout(layout)
-        self.setCentralWidget(central_widget)
-
-        # Add status bar and progress bar
-        self.status_bar = QStatusBar()
-        self.progress_bar = QProgressBar()
-        self.status_bar.addPermanentWidget(self.progress_bar)
-        self.setStatusBar(self.status_bar)
-
-        self.setWindowTitle("Rebar Coordinates and Cross Section Plot")
+        super().__init__()
+        self.setWindowTitle('QTableView with MainWindowModel')
         self.setGeometry(100, 100, 800, 600)
 
-        self.update_plot()
+        # Create the QTableView
+        self.table_view = QTableView(self)
+        self.setCentralWidget(self.table_view)
 
-    def update_plot(self):
-        cover = float(self.cover_input.text())
-        bar_area = float(self.bar_area_input.text())
-        spacing = float(self.spacing_input.text())
-        sdname = self.sdname_input.text()
+        # Create a sample DataFrame
+        data = {
+            'Header1': [1, 2, 3],
+            'Header2': ['A', 'B', 'C'],
+            'Header3': [True, False, True]
+        }
+        df = pd.DataFrame(data)
 
-        # Simulate progress for demonstration purposes
-        self.progress_bar.setValue(0)
-        QTimer.singleShot(100, lambda: self.progress_bar.setValue(25))
-        QTimer.singleShot(200, lambda: self.progress_bar.setValue(50))
-        QTimer.singleShot(300, lambda: self.progress_bar.setValue(75))
-        QTimer.singleShot(400, lambda: self.progress_bar.setValue(100))
+        # Create a MainWindowModel with the sample DataFrame
+        self.model = MainWindowPandasModel(dataframe=df, headers=['Header1', 'Header2', 'Header3'])
+        self.table_view.setModel(self.model)
 
-        total_rebar, multiline_string_rebarPts = get_rebarCoordinates_str(self.frame, engine, cover, bar_area, spacing,
-                                                                          sdname)
+        # Set up context menu
+        self.table_view.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.table_view.customContextMenuRequested.connect(self.open_context_menu)
+
+    def open_context_menu(self, position):
+        menu = QMenu()
+
+        delete_action = QAction('Delete Row', self)
+        delete_action.triggered.connect(self.delete_row)
+        menu.addAction(delete_action)
+
+        update_action = QAction('Update Row', self)
+        update_action.triggered.connect(self.update_row)
+        menu.addAction(update_action)
+
+        duplicate_action = QAction('Duplicate Row', self)
+        duplicate_action.triggered.connect(self.duplicate_row)
+        menu.addAction(duplicate_action)
+
+        menu.exec(self.table_view.viewport().mapToGlobal(position))
+
+    def get_selected_row(self):
+        indexes = self.table_view.selectionModel().selectedRows()
+        if indexes:
+            return indexes[0].row()
+        return None
+
+    def delete_row(self):
+        row = self.get_selected_row()
+        if row is not None:
+            self.model.beginRemoveRows(QModelIndex(), row, row)
+            self.model._dataframe = self.model._dataframe.drop(self.model._dataframe.index[row]).reset_index(drop=True)
+            self.model.endRemoveRows()
+        else:
+            QMessageBox.warning(self, 'Warning', 'No row selected')
+
+    def update_row(self):
+        row = self.get_selected_row()
+        if row is not None:
+            # For simplicity, we update the row with hardcoded values
+            self.model._dataframe.iloc[row] = [4, 'D', False]
+            self.model.dataChanged.emit(self.model.index(row, 0), self.model.index(row, self.model.columnCount() - 1))
+        else:
+            QMessageBox.warning(self, 'Warning', 'No row selected')
+
+    def duplicate_row(self):
+        row = self.get_selected_row()
+        if row is not None:
+            self.model.beginInsertRows(QModelIndex(), row + 1, row + 1)
+            new_row = self.model._dataframe.iloc[row].copy()
+            self.model._dataframe = pd.concat([self.model._dataframe.iloc[:row + 1], pd.DataFrame([new_row]),
+                                               self.model._dataframe.iloc[row + 1:]]).reset_index(drop=True)
+            self.model.endInsertRows()
+        else:
+            QMessageBox.warning(self, 'Warning', 'No row selected')
 
 
+# Test the MainWindowModel with a QTableView in a PySide6 application
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    main_window = MainWindow()
-    main_window.show()
+    app = QApplication([])
+
+    # Create the main window
+    window = MainWindow()
+    window.show()
+
+    # Execute the application
     sys.exit(app.exec())

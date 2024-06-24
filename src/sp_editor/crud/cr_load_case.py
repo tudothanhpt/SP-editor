@@ -1,5 +1,3 @@
-from pandas import DataFrame
-from sqlalchemy import func
 from sqlalchemy.exc import NoResultFound, MultipleResultsFound
 
 from sqlmodel import Session, select
@@ -103,7 +101,7 @@ def get_rebar_area_from_name(engine: Engine, name: str):
 
 
 def create_calculation_case(engine: Engine, params: list[str | float]):
-    (tier, folder, sds, pier, bar_cover, bar_area, bar_spacing, concrete_ag, sds_as, rho,
+    (tier, folder, sds, pier, bar_cover, bar_no, bar_area, bar_spacing, concrete_ag, sds_as, rho,
      material_fc, material_fy, material_ec, material_es, from_level, to_level, case_path) = params
 
     with Session(engine) as session:
@@ -113,6 +111,7 @@ def create_calculation_case(engine: Engine, params: list[str | float]):
             sds=sds,
             pier=pier,
             barCover=bar_cover,
+            barNo=bar_no,
             barArea=bar_area,
             barSpacing=bar_spacing,
             concreteAg=concrete_ag,

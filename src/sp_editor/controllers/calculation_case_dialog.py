@@ -29,6 +29,7 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.pier_name = None
         self.concrete_Ag = None
         self.sds_total_As = None
+        self.bar_no = None
         self.bar_area = None
         self.bar_cover = None
         self.bar_spacing = None
@@ -204,11 +205,11 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
                 case_dir_name = [self.tier_name, self.folder_name]
 
                 self.case_path = os.path.join(*case_dir_name)
-                try:
-                    # Create the new directories
-                    os.makedirs(self.case_path, exist_ok=True)
-                except Exception as e:
-                    qtw.QMessageBox.critical(self, 'Error', f'An error occurred: {str(e)}')
+                # try:
+                #     # Create the new directories
+                #     os.makedirs(self.case_path, exist_ok=True)
+                # except Exception as e:
+                #     qtw.QMessageBox.critical(self, 'Error', f'An error occurred: {str(e)}')
             else:
                 self.check_input()
 
@@ -241,8 +242,9 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         return unique_items
 
     def get_bar_area(self):
+        self.bar_no = self.cb_barSize.currentText()
         if self.cb_barType.currentIndex() == 0:
-            self.bar_area = get_rebar_area_from_name(self.engine, self.cb_barSize.currentText())
+            self.bar_area = get_rebar_area_from_name(self.engine, self.bar_no)
         else:
             self.bar_area = self.le_barArea.text()
             if float(self.bar_area) < 0:
@@ -308,8 +310,8 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
 
     def add_calculation_case(self):
         case = [self.tier_name, self.folder_name, self.sds_name, self.pier_name,
-                self.bar_cover, self.bar_area, self.bar_spacing, self.concrete_Ag, self.sds_total_As, self.rho,
-                self.material_fc, self.material_fy, self.material_Ec, self.material_Es,
+                self.bar_cover, self.bar_no, self.bar_area, self.bar_spacing, self.concrete_Ag, self.sds_total_As,
+                self.rho, self.material_fc, self.material_fy, self.material_Ec, self.material_Es,
                 self.from_level, self.to_level,
                 self.case_path]
         cal_case = create_calculation_case(self.engine, case)
