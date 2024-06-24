@@ -4,8 +4,16 @@ from sqlalchemy.exc import NoResultFound, MultipleResultsFound
 
 from sqlmodel import Session, select
 from sp_editor.database.models import GroupLevel, PierLabel, Level, SectionDesignerShape, MaterialConcrete, \
-    MaterialRebar, BarSet, CalculationCase
+    MaterialRebar, BarSet, CalculationCase, GeneralInfor
 from sqlalchemy.engine.base import Engine
+
+
+def get_current_unit(engine: Engine):
+    with Session(engine) as session:
+        statement = select(GeneralInfor.unit_system)
+        results = session.exec(statement)
+        unit = results.one()
+        return unit
 
 
 def get_sds_section_name(engine: Engine):
@@ -117,7 +125,7 @@ def create_calculation_case(engine: Engine, params: list[str | float]):
 
             fromLevel=from_level,
             toLevel=to_level,
-            
+
             casePath=case_path,
             spColumnFile=None
         )

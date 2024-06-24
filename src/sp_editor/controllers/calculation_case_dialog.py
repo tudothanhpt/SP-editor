@@ -10,18 +10,18 @@ from sp_editor.widgets.load_calculation_case import Ui_calculationCase_dialog
 
 from crud.cr_level_group import get_group_level, get_level_from_group, get_pierlabel_with_level
 from crud.cr_load_case import get_sds_section_name, get_concrete_name, get_steel_name, get_rebar_size_name, \
-    get_concrete_fc_Ec, get_steel_fy_Es, get_rebar_area_from_name, create_calculation_case
+    get_concrete_fc_Ec, get_steel_fy_Es, get_rebar_area_from_name, create_calculation_case, get_current_unit
 
 from core.connect_etabs import show_warning
 from core.find_uniform_bars import get_rebarCoordinates_str
-
+from sp_editor.core.global_variables import UnitSystem
 from sqlalchemy.engine.base import Engine
 
 
 class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
     case_init = qtc.Signal(str)
 
-    def __init__(self, engine: Engine | None = None, path: str | None = None, unit: str | None = None):
+    def __init__(self, engine: Engine | None = None, path: str | None = None):
         super().__init__()
         self.tier_name = None
         self.folder_name = None
@@ -51,14 +51,14 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
 
         self.engine = engine
         self.current_path = path
-        self.current_unit = unit
+        self.current_unit = None
 
         self.case_path = None
 
         self.calculation_case = None
 
         self.setupUi(self)
-
+        self.update_unit()
         self.update_group_box()
         self.update_section_designer_shape()
         self.update_concrete()
@@ -197,7 +197,7 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
     def create_folder(self):
         if self.current_path:
             # Extract the directory from the file path
-            #base_dir = os.path.dirname(self.current_path)
+            # base_dir = os.path.dirname(self.current_path)
 
             if self.folder_name and self.tier_name:
                 # Define the new folders to be created
@@ -314,6 +314,19 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
                 self.case_path]
         cal_case = create_calculation_case(self.engine, case)
         return cal_case
+
+    def update_unit(self):
+        self.current_unit = get_current_unit(self.engine)
+        if self.current_unit == str(UnitSystem.ENGLISH):
+            area = "in2"
+            self.lb_globalUnit.setText(self.current_unit)
+            self.lb_unitArea.setText(area)
+            self.lb_unitAs.setText(area)
+        else:
+            area = "mm2"
+            self.lb_globalUnit.setText(self.current_unit)
+            self.lb_unitArea.setText(area)
+            self.lb_unitAs.setText(area)
 
 
 if __name__ == '__main__':
