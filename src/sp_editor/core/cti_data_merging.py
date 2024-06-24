@@ -8,6 +8,7 @@ from sp_editor.core.find_uniform_bars import get_rebarCoordinates_str2
 from sp_editor.core.engineering_funcs import calculate_beta1
 from sp_editor.crud.cr_general_infor import get_infor
 from sqlalchemy.engine.base import Engine
+from sqlalchemy.engine.url import make_url
 from sp_editor.core.global_variables import *
 
 from sqlmodel import create_engine
@@ -18,6 +19,16 @@ TB_CALCULATIONCASE = str(CalculationCase.__name__).lower()
 TB_SDSHAPE_ETABS = str(SectionDesignerShape.__name__).lower()
 TB_SDSHAPE_CTI = str(SDCoordinates_CTI.__name__).lower()
 TB_PIERFORCE = str(PierForce.__name__).lower()
+
+
+def get_engine_path(engine):
+    # Parse the engine's URL using SQLAlchemy's make_url
+    url = make_url(engine.url)
+    
+    # Extract the path (for SQLite, the path starts with '/', so we strip the first character)
+    db_path = url.database if url.drivername == 'sqlite' else url.database
+    
+    return db_path
 
 
 def create_file_and_notify(content):
@@ -160,6 +171,7 @@ def CTI_creation_from_list(engine, listCTIfile: list):
     df_summaryCTI = read_summaryCTI_DB(engine)
     df_summaryCTI=df_summaryCTI[df_summaryCTI['ID2'].isin(listCTIfile)]
     general_infor = get_infor(engine)
+    engine_path = os.path.abspath(get_engine_path(engine))
     
     d_code = DesignCode.from_string(general_infor.design_code).value
     u_sys = UnitSystem.from_string(general_infor.unit_system).value
@@ -179,7 +191,10 @@ def CTI_creation_from_list(engine, listCTIfile: list):
         rebarcoordinates = row['rebarcoordinates']
         Total_Combos = row['Total Combos']
         Filtered_Forces = row['Filtered Forces']
-        case_path = os.path.normpath(row["casePath"])
+        
+        case_path = row["casePath"]
+        print(case_path)
+        full_path = os.path.join(engine_path, case_path)
     
 
         newCTIfile = CTIfile()
@@ -201,7 +216,7 @@ def CTI_creation_from_list(engine, listCTIfile: list):
         newCTIfile.set_bar_group_type(bar_group_type=b_set)
         newCTIfile.write_CTIfile_to_file(case_path, Col_id)
         
-        lst_CTIfile_fullpath.append(os.path.join(case_path, Col_id+".cti"))
+        lst_CTIfile_fullpath.append(os.path.join(full_path, Col_id+".cti"))
     
     return lst_CTIfile_fullpath
 
@@ -209,5 +224,5 @@ def CTI_creation_from_list(engine, listCTIfile: list):
 if __name__ == "__main__":
     engine_temppath = r"tests\TestBM\demono1.spe"
     engine: Engine = create_engine(f"sqlite:///{engine_temppath}")
-    create_cti_summary_df(engine)
-    CTI_creation(engine)
+   
+

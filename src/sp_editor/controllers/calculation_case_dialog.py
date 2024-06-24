@@ -197,7 +197,7 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
     def create_folder(self):
         if self.current_path:
             # Extract the directory from the file path
-            base_dir = os.path.dirname(self.current_path)
+            #base_dir = os.path.dirname(self.current_path)
 
             if self.folder_name and self.tier_name:
                 # Define the new folders to be created
