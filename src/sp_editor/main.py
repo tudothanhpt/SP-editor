@@ -1,10 +1,12 @@
 import sys
 
+import pandas as pd
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from sqlalchemy.engine.base import Engine
 
-from crud.cr_mainwindow import update_path_after_creation
+from crud.cr_mainwindow import fetch_data_from_db
+from database.mainWindow_model import MainWindowModel
 from sp_editor.controllers.barest_dialog import BarSet_Dialog
 from sp_editor.controllers.calculation_case_dialog import CalculationCase_Dialog
 from sp_editor.controllers.combos_dialog import Combo_Dialog
@@ -28,6 +30,8 @@ from sp_editor.widgets.main_window import Ui_mw_Main
 class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def __init__(self):
         super().__init__()
+        self.dialog_load_combos_selection = None
+        self.dialog_calculation_case = None
         self.dialog_group = None
         self.current_path = None
         self.dialog_barset = None
@@ -38,9 +42,12 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.sap_model = None
         self.etabs_object = None
         self.dialog_material = None
+        self.cti_making = None
 
         self.setupUi(self)
         self.set_active_action(False)
+
+        self.init_display_table()
 
         # Setup action
         self.action_New.triggered.connect(self.new_file)
@@ -63,6 +70,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.dialog_new.engine_new.connect(self.set_current_engine)
         self.set_active_action(True)
         self.dialog_new.exec()
+        self.init_display_table()
 
     @qtc.Slot()
     def open_file(self):
@@ -70,6 +78,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.dialog_open.path_open.connect(self.update_message)
         self.dialog_open.path_open.connect(self.set_current_path)
         self.dialog_open.engine_open.connect(self.set_current_engine)
+        self.dialog_open.current_db.connect(self.update_display_results)
         self.set_active_action(True)
         self.dialog_open.open_file()
 
@@ -130,15 +139,16 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
 
     @qtc.Slot()
     def open_calculation_cases(self):
-        self.dialog_group = CalculationCase_Dialog(self.current_engine, self.current_path)
-        self.dialog_group.case_init.connect(self.update_message)
-        self.dialog_group.exec()
+        self.dialog_calculation_case = CalculationCase_Dialog(self.current_engine, self.current_path)
+        self.dialog_calculation_case.case_init.connect(self.update_message)
+        self.dialog_calculation_case.case_init.connect(self.update_display_results)
+        self.dialog_calculation_case.exec()
         self.a_MakeSPcolumn.setEnabled(True)
 
     @qtc.Slot()
     def open_loadComboSelection(self):
-        self.dialog_group = Combo_Dialog(self.current_engine)
-        self.dialog_group.exec()
+        self.dialog_load_combos_selection = Combo_Dialog(self.current_engine)
+        self.dialog_load_combos_selection.exec()
         self.a_GetAllForce.setEnabled(True)
 
     @qtc.Slot()
@@ -153,12 +163,27 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     @qtc.Slot()
     def make_spcolumn(self):
         self.cti_making = CTIMakingDialog(self.current_engine)
+        self.cti_making.cti_create.connect(self.update_message)
+        self.cti_making.cti_create.connect(self.update_display_results)
         self.cti_making.exec()
-        self.display_results()
+
+    def init_display_table(self):
+        # TODO: display infor from database
+        column_headers = ["Tier", "From Story", "To Story", "Pier",
+                          "Material Fc", "Material Fy", "Bar No", "Rho", "DCR",
+                          "Force Combo", "SPColumn File"]
+        df = pd.DataFrame(columns=column_headers)
+        self.main_window_model = MainWindowModel(dataframe=df)
+        self.table_sumaryResults.setModel(self.main_window_model)
 
     @qtc.Slot()
-    def display_results(self):
-        update_path_after_creation(self.current_engine)
+    def update_display_results(self):
+        # TODO: display infor from database
+        self.main_window_model.update_model_from_db(self.current_engine)
+
+    @qtc.Slot()
+    def update_model_after_action(self):
+        self.main_window_model.update_model_from_db(self.current_engine)
 
     @qtc.Slot(Engine)
     def set_current_engine(self, engine: Engine):

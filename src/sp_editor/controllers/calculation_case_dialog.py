@@ -6,6 +6,7 @@ from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 
 from crud.cr_SD_shape import read_area
+from crud.cr_mainwindow import fetch_data_from_db
 from sp_editor.widgets.load_calculation_case import Ui_calculationCase_dialog
 
 from crud.cr_level_group import get_group_level, get_level_from_group, get_pierlabel_with_level
@@ -24,6 +25,7 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
     def __init__(self, engine: Engine | None = None, path: str | None = None):
         super().__init__()
         self.tier_name = None
+        self.is_pier_name = None
         self.folder_name = None
         self.sds_name = None
         self.pier_name = None
@@ -265,8 +267,10 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         status = qtg.Qt.CheckState.Checked
         if self.checkb_userPierName.checkState() == status:
             folder_name = self.cb_pierdata.currentText()
+            self.is_pier_name = True
         else:
             folder_name = self.le_folderName.text()
+            self.is_pier_name = False
 
         check_folder_name = {"Folder name": folder_name}
 
@@ -309,11 +313,12 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.sds_name = self.cb_sectionDesignerShape.currentText()
 
     def add_calculation_case(self):
-        case = [self.tier_name, self.folder_name, self.sds_name, self.pier_name,
+        case = [self.tier_name, self.is_pier_name, self.folder_name, self.sds_name, self.pier_name,
                 self.bar_cover, self.bar_no, self.bar_area, self.bar_spacing, self.concrete_Ag, self.sds_total_As,
                 self.rho, self.material_fc, self.material_fy, self.material_Ec, self.material_Es,
                 self.from_story, self.to_story,
                 self.case_path]
+
         cal_case = create_calculation_case(self.engine, case)
         return cal_case
 

@@ -101,12 +101,13 @@ def get_rebar_area_from_name(engine: Engine, name: str):
 
 
 def create_calculation_case(engine: Engine, params: list[str | float]):
-    (tier, folder, sds, pier, bar_cover, bar_no, bar_area, bar_spacing, concrete_ag, sds_as, rho,
+    (tier, is_pier_name, folder, sds, pier, bar_cover, bar_no, bar_area, bar_spacing, concrete_ag, sds_as, rho,
      material_fc, material_fy, material_ec, material_es, from_story, to_story, case_path) = params
 
     with Session(engine) as session:
         calculation_case = CalculationCase(
             tier=tier,
+            isPierName=is_pier_name,
             folder=folder,
             sds=sds,
             pier=pier,

@@ -5,6 +5,10 @@ from PySide6.QtGui import QStandardItemModel, QStandardItem, QAction
 import pandas as pd
 from typing import Sequence, Any
 
+from sqlalchemy import Engine
+
+from crud.cr_mainwindow import fetch_data_from_db
+
 
 class MainWindowModel(QAbstractTableModel):
     """A model to interface a Qt view with pandas DataFrame"""
@@ -43,12 +47,20 @@ class MainWindowModel(QAbstractTableModel):
 
         return None
 
-    def update_dataframe(self, dataframe: pd.DataFrame, headers=None):
-        """Update the model with a new DataFrame"""
+    def update_model_from_db(self, engine: Engine):
+        """Update model with new data from the database"""
+        new_data = fetch_data_from_db(engine=engine)  # Fetch new data from database
+        # Prepare data as list of lists (rows)
+        # Convert to DataFrame
+        column_headers = ["Tier", "From Story", "To Story", "Pier",
+                          "Material Fc", "Material Fy", "Bar No", "Rho", "DCR",
+                          "Force Combo", "SPColumn File"]
+
+        new_df = new_data.set_axis(column_headers, axis=1)
+
+        # Update the model
         self.beginResetModel()
-        self._dataframe = dataframe
-        if headers:
-            self._dataframe.columns = headers
+        self._dataframe = new_df
         self.endResetModel()
 
     @staticmethod

@@ -102,6 +102,7 @@ class GroupLevel(SQLModel, table=True):
 class CalculationCase(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     tier: str | None = Field(default=None)
+    isPierName: bool | None = Field(default=None)
     folder: str | None = Field(default=None)
     sds: str | None = Field(default=None)
     pier: str | None = Field(default=None)

@@ -1,32 +1,19 @@
 import os.path
+from typing import List, Any
 
-from sqlmodel import Session, select
+import pandas as pd
+from sqlmodel import Session, select, SQLModel
 from sp_editor.database.models import GroupLevel, PierLabel, Level, SectionDesignerShape, MaterialConcrete, \
     MaterialRebar, BarSet, CalculationCase, GeneralInfor, CTISummary
 from sqlalchemy.engine.base import Engine
 
 
 def update_path_after_creation(engine: Engine):
-    # id_name = f"{tier}_{pier}"
-    # with (Session(engine) as session):
-    #     statement1 = select(CTISummary.pathAfterCreation).where(CTISummary.ID2 == id_name)
-    #     statement2 = select(CalculationCase).where(CalculationCase.tier == tier).where(
-    #         CalculationCase.pier == pier)
-    #     result1 = session.exec(statement1)
-    #     path_after_create = result1.one()
-    #     file_name_after = os.path.basename(path_after_create)
-    #
-    #     result2 = session.exec(statement2)
-    #     calculation_case = result2.one()
-    #     calculation_case.spColumnFile = file_name_after
-    #     session.add(calculation_case)
-    #     session.commit()
-    #     session.refresh(calculation_case)
     with Session(engine) as session:
         statement = select(CTISummary)
         results = session.exec(statement).all()
         for result in results:
-            file_name = result.casePath.split("\\")[-1]
+            file_name = os.path.basename(result.pathAfterCreation)
 
             # update table where casePath match
             update_statement = select(CalculationCase).where(CalculationCase.casePath == result.casePath)
@@ -36,3 +23,30 @@ def update_path_after_creation(engine: Engine):
                 session.add(calculation_entry)
                 session.commit()
                 session.refresh(calculation_entry)
+
+
+# Function to dynamically get column names from the model
+def get_column_names(model: Any, attributes: List[str]) -> List[str]:
+    model_columns = model.__annotations__.keys()
+    return [attr for attr in attributes if attr in model_columns]
+
+
+# Usage example
+desired_columns = [CalculationCase.tier.__str__(), CalculationCase.fromStory.__str__(),
+                   CalculationCase.toStory.__str__(),
+                   CalculationCase.pier.__str__(), CalculationCase.materialFc.__str__(),
+                   CalculationCase.materialFy.__str__(),
+                   CalculationCase.barNo.__str__(), CalculationCase.rho.__str__(), CalculationCase.dcr.__str__(),
+                   CalculationCase.forceCombo.__str__(), CalculationCase.spColumnFile.__str__()]
+column_desired_names = [column.split(".")[1] for column in desired_columns]
+
+
+def fetch_data_from_db(engine: Engine):
+    column_names = get_column_names(CalculationCase, column_desired_names)
+    with Session(engine) as session:
+        statement = select(*[getattr(CalculationCase, col) for col in column_names])
+        results = session.exec(statement)
+        cases = results.all()
+    # convert into a pandas dataframe
+    df = pd.DataFrame(cases, columns=column_names)
+    return df
