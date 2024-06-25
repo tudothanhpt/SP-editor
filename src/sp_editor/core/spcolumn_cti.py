@@ -271,7 +271,7 @@ class CTIfile:
         # Define the properties based on input parameters
         concrete_strength = f_c                         # Concrete strength, f’c
         concrete_modulus = E_c                           # Concrete modulus of elasticity, Ec
-        concrete_max_stress = 0.65*f_c                                       # Concrete maximum stress (assumed constant 8)
+        concrete_max_stress = 0.85*f_c                                       # Concrete maximum stress (assumed constant 8)
         beta1 = beta1                                                   # Beta (1) for concrete stress block
         concrete_ultimate_strain = 0.003                                  # Concrete ultimate strain
         steel_yield_strength = fy                   # Steel yield strength, fy
@@ -667,8 +667,10 @@ class CTIfile:
             os.makedirs(folder_path)
         
         file_path = os.path.join(folder_path, file_name+".cti")
-
-        # Write the content to the file
         with open(file_path, "w") as file:
             file.write(self.CTIbuilder())
+        
+        force_path = os.path.join(folder_path, file_name+"_forces"+".txt")
+        with open(force_path, "w") as file:
+            file.write(self.__FactoredLoads)
 
