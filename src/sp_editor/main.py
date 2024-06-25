@@ -5,6 +5,7 @@ from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from sqlalchemy.engine.base import Engine
 
+from core.mainwindow_context_menu import TableContextMenu
 from crud.cr_mainwindow import fetch_data_from_db
 from database.mainWindow_model import MainWindowModel
 from sp_editor.controllers.barest_dialog import BarSet_Dialog
@@ -51,6 +52,13 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.set_active_action(False)
 
         self.init_display_table()
+
+        self.main_window_model = None
+
+        # setup context menu
+        self.context_menu = TableContextMenu(self.table_sumaryResults, self.main_window_model)
+        self.table_sumaryResults.setContextMenuPolicy(qtc.Qt.CustomContextMenu)
+        self.table_sumaryResults.customContextMenuRequested.connect(self.open_context_menu)
 
         # Setup action
         self.action_New.triggered.connect(self.new_file)
@@ -192,10 +200,6 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         # TODO: display infor from database
         self.main_window_model.update_model_from_db(self.current_engine)
 
-    @qtc.Slot()
-    def update_model_after_action(self):
-        self.main_window_model.update_model_from_db(self.current_engine)
-
     @qtc.Slot(Engine)
     def set_current_engine(self, engine: Engine):
         self.current_engine = engine
@@ -229,6 +233,10 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.a_GetAllForce.setEnabled(False)
         self.a_MakeSPcolumn.setEnabled(True)
         self.a_BatchProcessor.setEnabled(True)
+
+    @qtc.Slot()
+    def open_context_menu(self, position):
+        self.context_menu.exec(self.table_sumaryResults.viewport().mapToGlobal(position))
 
 
 if __name__ == '__main__':
