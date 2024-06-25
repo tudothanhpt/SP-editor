@@ -114,3 +114,6 @@ def get_engine_path(engine):
     db_folder = os.path.dirname(db_path)
     
     return db_folder
+
+def get_attribute_names(cls):
+    return list(cls.__annotations__.keys())

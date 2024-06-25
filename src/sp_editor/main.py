@@ -17,6 +17,7 @@ from sp_editor.controllers.import_etabs_dialog import ImportEtabs_Dialog
 from sp_editor.controllers.material_dialog import Material_Dialog
 from sp_editor.controllers.new_file_dialog import NewFile_Dialog
 from sp_editor.controllers.open_file_dialog import OpenFile_Dialog
+from sp_editor.controllers.batch_processor_dialog import BatchProcessorDialog
 from sp_editor.core.connect_etabs import get_story_infor, get_pier_label_infor, get_pier_force_infor, \
     get_loadCombo_df_fromE, get_section_designer_shape_infor, set_global_unit
 from sp_editor.core.force_filter import get_pierforces_CTI_todb
@@ -25,6 +26,7 @@ from sp_editor.crud.cr_level_group import get_level_to_db, get_pier_label_to_db,
     get_sds_to_db
 from sp_editor.crud.cr_load_combo import create_loadComboDB, create_loadComboSelectionDB, read_loadComboSelectionDB
 from sp_editor.widgets.main_window import Ui_mw_Main
+
 
 
 class MainWindow(qtw.QMainWindow, Ui_mw_Main):
@@ -43,6 +45,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.etabs_object = None
         self.dialog_material = None
         self.cti_making = None
+        self.dialog_batch_processor =None
 
         self.setupUi(self)
         self.set_active_action(False)
@@ -61,6 +64,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.actionDesign_Combos_Selection.triggered.connect(self.open_loadComboSelection)
         self.a_GetAllForce.triggered.connect(self.get_all_force)
         self.a_MakeSPcolumn.triggered.connect(self.make_spcolumn)
+        self.a_BatchProcessor.triggered.connect(self.batch_processor)
 
     @qtc.Slot()
     def new_file(self):
@@ -143,7 +147,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.dialog_calculation_case.case_init.connect(self.update_message)
         self.dialog_calculation_case.case_init.connect(self.update_display_results)
         self.dialog_calculation_case.exec()
-        self.a_MakeSPcolumn.setEnabled(True)
+
 
     @qtc.Slot()
     def open_loadComboSelection(self):
@@ -166,6 +170,13 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.cti_making.cti_create.connect(self.update_message)
         self.cti_making.cti_create.connect(self.update_display_results)
         self.cti_making.exec()
+    
+    @qtc.Slot()
+    def batch_processor(self):
+        self.dialog_batch_processor= BatchProcessorDialog(self.current_engine)
+        self.dialog_batch_processor.read_results_create.connect(self.update_message)
+        self.dialog_batch_processor.read_results_create.connect(self.update_display_results)
+        self.dialog_batch_processor.exec()
 
     def init_display_table(self):
         # TODO: display infor from database
@@ -216,8 +227,8 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.a_Cases.setEnabled(mode)
         self.actionDesign_Combos_Selection.setEnabled(mode)
         self.a_GetAllForce.setEnabled(False)
-        self.a_MakeSPcolumn.setEnabled(False)
-        self.a_BatchProcessor.setEnabled(False)
+        self.a_MakeSPcolumn.setEnabled(True)
+        self.a_BatchProcessor.setEnabled(True)
 
 
 if __name__ == '__main__':

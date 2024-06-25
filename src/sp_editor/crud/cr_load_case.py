@@ -134,3 +134,15 @@ def create_calculation_case(engine: Engine, params: list[str | float]):
         session.commit()
         session.refresh(calculation_case)
         return calculation_case
+
+def update_dcr_by_spcolumnfile(engine: Engine, spColumnFile, new_dcr_value):
+    with Session(engine) as session:
+        statement = select(CalculationCase).where(CalculationCase.spColumnFile == spColumnFile)
+        results = session.exec(statement).all()
+        print(results)
+        
+        for row in results:
+            row.dcr = new_dcr_value
+            session.add(row)
+        
+        session.commit()

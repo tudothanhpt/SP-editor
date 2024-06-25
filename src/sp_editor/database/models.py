@@ -172,3 +172,11 @@ class CTISummary(SQLModel, table=True):
     filteredForces: Optional[str] = Field(default=None)
     casePath: Optional[str] = Field(default=None)
     pathAfterCreation: Optional[str] = Field(default=None)
+
+class BatchProcessingOutput(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    spColumnFile: str | None = Field(default=None)
+    Pu: Optional[float] = Field(default=None)
+    Mux: Optional[float] = Field(default=None)
+    Muy: Optional[float] = Field(default=None)
+    DCR: Optional[float] = Field(default=None)
