@@ -1,20 +1,19 @@
 import os
 import subprocess
 import pandas as pd
-from PyQt6.QtCore import pyqtSignal, QThread
+from PySide6.QtCore import Signal, QThread
 from sqlalchemy.engine.base import Engine
 
-
-#DEFAULT BY INSTALLATION, PLEASE CHANGE THIS IF NOT COMPATIBLE WITH YOUR COMPUTER'S SETTINGS
+# DEFAULT BY INSTALLATION, PLEASE CHANGE THIS IF NOT COMPATIBLE WITH YOUR COMPUTER'S SETTINGS
 SPCOLUMN_PATH = r"C:\Program Files (x86)\StructurePoint\spColumn\spColumn.CLI.exe"
 
 
 class BatchProcessorThread(QThread):
-    error = pyqtSignal(str)
-    success = pyqtSignal(str)
-    output = pyqtSignal(str)
+    error = Signal(str)
+    success = Signal(str)
+    output = Signal(str)
 
-    def __init__(self, engine: Engine, input_files: list[str], options: list[str]=["/rcsv"]):
+    def __init__(self, engine: Engine, input_files: list[str], options: list[str] = ["/rcsv"]):
         super().__init__()
         self.engine = engine
         self.options = options
@@ -42,7 +41,7 @@ class BatchProcessorThread(QThread):
                     error_message = "The input file list is empty. Please provide a list of input files and try again."
                     self.error.emit(error_message)
                     return
-                
+
             except Exception as e:
                 error_message = f"An error occurred while reading the summary CTI database: {e}"
                 self.error.emit(error_message)
@@ -63,15 +62,16 @@ class BatchProcessorThread(QThread):
                     output_file = os.path.join(output_folder, filename)
 
                     # Write command line instructions to the batch file
-                    batch_file.write(f'"{SPCOLUMN_PATH}" /i:"{self.input_files[i]}" /o:"{output_file}.out" ' + ' '.join(self.options) + '\n')
+                    batch_file.write(f'"{SPCOLUMN_PATH}" /i:"{self.input_files[i]}" /o:"{output_file}.out" ' + ' '.join(
+                        self.options) + '\n')
 
             try:
                 # Step 4: Execute the batch file
                 process = subprocess.Popen(
-                    [batch_file_path], 
-                    stdout=subprocess.PIPE, 
-                    stderr=subprocess.PIPE, 
-                    shell=True, 
+                    [batch_file_path],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    shell=True,
                     text=True
                 )
                 for line in iter(process.stdout.readline, ''):
@@ -82,7 +82,7 @@ class BatchProcessorThread(QThread):
                 # Check for errors in execution
                 if process.returncode != 0:
                     raise subprocess.CalledProcessError(process.returncode, process.args)
-                
+
                 # Step 5: Emit success signal
                 self.success.emit(f"Batch file created and executed successfully: {batch_file_path}")
             except subprocess.CalledProcessError as e:
@@ -96,4 +96,3 @@ class BatchProcessorThread(QThread):
         except Exception as e:
             error_message = f"An unexpected error occurred: {e}"
             self.error.emit(error_message)
-

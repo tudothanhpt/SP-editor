@@ -29,7 +29,6 @@ from sp_editor.crud.cr_load_combo import create_loadComboDB, create_loadComboSel
 from sp_editor.widgets.main_window import Ui_mw_Main
 
 
-
 class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def __init__(self):
         super().__init__()
@@ -46,7 +45,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.etabs_object = None
         self.dialog_material = None
         self.cti_making = None
-        self.dialog_batch_processor =None
+        self.dialog_batch_processor = None
 
         self.setupUi(self)
         self.set_active_action(False)
@@ -90,9 +89,9 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.dialog_open.path_open.connect(self.update_message)
         self.dialog_open.path_open.connect(self.set_current_path)
         self.dialog_open.engine_open.connect(self.set_current_engine)
-        self.dialog_open.current_db.connect(self.update_display_results)
         self.set_active_action(True)
         self.dialog_open.open_file()
+        self.dialog_open.current_db.connect(self.update_display_results)
 
     @qtc.Slot()
     def open_import_etabs(self):
@@ -156,7 +155,6 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.dialog_calculation_case.case_init.connect(self.update_display_results)
         self.dialog_calculation_case.exec()
 
-
     @qtc.Slot()
     def open_loadComboSelection(self):
         self.dialog_load_combos_selection = Combo_Dialog(self.current_engine)
@@ -178,10 +176,10 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.cti_making.cti_create.connect(self.update_message)
         self.cti_making.cti_create.connect(self.update_display_results)
         self.cti_making.exec()
-    
+
     @qtc.Slot()
     def batch_processor(self):
-        self.dialog_batch_processor= BatchProcessorDialog(self.current_engine)
+        self.dialog_batch_processor = BatchProcessorDialog(self.current_engine)
         self.dialog_batch_processor.read_results_create.connect(self.update_message)
         self.dialog_batch_processor.read_results_create.connect(self.update_display_results)
         self.dialog_batch_processor.exec()
