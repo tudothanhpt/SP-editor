@@ -561,7 +561,7 @@ class Ui_calculationCase_dialog(object):
         self.label_24.setText(QCoreApplication.translate("calculationCase_dialog", u"Type", None))
         self.label_26.setText(QCoreApplication.translate("calculationCase_dialog", u"Cover", None))
         self.label_3.setText(QCoreApplication.translate("calculationCase_dialog", u"Clear", None))
-        self.pb_makeSection.setText(QCoreApplication.translate("calculationCase_dialog", u"Make Section", None))
+        self.pb_makeSection.setText(QCoreApplication.translate("calculationCase_dialog", u"Generate Section", None))
         self.groupBox_8.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Properties", None))
         self.label_13.setText(QCoreApplication.translate("calculationCase_dialog", u"Max capacity ratio", None))
         self.lb_unitAs.setText("")
