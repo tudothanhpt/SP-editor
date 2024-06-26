@@ -2,6 +2,7 @@ from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 
+
 class Ui_BatchProcessorDialog(object):
     def setupUi(self, BatchProcessorDialog):
         BatchProcessorDialog.setObjectName("BatchProcessorDialog")
@@ -52,4 +53,4 @@ class Ui_BatchProcessorDialog(object):
         _translate = qtc.QCoreApplication.translate
         BatchProcessorDialog.setWindowTitle(_translate("BatchProcessorDialog", "Batch Processor"))
         self.pb_startButton.setText(_translate("BatchProcessorDialog", "Batch Proccesing"))
-        self.pb_readButton.setText(_translate("BatchProcessorDialog", "Read Result"))
+        self.pb_readButton.setText(_translate("BatchProcessorDialog", "Show Result"))

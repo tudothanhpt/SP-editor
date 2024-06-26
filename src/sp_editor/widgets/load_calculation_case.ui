@@ -524,7 +524,7 @@
                <item>
                 <widget class="QPushButton" name="pb_makeSection">
                  <property name="text">
-                  <string>Make Section</string>
+                  <string>Generate Section</string>
                  </property>
                 </widget>
                </item>
