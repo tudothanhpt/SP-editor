@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['src\\main.py'],
+    ['src\\sp_editor\\main.py'],
     pathex=[],
     binaries=[],
     datas=[("src\\sp_editor\\database\\material_table\\*.json","sp_editor\\database\\material_table"),("src\\sp_editor\\database\\barset_table\\*.json","sp_editor\\database\\barset_table")],
@@ -32,7 +32,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon="src/SP_TOOL.ico",
+    icon="src\\sp_editor\\SP_TOOL.ico",
 )
 coll = COLLECT(
     exe,
