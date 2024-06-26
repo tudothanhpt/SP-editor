@@ -127,7 +127,7 @@ class CalculationCase(SQLModel, table=True):
     spColumnFile: str | None = Field(default=None)
 
     forceCombo: str | None = Field(default=None)
-    dcr: float | None = Field(default=None)
+    dcr: Optional[float] | None = Field(default=None)
 
 
 class LoadCombinationsSelection(SQLModel, table=True):

@@ -73,12 +73,20 @@ def read_excel_sheet(filepath):
         # Read the Excel file
         xl = pd.ExcelFile(filepath)
         # Select the sheet to read
-        df = xl.parse(sheet_name="6", header=0, skiprows=3, usecols="B:K")
+        df = xl.parse(sheet_name="6", header=None, usecols="A:K")
+        
+        # Locate 
+        row_index = df[df.apply(lambda row: 
+                    row.astype(str).str.contains("No.", case=True).any(), axis=1)].index[0]
+        
+        header_location=df.iloc[row_index]
+        df=pd.DataFrame(df.values[row_index+2:], columns=header_location)
         # Create a custom headers - ensure no abnormal things among xls file
-        custom_headers = ['Pu', 'Mux', 'Muy', 'phiPn', 'phiMnx', 'phiMny', 'NA_Depth', 'epsilon_t', 'phi', 'DCR']
-        df = df.iloc[1:]
+        custom_headers = ['No.','Pu', 'Mux', 'Muy', 'phiPn', 'phiMnx', 'phiMny', 'NA_Depth', 'epsilon_t', 'phi', 'DCR']
         df.columns = custom_headers
-        # Create sub columns to match database
+        # drop unit row
+        df = df.iloc[1:]
+        
         df['spColumnFile'] = os.path.splitext(os.path.basename(filepath))[0]+".cti"
         # Rearrange the column to match database order
         # Return the read DataFrame
@@ -98,12 +106,55 @@ def make_df_from_outputs(path_list):
         df_output = pd.concat([df_output, df], ignore_index=True)
     
     df_output['id'] = range(1, len(df_output) + 1)
-    df_output = df_output.loc[:,['id','spColumnFile','DCR','Pu', 'Mux', 'Muy']]
-    
+
+    df_output = df_output.loc[:,['id','spColumnFile','DCR',"No.",'Pu', 'Mux', 'Muy']]
+    print(df_output)
     return df_output
 
 def max_dcr_from_outputs(df: pd.DataFrame):
-   df_max_dcr_per_spColumn = df.loc[df.groupby("spColumnFile")["DCR"].idxmax()] 
+    
+    """
+    This function takes a DataFrame and returns a new DataFrame containing the rows with the maximum DCR value
+    for each unique spColumnFile. If a TypeError or ValueError occurs, a pseudo DataFrame is created and included.
 
-   return (df_max_dcr_per_spColumn)
+    Parameters:
+    df (pd.DataFrame): The input DataFrame containing the columns 'id', 'spColumnFile', 'DCR', 'Pu', 'Mux', and 'Muy'.
 
+    Returns:
+    pd.DataFrame: A DataFrame with the rows having the maximum DCR for each spColumnFile, or a pseudo DataFrame in case of error.
+    """
+    # Initialize an empty DataFrame to store the summary
+    df_max_dcr_per_spColumn = pd.DataFrame(columns=['id','spColumnFile','DCR',"No.",'Pu', 'Mux', 'Muy'])
+    
+    # Get unique values from the spColumnFile column
+    unique_spColumnFiles = df['spColumnFile'].unique()
+    
+    for spColumnFile in unique_spColumnFiles:
+        try:
+            # Find the row with the maximum DCR for each spColumnFile
+            max_dcr_row = df.loc[df.loc[df['spColumnFile'] == spColumnFile, 'DCR']
+                                  .astype(str).replace({'>': ''}).astype(float).idxmax()]
+            # Append the row to the summary DataFrame
+            df_max_dcr_per_spColumn = pd.concat([df_max_dcr_per_spColumn, max_dcr_row.to_frame().T], ignore_index=True)
+        except (TypeError, ValueError) as e:
+            print(f"TypeError or ValueError: {e} - Creating pseudo DataFrame for {spColumnFile}")
+            # Create pseudo DataFrame in case of error
+            dict_max_os = {
+                'id': ['-'],
+                'spColumnFile': [spColumnFile],
+                'DCR': ['o/s'],
+                'Pu': ["Pu > Pmax"],
+                'Mux': ['-'],
+                'Muy': ['-']
+            }
+            df_max_os = pd.DataFrame(dict_max_os)
+            # Append the pseudo DataFrame to the summary DataFrame
+            df_max_dcr_per_spColumn = pd.concat([df_max_dcr_per_spColumn, df_max_os], ignore_index=True)
+    
+    return df_max_dcr_per_spColumn
+    
+if __name__ == "__main__":
+
+    df=make_df_from_outputs(["C:\\Users\\abui\\Desktop\\New folder\\t1\\P1\\outputs\\t1_P1.xlsx","C:\\Users\\abui\\Desktop\\New folder\\t1\\P1\\outputs\\t1_P1_!.xlsx"])
+    df1=max_dcr_from_outputs(df)
+    print(df1)

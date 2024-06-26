@@ -3,7 +3,8 @@ from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 
 from sp_editor.core.spcol_batch_processor import BatchProcessorThread
-from sp_editor.core.read_batch_processor_outputs import make_df_from_outputs,check_output_paths_exist,get_o_xlsx_paths_from_cti_paths,max_dcr_from_outputs
+from sp_editor.core.read_batch_processor_outputs import make_df_from_outputs,check_output_paths_exist, \
+    get_o_xlsx_paths_from_cti_paths,max_dcr_from_outputs
 from sp_editor.widgets.batch_processor_dialog_ui import Ui_BatchProcessorDialog
 from sqlalchemy.engine.base import Engine
 from sqlmodel import Session, create_engine
@@ -42,7 +43,8 @@ class BatchProcessorDialog(qtw.QDialog, Ui_BatchProcessorDialog):
 
     def start_thread(self):
         
-        self.pb_startButton.setEnabled(False)  # Disable the start button
+        self.pb_startButton.setEnabled(False)  # Disable the start button when running
+        self.pb_readButton.setEnabled(False)   # Disable the read button when running
         self.t_resultTextEdit.clear()  # Clear previous output
 
         self.t_resultTextEdit.setText(f"<b>{STARTTEXT}<b>")
@@ -86,16 +88,17 @@ class BatchProcessorDialog(qtw.QDialog, Ui_BatchProcessorDialog):
                 id = row['id']
                 spColumnFile = row['spColumnFile']
                 dcr = row['DCR']
-                update_dcr_by_spcolumnfile(self.engine,spColumnFile,dcr)
+                update_dcr_by_spcolumnfile(self.engine,spColumnFile,dcr,id)
                 self.read_results_create.emit()
                 
             self.t_resultTextEdit.setText("DONE")
+            self.close()
         except Exception as e:
             print(f"Error occurred: {e}")
 
 if __name__ == '__main__':
     app = qtw.QApplication(sys.argv)
-    engine_temppath = r"tests\TestBM\123.spe"
+    engine_temppath = r"C:\Users\abui\Desktop\New folder\1.spe"
     engine = create_engine(f"sqlite:///{engine_temppath}")
     window = BatchProcessorDialog(engine)
     window.show()
