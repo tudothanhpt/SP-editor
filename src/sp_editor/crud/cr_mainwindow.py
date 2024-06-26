@@ -32,12 +32,13 @@ def get_column_names(model: Any, attributes: List[str]) -> List[str]:
 
 
 # Usage example
-desired_columns = [CalculationCase.tier.__str__(), CalculationCase.fromStory.__str__(),
+desired_columns = [CalculationCase.spColumnFile.__str__(), CalculationCase.tier.__str__(),
+                   CalculationCase.fromStory.__str__(),
                    CalculationCase.toStory.__str__(),
                    CalculationCase.pier.__str__(), CalculationCase.materialFc.__str__(),
                    CalculationCase.materialFy.__str__(),
                    CalculationCase.barNo.__str__(), CalculationCase.rho.__str__(), CalculationCase.dcr.__str__(),
-                   CalculationCase.forceCombo.__str__(), CalculationCase.spColumnFile.__str__()]
+                   CalculationCase.forceCombo.__str__()]
 column_desired_names = [column.split(".")[1] for column in desired_columns]
 
 

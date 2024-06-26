@@ -39,10 +39,10 @@ class Ui_BatchProcessorDialog(object):
         self.pb_startButton.setFont(qtg.QFont("Segoe UI", 12))
         self.horizontalLayout.addWidget(self.pb_startButton)
 
-        self.pb_readButton = qtw.QPushButton(BatchProcessorDialog)
-        self.pb_readButton.setObjectName("pb_readButton")
-        self.pb_readButton.setFont(qtg.QFont("Segoe UI", 12))
-        self.horizontalLayout.addWidget(self.pb_readButton)
+        self.pb_showButton = qtw.QPushButton(BatchProcessorDialog)
+        self.pb_showButton.setObjectName("pb_showButton")
+        self.pb_showButton.setFont(qtg.QFont("Segoe UI", 12))
+        self.horizontalLayout.addWidget(self.pb_showButton)
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
@@ -53,4 +53,4 @@ class Ui_BatchProcessorDialog(object):
         _translate = qtc.QCoreApplication.translate
         BatchProcessorDialog.setWindowTitle(_translate("BatchProcessorDialog", "Batch Processor"))
         self.pb_startButton.setText(_translate("BatchProcessorDialog", "Batch Proccesing"))
-        self.pb_readButton.setText(_translate("BatchProcessorDialog", "Show Result"))
+        self.pb_showButton.setText(_translate("BatchProcessorDialog", "Show Result"))

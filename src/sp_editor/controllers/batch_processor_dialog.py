@@ -37,14 +37,14 @@ class BatchProcessorDialog(qtw.QDialog, Ui_BatchProcessorDialog):
         self.engine = engine
         self.input_files = read_summaryCTI_DB(self.engine)[path_after_creation].tolist()
         self.output_xlsx_paths = None
-        self.pb_readButton.setEnabled(True)
+        self.pb_showButton.setEnabled(True)
         self.pb_startButton.clicked.connect(self.start_thread)
-        self.pb_readButton.clicked.connect(self.read_result)
+        self.pb_showButton.clicked.connect(self.read_result)
 
     def start_thread(self):
 
         self.pb_startButton.setEnabled(False)  # Disable the start button when running
-        self.pb_readButton.setEnabled(False)  # Disable the read button when running
+        self.pb_showButton.setEnabled(False)  # Disable the read button when running
         self.t_resultTextEdit.clear()  # Clear previous output
 
         self.t_resultTextEdit.setText(f"<b>{STARTTEXT}<b>")
@@ -63,7 +63,7 @@ class BatchProcessorDialog(qtw.QDialog, Ui_BatchProcessorDialog):
         self.t_resultTextEdit.append(message)
         self.t_resultTextEdit.append(f"<b>{ENDTEXT}<b>")
         self.pb_startButton.setEnabled(True)  # Re-enable the start button
-        self.pb_readButton.setEnabled(True)
+        self.pb_showButton.setEnabled(True)
 
     def update_output(self, output):
         self.t_resultTextEdit.append(output)

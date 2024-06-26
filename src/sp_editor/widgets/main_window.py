@@ -16,10 +16,11 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QFrame, QGridLayout,
-    QHBoxLayout, QHeaderView, QLabel, QMainWindow,
-    QMenu, QMenuBar, QSizePolicy, QStatusBar,
-    QTableView, QToolBar, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QApplication, QFrame,
+    QGridLayout, QHBoxLayout, QHeaderView, QLabel,
+    QMainWindow, QMenu, QMenuBar, QSizePolicy,
+    QStatusBar, QTableView, QToolBar, QVBoxLayout,
+    QWidget)
 import icons_rc
 
 class Ui_mw_Main(object):
@@ -137,8 +138,23 @@ class Ui_mw_Main(object):
         self.table_sumaryResults = QTableView(self.frame_2)
         self.table_sumaryResults.setObjectName(u"table_sumaryResults")
         self.table_sumaryResults.setAutoFillBackground(False)
+        self.table_sumaryResults.setSizeAdjustPolicy(QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored)
         self.table_sumaryResults.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.table_sumaryResults.setSortingEnabled(False)
+        self.table_sumaryResults.setAlternatingRowColors(False)
+        self.table_sumaryResults.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.table_sumaryResults.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.table_sumaryResults.setSortingEnabled(True)
+        self.table_sumaryResults.setWordWrap(True)
+        self.table_sumaryResults.horizontalHeader().setCascadingSectionResizes(True)
+        self.table_sumaryResults.horizontalHeader().setMinimumSectionSize(75)
+        self.table_sumaryResults.horizontalHeader().setDefaultSectionSize(100)
+        self.table_sumaryResults.horizontalHeader().setProperty("showSortIndicator", True)
+        self.table_sumaryResults.horizontalHeader().setStretchLastSection(True)
+        self.table_sumaryResults.verticalHeader().setVisible(True)
+        self.table_sumaryResults.verticalHeader().setCascadingSectionResizes(True)
+        self.table_sumaryResults.verticalHeader().setHighlightSections(False)
+        self.table_sumaryResults.verticalHeader().setProperty("showSortIndicator", False)
+        self.table_sumaryResults.verticalHeader().setStretchLastSection(False)
 
         self.gridLayout_3.addWidget(self.table_sumaryResults, 0, 0, 1, 1)
 

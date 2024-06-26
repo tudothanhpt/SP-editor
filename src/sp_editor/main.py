@@ -94,7 +94,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
             self.update_display_results()
         except sqlalchemy.exc.OperationalError:
             print("no data in database")
-            
+
         self.set_active_action(True)
 
     @qtc.Slot()
@@ -190,9 +190,9 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
 
     def init_display_table(self):
         # TODO: display infor from database
-        column_headers = ["Tier", "From Story", "To Story", "Pier",
+        column_headers = ["SPColumn File", "Tier", "From Story", "To Story", "Pier",
                           "Material Fc", "Material Fy", "Bar No", "Rho", "DCR",
-                          "Force Combo", "SPColumn File"]
+                          "Force Combo"]
         df = pd.DataFrame(columns=column_headers)
         self.main_window_model = MainWindowModel(dataframe=df)
         self.table_sumaryResults.setModel(self.main_window_model)
@@ -201,6 +201,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def update_display_results(self):
         # TODO: display infor from database
         self.main_window_model.update_model_from_db(self.current_engine)
+        self.table_sumaryResults.resizeColumnsToContents()
 
     @qtc.Slot(Engine)
     def set_current_engine(self, engine: Engine):
@@ -238,6 +239,8 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
 
     @qtc.Slot()
     def open_context_menu(self, position):
+        self.context_menu.path = self.current_path
+        self.context_menu.engine = self.current_engine
         self.context_menu.exec(self.table_sumaryResults.viewport().mapToGlobal(position))
 
 

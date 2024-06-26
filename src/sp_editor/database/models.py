@@ -129,6 +129,15 @@ class CalculationCase(SQLModel, table=True):
     forceCombo: str | None = Field(default=None)
     dcr: str | None = Field(default=None)
 
+    def to_list(self):
+        return [
+            self.id, self.tier, self.isPierName, self.folder, self.sds, self.pier,
+            self.barCover, self.barNo, self.barArea, self.barSpacing, self.concreteAg,
+            self.sdsAs, self.rho, self.materialFc, self.materialFy, self.materialEc,
+            self.materialEs, self.fromStory, self.toStory, self.casePath,
+            self.spColumnFile, self.forceCombo, self.dcr
+        ]
+
 
 class LoadCombinationsSelection(SQLModel, table=True):
     """

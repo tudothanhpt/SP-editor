@@ -1,12 +1,10 @@
-import sys
-from PySide6.QtCore import QAbstractTableModel, QModelIndex, Qt
-from PySide6.QtWidgets import QApplication, QMainWindow, QTableView, QMenu, QMessageBox
-from PySide6.QtGui import QStandardItemModel, QStandardItem, QAction
 import pandas as pd
-from typing import Sequence, Any
+from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex
+from PySide6.QtGui import QColor, QBrush
+from PySide6.QtWidgets import QApplication, QMainWindow, QTableView, QStyledItemDelegate
 
 
-class MainWindowPandasModel(QAbstractTableModel):
+class MainWindowModel(QAbstractTableModel):
     """A model to interface a Qt view with pandas DataFrame"""
 
     def __init__(self, dataframe: pd.DataFrame = pd.DataFrame(), parent=None, headers=None):
@@ -30,6 +28,14 @@ class MainWindowPandasModel(QAbstractTableModel):
 
         if role == Qt.ItemDataRole.DisplayRole:
             return str(self._dataframe.iloc[index.row(), index.column()])
+        elif role == Qt.ItemDataRole.BackgroundRole and index.column() == 9:  # Assuming DCR column is at index 9
+            value = self._dataframe.iloc[index.row(), index.column()]
+            try:
+                value = float(value)
+            except ValueError:
+                value = 1.0
+            color = self.get_color_for_value(value)
+            return QBrush(color)
 
         return None
 
@@ -43,117 +49,76 @@ class MainWindowPandasModel(QAbstractTableModel):
 
         return None
 
-    def update_dataframe(self, dataframe: pd.DataFrame, headers=None):
-        """Update the model with a new DataFrame"""
+    def update_model_from_db(self, engine):
+        """Update model with new data from the database"""
+        new_data = fetch_data_from_db(engine=engine)  # Fetch new data from database
+        # Prepare data as list of lists (rows)
+        # Convert to DataFrame
+        column_headers = ["SPColumn File", "Tier", "From Story", "To Story", "Pier",
+                          "Material Fc", "Material Fy", "Bar No", "Rho", "DCR",
+                          "Force Combo"]
+
+        new_df = new_data.set_axis(column_headers, axis=1)
+
+        # Convert DCR column to numeric
+        new_df['DCR'] = pd.to_numeric(new_df['DCR'], errors='coerce').fillna(1.0)
+
+        # Update the model
         self.beginResetModel()
-        self._dataframe = dataframe
-        if headers:
-            self._dataframe.columns = headers
+        self._dataframe = new_df
         self.endResetModel()
 
-    @staticmethod
-    def sqlmodel_to_df(objects: Sequence[Any]) -> pd.DataFrame:
-        """Converts SQLModel objects into a Pandas DataFrame"""
-        if not objects:
-            return pd.DataFrame()  # Return an empty DataFrame if the list is empty
-        else:
-            # Extract data from SQLModel objects
-            data = [model.dict() for model in objects]
-            # Get the column order from the first SQLModel object
-            column_order = list(objects[0].__fields__.keys())
-            # Convert the list of dictionaries to a pandas DataFrame
-            df_out = pd.DataFrame(data)
-            # Apply the column order
-            df_out = df_out[column_order]
-        return df_out
+    def get_color_for_value(self, value):
+        """Get color for value with gradient"""
+        min_value, max_value = 0, 1
+        value = min(max(value, min_value), max_value)
+        ratio = (value - min_value) / (max_value - min_value)
+        r = int(255 * (1 - ratio))
+        g = int(255 * ratio)
+        return QColor(r, g, 0)
+
+
+class DCRDelegate(QStyledItemDelegate):
+    def paint(self, painter, option, index):
+        value = float(index.model().data(index, Qt.ItemDataRole.DisplayRole))
+        color = index.model().get_color_for_value(value)
+        option.backgroundBrush = QBrush(color)
+        super().paint(painter, option, index)
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('QTableView with MainWindowModel')
-        self.setGeometry(100, 100, 800, 600)
+        self.setWindowTitle("QTableView with Pandas DataFrame")
+        self.resize(800, 600)
 
-        # Create the QTableView
-        self.table_view = QTableView(self)
-        self.setCentralWidget(self.table_view)
+        self.table = QTableView()
+        self.setCentralWidget(self.table)
 
-        # Create a sample DataFrame
         data = {
-            'Header1': [1, 2, 3],
-            'Header2': ['A', 'B', 'C'],
-            'Header3': [True, False, True]
+            "SPColumn File": ["t2_CORE4-ALL.cti", "t1_CORE4-ALL.cti"],
+            "Tier": ["t2", "t1"],
+            "From Story": ["Story21", "B1"],
+            "To Story": ["Story38", "Story20"],
+            "Pier": ["CORE4-ALL", "CORE4-ALL"],
+            "Material Fc": [10.0, 10.0],
+            "Material Fy": [60.0, 60.0],
+            "Bar No": ["#18", "#18"],
+            "Rho": [0.95, 0.95],
+            "DCR": [0.57, 1.04],
+            "Force Combo": [481, 1382]
         }
         df = pd.DataFrame(data)
 
-        # Create a MainWindowModel with the sample DataFrame
-        self.model = MainWindowPandasModel(dataframe=df, headers=['Header1', 'Header2', 'Header3'])
-        self.table_view.setModel(self.model)
+        self.model = MainWindowModel(df)
+        self.table.setModel(self.model)
 
-        # Set up context menu
-        self.table_view.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.table_view.customContextMenuRequested.connect(self.open_context_menu)
-
-    def open_context_menu(self, position):
-        menu = QMenu()
-
-        delete_action = QAction('Delete Row', self)
-        delete_action.triggered.connect(self.delete_row)
-        menu.addAction(delete_action)
-
-        update_action = QAction('Update Row', self)
-        update_action.triggered.connect(self.update_row)
-        menu.addAction(update_action)
-
-        duplicate_action = QAction('Duplicate Row', self)
-        duplicate_action.triggered.connect(self.duplicate_row)
-        menu.addAction(duplicate_action)
-
-        menu.exec(self.table_view.viewport().mapToGlobal(position))
-
-    def get_selected_row(self):
-        indexes = self.table_view.selectionModel().selectedRows()
-        if indexes:
-            return indexes[0].row()
-        return None
-
-    def delete_row(self):
-        row = self.get_selected_row()
-        if row is not None:
-            self.model.beginRemoveRows(QModelIndex(), row, row)
-            self.model._dataframe = self.model._dataframe.drop(self.model._dataframe.index[row]).reset_index(drop=True)
-            self.model.endRemoveRows()
-        else:
-            QMessageBox.warning(self, 'Warning', 'No row selected')
-
-    def update_row(self):
-        row = self.get_selected_row()
-        if row is not None:
-            # For simplicity, we update the row with hardcoded values
-            self.model._dataframe.iloc[row] = [4, 'D', False]
-            self.model.dataChanged.emit(self.model.index(row, 0), self.model.index(row, self.model.columnCount() - 1))
-        else:
-            QMessageBox.warning(self, 'Warning', 'No row selected')
-
-    def duplicate_row(self):
-        row = self.get_selected_row()
-        if row is not None:
-            self.model.beginInsertRows(QModelIndex(), row + 1, row + 1)
-            new_row = self.model._dataframe.iloc[row].copy()
-            self.model._dataframe = pd.concat([self.model._dataframe.iloc[:row + 1], pd.DataFrame([new_row]),
-                                               self.model._dataframe.iloc[row + 1:]]).reset_index(drop=True)
-            self.model.endInsertRows()
-        else:
-            QMessageBox.warning(self, 'Warning', 'No row selected')
+        dcr_delegate = DCRDelegate(self.table)
+        self.table.setItemDelegateForColumn(9, dcr_delegate)  # Assuming DCR column is at index 9
 
 
-# Test the MainWindowModel with a QTableView in a PySide6 application
 if __name__ == "__main__":
     app = QApplication([])
-
-    # Create the main window
     window = MainWindow()
     window.show()
-
-    # Execute the application
-    sys.exit(app.exec())
+    app.exec()

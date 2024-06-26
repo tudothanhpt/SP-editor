@@ -52,9 +52,9 @@ class MainWindowModel(QAbstractTableModel):
         new_data = fetch_data_from_db(engine=engine)  # Fetch new data from database
         # Prepare data as list of lists (rows)
         # Convert to DataFrame
-        column_headers = ["Tier", "From Story", "To Story", "Pier",
+        column_headers = ["SPColumn File", "Tier", "From Story", "To Story", "Pier",
                           "Material Fc", "Material Fy", "Bar No", "Rho", "DCR",
-                          "Force Combo", "SPColumn File"]
+                          "Force Combo"]
 
         new_df = new_data.set_axis(column_headers, axis=1)
 
