@@ -127,7 +127,7 @@ class CalculationCase(SQLModel, table=True):
     spColumnFile: str | None = Field(default=None)
 
     forceCombo: str | None = Field(default=None)
-    dcr: Optional[float] | None = Field(default=None)
+    dcr: str | None = Field(default=None)
 
 
 class LoadCombinationsSelection(SQLModel, table=True):
@@ -172,6 +172,7 @@ class CTISummary(SQLModel, table=True):
     filteredForces: Optional[str] = Field(default=None)
     casePath: Optional[str] = Field(default=None)
     pathAfterCreation: Optional[str] = Field(default=None)
+
 
 class BatchProcessingOutput(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
