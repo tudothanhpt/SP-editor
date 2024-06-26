@@ -54,7 +54,6 @@ class NewFile_Dialog(qtw.QDialog, Ui_d_GeneralInfor):
 
                 infor = create_infor(self.engine, data_list)
                 barset = create_barset(self.engine, infor.bar_set)
-                print(infor.bar_set)
                 self.path_new.emit(self.dialog_new_path)
                 self.engine_new.emit(self.engine)
                 self.close()

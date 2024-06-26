@@ -1,6 +1,7 @@
 import sys
 
 import pandas as pd
+import sqlalchemy
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from sqlalchemy.engine.base import Engine
@@ -46,13 +47,10 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.dialog_material = None
         self.cti_making = None
         self.dialog_batch_processor = None
+        self.main_window_model = None
 
         self.setupUi(self)
         self.set_active_action(False)
-
-        self.init_display_table()
-
-        self.main_window_model = None
 
         # setup context menu
         self.context_menu = TableContextMenu(self.table_sumaryResults, self.main_window_model)
@@ -89,9 +87,15 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.dialog_open.path_open.connect(self.update_message)
         self.dialog_open.path_open.connect(self.set_current_path)
         self.dialog_open.engine_open.connect(self.set_current_engine)
+        self.set_current_engine(self.dialog_open.engine)
+        results = self.dialog_open.exec()
+        self.init_display_table()
+        try:
+            self.update_display_results()
+        except sqlalchemy.exc.OperationalError:
+            print("no data in database")
+            
         self.set_active_action(True)
-        self.dialog_open.open_file()
-        self.dialog_open.current_db.connect(self.update_display_results)
 
     @qtc.Slot()
     def open_import_etabs(self):
