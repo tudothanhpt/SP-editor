@@ -16,10 +16,11 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QFrame, QGridLayout,
-    QHBoxLayout, QHeaderView, QLabel, QMainWindow,
-    QMenu, QMenuBar, QSizePolicy, QStatusBar,
-    QTableView, QToolBar, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QApplication, QFrame,
+    QGridLayout, QHBoxLayout, QHeaderView, QLabel,
+    QMainWindow, QMenu, QMenuBar, QSizePolicy,
+    QStatusBar, QTableView, QToolBar, QVBoxLayout,
+    QWidget)
 import icons_rc
 
 class Ui_mw_Main(object):
