@@ -6,10 +6,10 @@ from PySide6 import QtGui as qtg
 
 from sp_editor.widgets.levelgroup_dialog import Ui_group_dialog
 
-from crud.cr_level_group import (get_level, get_pierlabel_with_level, get_group_level,
+from sp_editor.crud.cr_level_group import (get_level, get_pierlabel_with_level, get_group_level,
                                  update_group_level, create_level_group,
                                  check_group_level, return_group_level, get_level_from_group)
-from database.pandas_table_model import PandasModel
+from sp_editor.database.pandas_table_model import PandasModel
 from sqlalchemy.engine.base import Engine
 
 

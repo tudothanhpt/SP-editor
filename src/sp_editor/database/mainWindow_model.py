@@ -7,7 +7,7 @@ from typing import Sequence, Any
 
 from sqlalchemy import Engine
 
-from crud.cr_mainwindow import fetch_data_from_db
+from sp_editor.crud.cr_mainwindow import fetch_data_from_db
 
 
 class MainWindowModel(QAbstractTableModel):

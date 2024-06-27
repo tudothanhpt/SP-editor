@@ -6,9 +6,9 @@ from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from sqlalchemy.engine.base import Engine
 
-from core.mainwindow_context_menu import TableContextMenu
-from crud.cr_mainwindow import fetch_data_from_db
-from database.mainWindow_model import MainWindowModel
+from sp_editor.core.mainwindow_context_menu import TableContextMenu
+from sp_editor.crud.cr_mainwindow import fetch_data_from_db
+from sp_editor.database.mainWindow_model import MainWindowModel
 from sp_editor.controllers.barest_dialog import BarSet_Dialog
 from sp_editor.controllers.calculation_case_dialog import CalculationCase_Dialog
 from sp_editor.controllers.combos_dialog import Combo_Dialog

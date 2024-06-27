@@ -4,7 +4,7 @@ from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 import pandas as pd
 
-from crud.cr_mainwindow import update_path_after_creation, fetch_data_from_db
+from sp_editor.crud.cr_mainwindow import update_path_after_creation, fetch_data_from_db
 from sp_editor.widgets.cti_file_making_dialog_ui import Ui_cti_making_dialog
 from sp_editor.core.cti_data_merging import read_summaryCTI_DB, create_cti_summary_df, CTI_creation_from_list
 
