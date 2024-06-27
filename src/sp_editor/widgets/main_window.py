@@ -21,7 +21,7 @@ from PySide6.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QApplicat
     QMainWindow, QMenu, QMenuBar, QSizePolicy,
     QStatusBar, QTableView, QToolBar, QVBoxLayout,
     QWidget)
-import icons_rc
+from sp_editor import icons_rc
 
 class Ui_mw_Main(object):
     def setupUi(self, mw_Main):

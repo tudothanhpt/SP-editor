@@ -5,8 +5,8 @@ from PySide6.QtGui import QStandardItemModel, QStandardItem, QAction
 import pandas as pd
 from sqlalchemy import Engine
 
-from controllers.calculation_case_modify_dialog import CalculationCaseModify_Dialog
-from crud.cr_load_case import get_calculation_case
+from sp_editor.controllers.calculation_case_modify_dialog import CalculationCaseModify_Dialog
+from sp_editor.crud.cr_load_case import get_calculation_case
 
 
 class TableContextMenu(QMenu):
