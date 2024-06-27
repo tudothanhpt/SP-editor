@@ -49,7 +49,6 @@ class TableContextMenu(QMenu):
             self.current_data = get_calculation_case(self.engine, row)
             self.update_dialog = CalculationCaseModify_Dialog(self.engine, self.path, self.current_data, row, modify)
             self.update_dialog.exec()
-            self.model.dataChanged.emit()
         else:
             QMessageBox.warning(self.table_view, 'Warning', 'No row selected')
 

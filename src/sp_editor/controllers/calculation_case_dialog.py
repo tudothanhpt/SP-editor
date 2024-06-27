@@ -160,6 +160,7 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         pier_names_unique = self.get_unique_items(self.piers_list)
         self.cb_pierdata.clear()
         self.cb_pierdata.addItems(pier_names_unique)
+        self.cb_pierdata.setCurrentText(text)
 
     @qtc.Slot()
     def make_section(self):

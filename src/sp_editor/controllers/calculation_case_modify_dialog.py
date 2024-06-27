@@ -19,6 +19,8 @@ from sp_editor.widgets.load_calculation_case import Ui_calculationCase_dialog
 
 
 class CalculationCaseModify_Dialog(CalculationCase_Dialog):
+    model_modify = qtc.Signal()
+
     def __init__(self, engine: Engine, path: str, data: list[str | float] = None, current_id=None, modify=False):
         super().__init__(engine, path)
 
@@ -54,6 +56,7 @@ class CalculationCaseModify_Dialog(CalculationCase_Dialog):
         self.concrete_name = get_concrete_name_from_properties(self.engine, self.material_fc, self.material_Ec)
         self.steel_name = get_steel_name_from_properties(self.engine, self.material_fy, self.material_Es)
         # Manually trigger the slot for the initial current text
+        self.update_tier_name(self.tier_name)
         self.update_folder_name(self.is_pier_name, self.folder_name)
         self.update_level_list(self.tier_name)
         self.update_pier_infor(self.tier_name, self.level_list)
@@ -70,6 +73,7 @@ class CalculationCaseModify_Dialog(CalculationCase_Dialog):
                 self.case_path]
 
         cal_case = update_calculation_case(self.engine, case, self.current_id)
+        self.model_modify.emit()
         return cal_case
 
     def update_folder_name(self, is_pier_name, folder_name):
@@ -86,6 +90,9 @@ class CalculationCaseModify_Dialog(CalculationCase_Dialog):
     def update_rebar_and_cover(self, bar_spacing, bar_cover):
         self.le_spacing.setText(str(bar_spacing))
         self.le_cover.setText(str(bar_cover))
+
+    def update_tier_name(self, tier_name):
+        self.cb_tier.setCurrentText(tier_name)
 
 
 if __name__ == '__main__':

@@ -170,27 +170,28 @@ def update_calculation_case(engine: Engine, params: list[str | float], case_id: 
         statement = select(CalculationCase).where(CalculationCase.id == case_id)
         results = session.exec(statement)
         case = results.one()
-        case.tier = tier,
-        case.isPierName = is_pier_name,
-        case.folder = folder,
-        case.sds = sds,
-        case.pier = pier,
-        case.barCover = bar_cover,
-        case.barNo = bar_no,
-        case.barArea = bar_area,
-        case.barSpacing = bar_spacing,
-        case.concreteAg = concrete_ag,
-        case.sdsAs = sds_as,
-        case.rho = rho,
-        case.materialFc = material_fc,
-        case.materialFy = material_fy,
-        case.materialEc = material_ec,
-        case.materialEs = material_es,
+        
+        case.tier = tier
+        case.isPierName = is_pier_name
+        case.folder = folder
+        case.sds = sds
+        case.pier = pier
+        case.barCover = bar_cover
+        case.barNo = bar_no
+        case.barArea = bar_area
+        case.barSpacing = bar_spacing
+        case.concreteAg = concrete_ag
+        case.sdsAs = sds_as
+        case.rho = rho
+        case.materialFc = material_fc
+        case.materialFy = material_fy
+        case.materialEc = material_ec
+        case.materialEs = material_es
 
-        case.fromStory = from_story,
-        case.toStory = to_story,
+        case.fromStory = from_story
+        case.toStory = to_story
 
-        case.casePath = case_path,
+        case.casePath = case_path
         case.spColumnFile = None
 
         session.add(case)
