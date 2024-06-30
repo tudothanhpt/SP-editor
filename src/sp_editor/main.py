@@ -56,7 +56,10 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.context_menu = TableContextMenu(self.table_sumaryResults, self.main_window_model)
         self.table_sumaryResults.setContextMenuPolicy(qtc.Qt.CustomContextMenu)
         self.table_sumaryResults.customContextMenuRequested.connect(self.open_context_menu)
-
+        self.context_menu.modify_action_finished.connect(self.update_display_results)
+        self.context_menu.add_copy_action_finished.connect(self.update_display_results)
+        self.context_menu.delete_action_finished.connect(self.update_display_results)
+        
         # Setup action
         self.action_New.triggered.connect(self.new_file)
         self.action_Open.triggered.connect(self.open_file)
