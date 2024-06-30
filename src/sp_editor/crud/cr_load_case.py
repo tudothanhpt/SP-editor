@@ -30,6 +30,22 @@ def get_concrete_name(engine: Engine):
         return concrete_name
 
 
+def get_concrete_name_from_properties(engine: Engine, fc: str, ec: str):
+    with Session(engine) as session:
+        statement = select(MaterialConcrete.name).where(MaterialConcrete.fc == fc).where(MaterialConcrete.Ec == ec)
+        result = session.exec(statement)
+        concrete_name = result.one()
+        return concrete_name
+
+
+def get_steel_name_from_properties(engine: Engine, fy: str, es: str):
+    with Session(engine) as session:
+        statement = select(MaterialRebar.name).where(MaterialRebar.fy == fy).where(MaterialRebar.Es == es)
+        result = session.exec(statement)
+        steel_name = result.one()
+        return steel_name
+
+
 def get_concrete_fc_Ec(engine: Engine, name: str):
     try:
         with Session(engine) as session:
@@ -100,13 +116,24 @@ def get_rebar_area_from_name(engine: Engine, name: str):
         return barset_area
 
 
+def get_calculation_case(engine: Engine, case_id):
+    with Session(engine) as session:
+        statement = select(CalculationCase).where(CalculationCase.id == case_id)
+        results = session.exec(statement)
+        case = results.one_or_none()
+        if case:
+            return case.to_list()
+        return None
+
+
 def create_calculation_case(engine: Engine, params: list[str | float]):
-    (tier, folder, sds, pier, bar_cover, bar_no, bar_area, bar_spacing, concrete_ag, sds_as, rho,
+    (tier, is_pier_name, folder, sds, pier, bar_cover, bar_no, bar_area, bar_spacing, concrete_ag, sds_as, rho,
      material_fc, material_fy, material_ec, material_es, from_story, to_story, case_path) = params
 
     with Session(engine) as session:
         calculation_case = CalculationCase(
             tier=tier,
+            isPierName=is_pier_name,
             folder=folder,
             sds=sds,
             pier=pier,
@@ -133,3 +160,64 @@ def create_calculation_case(engine: Engine, params: list[str | float]):
         session.commit()
         session.refresh(calculation_case)
         return calculation_case
+
+
+def update_calculation_case(engine: Engine, params: list[str | float], case_id: int):
+    (tier, is_pier_name, folder, sds, pier, bar_cover, bar_no, bar_area, bar_spacing, concrete_ag, sds_as, rho,
+     material_fc, material_fy, material_ec, material_es, from_story, to_story, case_path) = params
+
+    with Session(engine) as session:
+        statement = select(CalculationCase).where(CalculationCase.id == case_id)
+        results = session.exec(statement)
+        case = results.one()
+        
+        case.tier = tier
+        case.isPierName = is_pier_name
+        case.folder = folder
+        case.sds = sds
+        case.pier = pier
+        case.barCover = bar_cover
+        case.barNo = bar_no
+        case.barArea = bar_area
+        case.barSpacing = bar_spacing
+        case.concreteAg = concrete_ag
+        case.sdsAs = sds_as
+        case.rho = rho
+        case.materialFc = material_fc
+        case.materialFy = material_fy
+        case.materialEc = material_ec
+        case.materialEs = material_es
+
+        case.fromStory = from_story
+        case.toStory = to_story
+
+        case.casePath = case_path
+        case.spColumnFile = None
+
+        session.add(case)
+        session.commit()
+        session.refresh(case)
+        return case
+
+
+def delete_calculation_case(engine: Engine, case_id: int):
+    with Session(engine) as session:
+        statement = select(CalculationCase).where(CalculationCase.id == case_id)
+        results = session.exec(statement)
+        case = results.one()
+        session.delete(case)
+        session.commit()
+
+
+def update_dcr_by_spcolumnfile(engine: Engine, spColumnFile, new_dcr_value, loadcombo_id):
+    with Session(engine) as session:
+        statement = select(CalculationCase).where(CalculationCase.spColumnFile == spColumnFile)
+        results = session.exec(statement).all()
+        print(results)
+
+        for row in results:
+            row.dcr = new_dcr_value
+            row.forceCombo = loadcombo_id
+            session.add(row)
+
+        session.commit()

@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['src\\main.py'],
+    ['src\\sp_editor\\main.py'],
     pathex=[],
     binaries=[],
     datas=[("src\\sp_editor\\database\\material_table\\*.json","sp_editor\\database\\material_table"),("src\\sp_editor\\database\\barset_table\\*.json","sp_editor\\database\\barset_table")],
@@ -21,18 +21,18 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='main',
+    name='SPEditor',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
     console=True,
-    disable_windowed_traceback=False,
+    disable_windowed_traceback=True,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon="src/SP_TOOL.ico",
+    icon=["SP-EDITOR.ico"],
 )
 coll = COLLECT(
     exe,

@@ -1,9 +1,14 @@
 import sys
 
+import pandas as pd
+import sqlalchemy
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from sqlalchemy.engine.base import Engine
 
+from sp_editor.core.mainwindow_context_menu import TableContextMenu
+from sp_editor.crud.cr_mainwindow import fetch_data_from_db
+from sp_editor.database.mainWindow_model import MainWindowModel
 from sp_editor.controllers.barest_dialog import BarSet_Dialog
 from sp_editor.controllers.calculation_case_dialog import CalculationCase_Dialog
 from sp_editor.controllers.combos_dialog import Combo_Dialog
@@ -14,6 +19,7 @@ from sp_editor.controllers.import_etabs_dialog import ImportEtabs_Dialog
 from sp_editor.controllers.material_dialog import Material_Dialog
 from sp_editor.controllers.new_file_dialog import NewFile_Dialog
 from sp_editor.controllers.open_file_dialog import OpenFile_Dialog
+from sp_editor.controllers.batch_processor_dialog import BatchProcessorDialog
 from sp_editor.core.connect_etabs import get_story_infor, get_pier_label_infor, get_pier_force_infor, \
     get_loadCombo_df_fromE, get_section_designer_shape_infor, set_global_unit
 from sp_editor.core.force_filter import get_pierforces_CTI_todb
@@ -27,6 +33,8 @@ from sp_editor.widgets.main_window import Ui_mw_Main
 class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def __init__(self):
         super().__init__()
+        self.dialog_load_combos_selection = None
+        self.dialog_calculation_case = None
         self.dialog_group = None
         self.current_path = None
         self.dialog_barset = None
@@ -37,10 +45,21 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.sap_model = None
         self.etabs_object = None
         self.dialog_material = None
+        self.cti_making = None
+        self.dialog_batch_processor = None
+        self.main_window_model = None
 
         self.setupUi(self)
         self.set_active_action(False)
 
+        # setup context menu
+        self.context_menu = TableContextMenu(self.table_sumaryResults, self.main_window_model)
+        self.table_sumaryResults.setContextMenuPolicy(qtc.Qt.CustomContextMenu)
+        self.table_sumaryResults.customContextMenuRequested.connect(self.open_context_menu)
+        self.context_menu.modify_action_finished.connect(self.update_display_results)
+        self.context_menu.add_copy_action_finished.connect(self.update_display_results)
+        self.context_menu.delete_action_finished.connect(self.update_display_results)
+        
         # Setup action
         self.action_New.triggered.connect(self.new_file)
         self.action_Open.triggered.connect(self.open_file)
@@ -53,6 +72,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.actionDesign_Combos_Selection.triggered.connect(self.open_loadComboSelection)
         self.a_GetAllForce.triggered.connect(self.get_all_force)
         self.a_MakeSPcolumn.triggered.connect(self.make_spcolumn)
+        self.a_BatchProcessor.triggered.connect(self.batch_processor)
 
     @qtc.Slot()
     def new_file(self):
@@ -62,6 +82,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.dialog_new.engine_new.connect(self.set_current_engine)
         self.set_active_action(True)
         self.dialog_new.exec()
+        self.init_display_table()
 
     @qtc.Slot()
     def open_file(self):
@@ -69,8 +90,15 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.dialog_open.path_open.connect(self.update_message)
         self.dialog_open.path_open.connect(self.set_current_path)
         self.dialog_open.engine_open.connect(self.set_current_engine)
+        self.set_current_engine(self.dialog_open.engine)
+        results = self.dialog_open.exec()
+        self.init_display_table()
+        try:
+            self.update_display_results()
+        except sqlalchemy.exc.OperationalError:
+            print("no data in database")
+
         self.set_active_action(True)
-        self.dialog_open.open_file()
 
     @qtc.Slot()
     def open_import_etabs(self):
@@ -129,15 +157,15 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
 
     @qtc.Slot()
     def open_calculation_cases(self):
-        self.dialog_group = CalculationCase_Dialog(self.current_engine, self.current_path)
-        self.dialog_group.case_init.connect(self.update_message)
-        self.dialog_group.exec()
-        self.a_MakeSPcolumn.setEnabled(True)
+        self.dialog_calculation_case = CalculationCase_Dialog(self.current_engine, self.current_path)
+        self.dialog_calculation_case.case_init.connect(self.update_message)
+        self.dialog_calculation_case.case_init.connect(self.update_display_results)
+        self.dialog_calculation_case.exec()
 
     @qtc.Slot()
     def open_loadComboSelection(self):
-        self.dialog_group = Combo_Dialog(self.current_engine)
-        self.dialog_group.exec()
+        self.dialog_load_combos_selection = Combo_Dialog(self.current_engine)
+        self.dialog_load_combos_selection.exec()
         self.a_GetAllForce.setEnabled(True)
 
     @qtc.Slot()
@@ -152,19 +180,43 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     @qtc.Slot()
     def make_spcolumn(self):
         self.cti_making = CTIMakingDialog(self.current_engine)
+        self.cti_making.cti_create.connect(self.update_message)
+        self.cti_making.cti_create.connect(self.update_display_results)
         self.cti_making.exec()
+
+    @qtc.Slot()
+    def batch_processor(self):
+        self.dialog_batch_processor = BatchProcessorDialog(self.current_engine)
+        self.dialog_batch_processor.read_results_create.connect(self.update_message)
+        self.dialog_batch_processor.read_results_create.connect(self.update_display_results)
+        self.dialog_batch_processor.exec()
+
+    def init_display_table(self):
+        # TODO: display infor from database
+        column_headers = ["SPColumn File", "Tier", "From Story", "To Story", "Pier",
+                          "Material Fc", "Material Fy", "Bar No", "Rho", "DCR",
+                          "Force Combo"]
+        df = pd.DataFrame(columns=column_headers)
+        self.main_window_model = MainWindowModel(dataframe=df)
+        self.table_sumaryResults.setModel(self.main_window_model)
+
+    @qtc.Slot()
+    def update_display_results(self):
+        # TODO: display infor from database
+        self.main_window_model.update_model_from_db(self.current_engine)
+        self.table_sumaryResults.resizeColumnsToContents()
 
     @qtc.Slot(Engine)
     def set_current_engine(self, engine: Engine):
         self.current_engine = engine
 
     @qtc.Slot(str)
-    def set_current_path(self, path: str):
-        self.current_path = path
-
-    @qtc.Slot(str)
     def update_message(self, message: str):
         self.statusbar.showMessage(message)
+
+    @qtc.Slot(str)
+    def set_current_path(self, path: str):
+        self.current_path = path
 
     @qtc.Slot()
     def set_active_action(self, mode: bool):
@@ -185,8 +237,14 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.a_Cases.setEnabled(mode)
         self.actionDesign_Combos_Selection.setEnabled(mode)
         self.a_GetAllForce.setEnabled(False)
-        self.a_MakeSPcolumn.setEnabled(False)
-        self.a_BatchProcessor.setEnabled(False)
+        self.a_MakeSPcolumn.setEnabled(True)
+        self.a_BatchProcessor.setEnabled(True)
+
+    @qtc.Slot()
+    def open_context_menu(self, position):
+        self.context_menu.path = self.current_path
+        self.context_menu.engine = self.current_engine
+        self.context_menu.exec(self.table_sumaryResults.viewport().mapToGlobal(position))
 
 
 if __name__ == '__main__':

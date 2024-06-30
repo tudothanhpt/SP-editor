@@ -4,6 +4,7 @@ from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 import pandas as pd
 
+from sp_editor.crud.cr_mainwindow import update_path_after_creation, fetch_data_from_db
 from sp_editor.widgets.cti_file_making_dialog_ui import Ui_cti_making_dialog
 from sp_editor.core.cti_data_merging import read_summaryCTI_DB, create_cti_summary_df, CTI_creation_from_list
 
@@ -13,6 +14,7 @@ from sqlalchemy.engine.base import Engine
 
 
 class CTIMakingDialog(qtw.QDialog, Ui_cti_making_dialog):
+    cti_create = qtc.Signal()
 
     def __init__(self, engine, parent: qtw.QWidget = None):
         super().__init__(parent)
@@ -22,6 +24,7 @@ class CTIMakingDialog(qtw.QDialog, Ui_cti_making_dialog):
         try:
             self.engine = engine
             create_cti_summary_df(self.engine)
+
             self.df_summaryCTI = read_summaryCTI_DB(engine)
             items = self.df_summaryCTI["ID2"].unique().tolist()
         except Exception as e:
@@ -54,6 +57,10 @@ class CTIMakingDialog(qtw.QDialog, Ui_cti_making_dialog):
             self.show_warning()
         else:
             lst_CTIfile_fullpath = CTI_creation_from_list(self.engine, checked_items)
+            # TODO: Test
+            update_path_after_creation(self.engine)
+            self.cti_create.emit()
+
             message = "CTI file created and stored:" + '\n'
             blank = "---------------------------------------------"
 

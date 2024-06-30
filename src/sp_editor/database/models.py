@@ -102,6 +102,7 @@ class GroupLevel(SQLModel, table=True):
 class CalculationCase(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     tier: str | None = Field(default=None)
+    isPierName: bool | None = Field(default=None)
     folder: str | None = Field(default=None)
     sds: str | None = Field(default=None)
     pier: str | None = Field(default=None)
@@ -126,7 +127,16 @@ class CalculationCase(SQLModel, table=True):
     spColumnFile: str | None = Field(default=None)
 
     forceCombo: str | None = Field(default=None)
-    dcr: float | None = Field(default=None)
+    dcr: str | None = Field(default=None)
+
+    def to_list(self):
+        return [
+            self.id, self.tier, self.isPierName, self.folder, self.sds, self.pier,
+            self.barCover, self.barNo, self.barArea, self.barSpacing, self.concreteAg,
+            self.sdsAs, self.rho, self.materialFc, self.materialFy, self.materialEc,
+            self.materialEs, self.fromStory, self.toStory, self.casePath,
+            self.spColumnFile, self.forceCombo, self.dcr
+        ]
 
 
 class LoadCombinationsSelection(SQLModel, table=True):
@@ -164,10 +174,19 @@ class CTISummary(SQLModel, table=True):
     materialFy: Optional[float] = Field(default=None)
     materialEs: Optional[float] = Field(default=None)
     SDName: Optional[str] = Field(default=None)
-    Coordinates: Optional[str] = Field(default=None)
-    totalbars: Optional[int] = Field(default=None)
-    rebarcoordinates: Optional[str] = Field(default=None)
-    Total_Combos: Optional[int] = Field(default=None)
-    Filtered_Forces: Optional[str] = Field(default=None)
+    coordinates: Optional[str] = Field(default=None)
+    totalBars: Optional[int] = Field(default=None)
+    rebarCoordinates: Optional[str] = Field(default=None)
+    totalCombos: Optional[int] = Field(default=None)
+    filteredForces: Optional[str] = Field(default=None)
     casePath: Optional[str] = Field(default=None)
-    PathAfterCreation: Optional[str] = Field(default=None)
+    pathAfterCreation: Optional[str] = Field(default=None)
+
+
+class BatchProcessingOutput(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    spColumnFile: str | None = Field(default=None)
+    Pu: Optional[float] = Field(default=None)
+    Mux: Optional[float] = Field(default=None)
+    Muy: Optional[float] = Field(default=None)
+    DCR: Optional[float] = Field(default=None)
