@@ -26,25 +26,28 @@ class TableContextMenu(QMenu):
         self.modify_dialog = None
         self.add_copy_dialog = None
         # Create actions
-        self.modify_action = QAction('Modify/Show Load Case', self)
         self.add_copy_action = QAction('Add Copy of Load Case', self)
+        self.modify_action = QAction('Modify/Show Load Case', self)
         self.delete_action = QAction('Delete Load Case', self)
 
         # Connect actions to slots
-        self.modify_action.triggered.connect(self.modify_row)
         self.add_copy_action.triggered.connect(self.add_copy_row)
+        self.modify_action.triggered.connect(self.modify_row)
         self.delete_action.triggered.connect(self.delete_row)
 
         # Add actions to the menu
-        self.addAction(self.modify_action)
         self.addAction(self.add_copy_action)
+        self.addAction(self.modify_action)
         self.addAction(self.delete_action)
 
     def get_selected_row(self):
-        indexes = self.table_view.selectionModel().selectedRows()
-        if indexes:
-            return indexes[0].row()
-        return None
+        try:
+            indexes = self.table_view.selectionModel().selectedRows()
+            if indexes:
+                return indexes[0].row()
+            return None
+        except Exception as e:
+            QMessageBox.warning(self.table_view, 'Warning', 'No row selected')
 
     def modify_row(self):
         modify = True
@@ -56,8 +59,6 @@ class TableContextMenu(QMenu):
             self.modify_dialog = CalculationCaseModify_Dialog(self.engine, self.path, self.current_data, row, modify)
             self.modify_dialog.model_modify.connect(self.emit_action_modify_finished)
             self.modify_dialog.exec()
-        else:
-            QMessageBox.warning(self.table_view, 'Warning', 'No row selected')
 
     def add_copy_row(self):
         row = self.get_selected_row()
@@ -69,16 +70,12 @@ class TableContextMenu(QMenu):
             self.add_copy_dialog = CalculationCaseModify_Dialog(self.engine, self.path, self.current_data, row, modify)
             self.add_copy_dialog.model_modify.connect(self.emit_action_add_copy_finished)
             self.add_copy_dialog.exec()
-        else:
-            QMessageBox.warning(self.table_view, 'Warning', 'No row selected')
 
     def delete_row(self):
         row = self.get_selected_row()
         if row is not None:
             delete_calculation_case(self.engine, row)
             self.delete_action_finished.emit()
-        else:
-            QMessageBox.warning(self.table_view, 'Warning', 'No row selected')
 
     def emit_action_modify_finished(self):
         self.modify_action_finished.emit()
