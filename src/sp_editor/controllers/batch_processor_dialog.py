@@ -114,7 +114,7 @@ class BatchProcessorDialog(qtw.QDialog, Ui_BatchProcessorDialog):
 
 if __name__ == '__main__':
     app = qtw.QApplication(sys.argv)
-    engine_temppath = r"tests/test.db"
+    engine_temppath = r"C:\Users\AnhBui\Desktop\123.spe"
     engine = create_engine(f"sqlite:///{engine_temppath}")
     window = BatchProcessorDialog(engine)
     window.show()
