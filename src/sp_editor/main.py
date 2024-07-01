@@ -20,6 +20,7 @@ from sp_editor.controllers.material_dialog import Material_Dialog
 from sp_editor.controllers.new_file_dialog import NewFile_Dialog
 from sp_editor.controllers.open_file_dialog import OpenFile_Dialog
 from sp_editor.controllers.batch_processor_dialog import BatchProcessorDialog
+from sp_editor.controllers.about_dialog import AboutDialog
 from sp_editor.core.connect_etabs import get_story_infor, get_pier_label_infor, get_pier_force_infor, \
     get_loadCombo_df_fromE, get_section_designer_shape_infor, set_global_unit
 from sp_editor.core.force_filter import get_pierforces_CTI_todb
@@ -48,6 +49,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.cti_making = None
         self.dialog_batch_processor = None
         self.main_window_model = None
+        self.dialog_about = None
 
         self.setupUi(self)
         self.set_active_action(False)
@@ -73,6 +75,7 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.a_GetAllForce.triggered.connect(self.get_all_force)
         self.a_MakeSPcolumn.triggered.connect(self.make_spcolumn)
         self.a_BatchProcessor.triggered.connect(self.batch_processor)
+        self.a_About.triggered.connect(self.open_about)
 
     @qtc.Slot()
     def new_file(self):
@@ -190,6 +193,11 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.dialog_batch_processor.read_results_create.connect(self.update_message)
         self.dialog_batch_processor.read_results_create.connect(self.update_display_results)
         self.dialog_batch_processor.exec()
+    
+    @qtc.Slot()
+    def open_about(self):
+        self.dialog_about = AboutDialog()
+        self.dialog_about.exec()
 
     def init_display_table(self):
         # TODO: display infor from database

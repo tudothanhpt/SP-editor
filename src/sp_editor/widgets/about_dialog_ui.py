@@ -30,18 +30,27 @@ class Ui_d_About(object):
         sizePolicy.setHeightForWidth(d_About.sizePolicy().hasHeightForWidth())
         d_About.setSizePolicy(sizePolicy)
         d_About.setMinimumSize(QSize(360, 480))
-        d_About.setMaximumSize(QSize(364, 480))
+        d_About.setMaximumSize(QSize(360, 480))
         font = QFont()
         font.setPointSize(12)
         d_About.setFont(font)
         self.gridLayout = QGridLayout(d_About)
         self.gridLayout.setObjectName(u"gridLayout")
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout.addItem(self.horizontalSpacer, 1, 0, 1, 1)
+
+        self.pb_OK = QPushButton(d_About)
+        self.pb_OK.setObjectName(u"pb_OK")
+
+        self.gridLayout.addWidget(self.pb_OK, 1, 1, 1, 1)
+
         self.groupBox = QGroupBox(d_About)
         self.groupBox.setObjectName(u"groupBox")
         sizePolicy.setHeightForWidth(self.groupBox.sizePolicy().hasHeightForWidth())
         self.groupBox.setSizePolicy(sizePolicy)
         self.groupBox.setMinimumSize(QSize(0, 420))
-        self.groupBox.setMaximumSize(QSize(16777215, 420))
+        self.groupBox.setMaximumSize(QSize(340, 420))
         font1 = QFont()
         font1.setPointSize(12)
         font1.setBold(False)
@@ -117,15 +126,6 @@ class Ui_d_About(object):
 
         self.gridLayout.addWidget(self.groupBox, 0, 0, 1, 2)
 
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout.addItem(self.horizontalSpacer, 1, 0, 1, 1)
-
-        self.pb_OK = QPushButton(d_About)
-        self.pb_OK.setObjectName(u"pb_OK")
-
-        self.gridLayout.addWidget(self.pb_OK, 1, 1, 1, 1)
-
 
         self.retranslateUi(d_About)
 
@@ -134,12 +134,12 @@ class Ui_d_About(object):
 
     def retranslateUi(self, d_About):
         d_About.setWindowTitle(QCoreApplication.translate("d_About", u"SP-editor", None))
+        self.pb_OK.setText(QCoreApplication.translate("d_About", u"OK", None))
         self.groupBox.setTitle(QCoreApplication.translate("d_About", u"About", None))
         self.label.setText("")
         self.label_2.setText(QCoreApplication.translate("d_About", u"<html><head/><body><p><span style=\" font-size:8pt;\">Empowering Structural Engineers</span></p><p><span style=\" font-size:8pt;\">with seamless communication </span></p><p><span style=\" font-size:8pt;\">between SpColumn and ETABS</span></p></body></html>", None))
         self.label_3.setText(QCoreApplication.translate("d_About", u"SP-Editor V1.0", None))
         self.label_4.setText(QCoreApplication.translate("d_About", u"<html><head/><body><p><span style=\" font-weight:700; text-decoration: underline;\">Description:</span></p><p>A shear wall design software that make connection between </p><p>ETABS and SpColumn</p><p><span style=\" font-weight:700; text-decoration: underline;\">Authors:</span></p><p>Do Thanh Tu, email: &quot;<span style=\" font-style:italic; text-decoration: underline;\">tado@thorntontomasetti.com</span>&quot;</p><p>Bui Quang Anh, email: &quot;<span style=\" font-style:italic; text-decoration: underline;\">abui@thorntontomasetti.com</span>&quot;</p></body></html>", None))
         self.label_5.setText(QCoreApplication.translate("d_About", u"<html><head/><body><p align=\"justify\"><span style=\" font-weight:700;\">THORNTON TOMASETTI VIETNAM </span></p><p><span style=\" font-weight:700;\">HO CHI MINH OFFICE</span></p><p><span style=\" font-style:italic; text-decoration: underline;\">https://www.thorntontomasetti.com/location/ho-chi-minh-city</span></p><p>91 Pasteur, Ben Nghe Ward, District 1</p><p><br/></p></body></html>", None))
-        self.pb_OK.setText(QCoreApplication.translate("d_About", u"OK", None))
     # retranslateUi
 
