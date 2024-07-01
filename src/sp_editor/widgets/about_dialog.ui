@@ -197,7 +197,7 @@
           <enum>QFrame::Shape::NoFrame</enum>
          </property>
          <property name="text">
-          <string>SP-Editor V1.0</string>
+          <string>SP-Editor V0.1.0</string>
          </property>
          <property name="textFormat">
           <enum>Qt::TextFormat::RichText</enum>
@@ -225,7 +225,7 @@
           <enum>QFrame::Shape::NoFrame</enum>
          </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline;&quot;&gt;Description:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;A shear wall design software that make connection between &lt;/p&gt;&lt;p&gt;ETABS and SpColumn&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline;&quot;&gt;Authors:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Do Thanh Tu, email: &amp;quot;&lt;span style=&quot; font-style:italic; text-decoration: underline;&quot;&gt;tado@thorntontomasetti.com&lt;/span&gt;&amp;quot;&lt;/p&gt;&lt;p&gt;Bui Quang Anh, email: &amp;quot;&lt;span style=&quot; font-style:italic; text-decoration: underline;&quot;&gt;abui@thorntontomasetti.com&lt;/span&gt;&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline;&quot;&gt;Description:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;A shear wall design software that make connection &lt;/p&gt;&lt;p&gt;between ETABS and SpColumn&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline;&quot;&gt;Authors:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Do Thanh Tu, email: &amp;quot;&lt;span style=&quot; font-style:italic; text-decoration: underline;&quot;&gt;tado@thorntontomasetti.com&lt;/span&gt;&amp;quot;&lt;/p&gt;&lt;p&gt;Bui Quang Anh, email: &amp;quot;&lt;span style=&quot; font-style:italic; text-decoration: underline;&quot;&gt;abui@thorntontomasetti.com&lt;/span&gt;&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="textFormat">
           <enum>Qt::TextFormat::RichText</enum>
@@ -279,7 +279,7 @@
           <enum>QFrame::Shape::NoFrame</enum>
          </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;THORNTON TOMASETTI VIETNAM &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;HO CHI MINH OFFICE&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic; text-decoration: underline;&quot;&gt;https://www.thorntontomasetti.com/location/ho-chi-minh-city&lt;/span&gt;&lt;/p&gt;&lt;p&gt;91 Pasteur, Ben Nghe Ward, District 1&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;THORNTON TOMASETTI VIETNAM &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;HO CHI MINH OFFICE&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://www.thorntontomasetti.com/location/ho-chi-minh-city&quot;&gt;&lt;span style=&quot; font-style:italic; text-decoration: underline; color:#0078d4;&quot;&gt;https://www.thorntontomasetti.com/location/ho-chi-minh-city&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;91 Pasteur, Ben Nghe Ward, District 1&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="textFormat">
           <enum>Qt::TextFormat::RichText</enum>

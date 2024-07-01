@@ -69,7 +69,7 @@ class Ui_d_About(object):
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(10, 20, 101, 81))
         self.label.setTextFormat(Qt.TextFormat.PlainText)
-        self.label.setPixmap(QPixmap(u"icons/SP-EDITOR_PNG.png"))
+        self.label.setPixmap(QPixmap(u"../../../icons/SP-EDITOR_PNG.png"))
         self.label.setScaledContents(True)
         self.label_2 = QLabel(self.frame)
         self.label_2.setObjectName(u"label_2")
@@ -138,8 +138,8 @@ class Ui_d_About(object):
         self.groupBox.setTitle(QCoreApplication.translate("d_About", u"About", None))
         self.label.setText("")
         self.label_2.setText(QCoreApplication.translate("d_About", u"<html><head/><body><p><span style=\" font-size:8pt;\">Empowering Structural Engineers</span></p><p><span style=\" font-size:8pt;\">with seamless communication </span></p><p><span style=\" font-size:8pt;\">between SpColumn and ETABS</span></p></body></html>", None))
-        self.label_3.setText(QCoreApplication.translate("d_About", u"SP-Editor V1.0", None))
-        self.label_4.setText(QCoreApplication.translate("d_About", u"<html><head/><body><p><span style=\" font-weight:700; text-decoration: underline;\">Description:</span></p><p>A shear wall design software that make connection between </p><p>ETABS and SpColumn</p><p><span style=\" font-weight:700; text-decoration: underline;\">Authors:</span></p><p>Do Thanh Tu, email: &quot;<span style=\" font-style:italic; text-decoration: underline;\">tado@thorntontomasetti.com</span>&quot;</p><p>Bui Quang Anh, email: &quot;<span style=\" font-style:italic; text-decoration: underline;\">abui@thorntontomasetti.com</span>&quot;</p></body></html>", None))
-        self.label_5.setText(QCoreApplication.translate("d_About", u"<html><head/><body><p align=\"justify\"><span style=\" font-weight:700;\">THORNTON TOMASETTI VIETNAM </span></p><p><span style=\" font-weight:700;\">HO CHI MINH OFFICE</span></p><p><span style=\" font-style:italic; text-decoration: underline;\">https://www.thorntontomasetti.com/location/ho-chi-minh-city</span></p><p>91 Pasteur, Ben Nghe Ward, District 1</p><p><br/></p></body></html>", None))
+        self.label_3.setText(QCoreApplication.translate("d_About", u"SP-Editor V0.1.0", None))
+        self.label_4.setText(QCoreApplication.translate("d_About", u"<html><head/><body><p><span style=\" font-weight:700; text-decoration: underline;\">Description:</span></p><p>A shear wall design software that make connection </p><p>between ETABS and SpColumn</p><p><span style=\" font-weight:700; text-decoration: underline;\">Authors:</span></p><p>Do Thanh Tu, email: &quot;<span style=\" font-style:italic; text-decoration: underline;\">tado@thorntontomasetti.com</span>&quot;</p><p>Bui Quang Anh, email: &quot;<span style=\" font-style:italic; text-decoration: underline;\">abui@thorntontomasetti.com</span>&quot;</p></body></html>", None))
+        self.label_5.setText(QCoreApplication.translate("d_About", u"<html><head/><body><p align=\"justify\"><span style=\" font-weight:700;\">THORNTON TOMASETTI VIETNAM </span></p><p><span style=\" font-weight:700;\">HO CHI MINH OFFICE</span></p><p><a href=\"https://www.thorntontomasetti.com/location/ho-chi-minh-city\"><span style=\" font-style:italic; text-decoration: underline; color:#0078d4;\">https://www.thorntontomasetti.com/location/ho-chi-minh-city</span></a></p><p>91 Pasteur, Ben Nghe Ward, District 1</p><p><br/></p></body></html>", None))
     # retranslateUi
 

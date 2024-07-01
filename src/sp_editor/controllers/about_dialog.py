@@ -1,6 +1,7 @@
 import sys
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
+from PySide6 import QtGui as qtg
 
 from sp_editor.widgets.about_dialog_ui import Ui_d_About
 
@@ -10,6 +11,7 @@ class AboutDialog(qtw.QDialog, Ui_d_About):
         super().__init__(parent)
         self.setupUi(self)
         self.pb_OK.clicked.connect(self.on_ok_clicked)
+        self.label.setPixmap(qtg.QPixmap(u"icons/SP-EDITOR_PNG.png"))
         
     def on_ok_clicked(self):
         self.close()
