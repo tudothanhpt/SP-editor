@@ -48,13 +48,30 @@ class BatchProcessorDialog(qtw.QDialog, Ui_BatchProcessorDialog):
         self.t_resultTextEdit.clear()  # Clear previous output
 
         self.t_resultTextEdit.setText(f"<b>{STARTTEXT}<b>")
-        self.thread = BatchProcessorThread(self.engine, self.input_files, options=["/rcsv", "/rxls"])
+        ui_options = self.get_selected_output_options()
+        self.thread = BatchProcessorThread(self.engine, self.input_files, options=ui_options)
         self.thread.error.connect(self.show_error)
         self.thread.success.connect(self.show_success)
         self.thread.output.connect(self.update_output)
         self.thread.success.connect(self.enable_start_button)  # Re-enable the start button when the thread finishes
         self.thread.start()
 
+    def get_selected_output_options(self):
+        options = []
+        if self.cb_excel.isChecked():
+            options.append("/rxls")
+        if self.cb_word.isChecked():
+            options.append("/rdoc")
+        if self.cb_pdf.isChecked():
+            options.append("/rpdf")
+        if self.cb_text.isChecked():
+            options.append("/txt")
+        if self.cb_csv.isChecked():
+            options.append("/rcsv")
+        if self.cb_dxf.isChecked():
+            options.append("/dxf")
+        return options
+    
     def show_error(self, message):
         qtw.QMessageBox.critical(self, "Error", message)
         self.pb_startButton.setEnabled(True)  # Re-enable the start button in case of error
@@ -97,7 +114,7 @@ class BatchProcessorDialog(qtw.QDialog, Ui_BatchProcessorDialog):
 
 if __name__ == '__main__':
     app = qtw.QApplication(sys.argv)
-    engine_temppath = r"C:\Users\abui\Desktop\New folder\1.spe"
+    engine_temppath = r"C:\Users\AnhBui\Desktop\123.spe"
     engine = create_engine(f"sqlite:///{engine_temppath}")
     window = BatchProcessorDialog(engine)
     window.show()

@@ -1,73 +1,89 @@
 from PySide6.QtWidgets import QMenu, QMessageBox
-from PySide6.QtCore import QModelIndex
+from PySide6.QtCore import QModelIndex, Signal
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QAction
 
 import pandas as pd
 from sqlalchemy import Engine
 
+<<<<<<< HEAD
 from sp_editor.controllers.calculation_case_modify_dialog import CalculationCaseModify_Dialog
 from sp_editor.crud.cr_load_case import get_calculation_case
+=======
+from controllers.calculation_case_modify_dialog import CalculationCaseModify_Dialog
+from crud.cr_load_case import get_calculation_case, delete_calculation_case
+>>>>>>> c925b6a937b86b3d0445237323108d4f6af306b8
 
 
 class TableContextMenu(QMenu):
+    modify_action_finished = Signal()
+    add_copy_action_finished = Signal()
+    delete_action_finished = Signal()
+
     def __init__(self, table_view, model, parent=None):
         super().__init__(parent)
+        self.emit_action_finished = None
         self.table_view = table_view
         self.model = model
         self.engine = None
         self.path = None
 
         self.current_data = None
-        self.update_dialog = None
+        self.modify_dialog = None
+        self.add_copy_dialog = None
         # Create actions
-        self.update_action = QAction('Update Load Case', self)
-        self.duplicate_action = QAction('Duplicate Load Case', self)
+        self.add_copy_action = QAction('Add Copy of Load Case', self)
+        self.modify_action = QAction('Modify/Show Load Case', self)
         self.delete_action = QAction('Delete Load Case', self)
 
         # Connect actions to slots
-        self.update_action.triggered.connect(self.update_row)
-        self.duplicate_action.triggered.connect(self.duplicate_row)
+        self.add_copy_action.triggered.connect(self.add_copy_row)
+        self.modify_action.triggered.connect(self.modify_row)
         self.delete_action.triggered.connect(self.delete_row)
 
         # Add actions to the menu
-        self.addAction(self.update_action)
-        self.addAction(self.duplicate_action)
+        self.addAction(self.add_copy_action)
+        self.addAction(self.modify_action)
         self.addAction(self.delete_action)
 
     def get_selected_row(self):
-        indexes = self.table_view.selectionModel().selectedRows()
-        if indexes:
-            return indexes[0].row()
-        return None
+        try:
+            indexes = self.table_view.selectionModel().selectedRows()
+            if indexes:
+                return indexes[0].row()
+            return None
+        except Exception as e:
+            QMessageBox.warning(self.table_view, 'Warning', 'No row selected')
 
-    def update_row(self):
+    def modify_row(self):
         modify = True
         row = self.get_selected_row()
         if row is not None:
             row += 1
             # For simplicity, we update the row with hardcoded values
             self.current_data = get_calculation_case(self.engine, row)
-            self.update_dialog = CalculationCaseModify_Dialog(self.engine, self.path, self.current_data, row, modify)
-            self.update_dialog.exec()
-        else:
-            QMessageBox.warning(self.table_view, 'Warning', 'No row selected')
+            self.modify_dialog = CalculationCaseModify_Dialog(self.engine, self.path, self.current_data, row, modify)
+            self.modify_dialog.model_modify.connect(self.emit_action_modify_finished)
+            self.modify_dialog.exec()
 
-    def duplicate_row(self):
+    def add_copy_row(self):
         row = self.get_selected_row()
+        modify = False
         if row is not None:
-            self.model.beginInsertRows(QModelIndex(), row + 1, row + 1)
-            new_row = self.model._dataframe.iloc[row].copy()
-            self.model._dataframe = pd.concat([self.model._dataframe.iloc[:row + 1], pd.DataFrame([new_row]),
-                                               self.model._dataframe.iloc[row + 1:]]).reset_index(drop=True)
-            self.model.endInsertRows()
-        else:
-            QMessageBox.warning(self.table_view, 'Warning', 'No row selected')
+            row += 1
+            # For simplicity, we update the row with hardcoded values
+            self.current_data = get_calculation_case(self.engine, row)
+            self.add_copy_dialog = CalculationCaseModify_Dialog(self.engine, self.path, self.current_data, row, modify)
+            self.add_copy_dialog.model_modify.connect(self.emit_action_add_copy_finished)
+            self.add_copy_dialog.exec()
 
     def delete_row(self):
         row = self.get_selected_row()
         if row is not None:
-            self.model.beginRemoveRows(QModelIndex(), row, row)
-            self.model._dataframe = self.model._dataframe.drop(self.model._dataframe.index[row]).reset_index(drop=True)
-            self.model.endRemoveRows()
-        else:
-            QMessageBox.warning(self.table_view, 'Warning', 'No row selected')
+            delete_calculation_case(self.engine, row)
+            self.delete_action_finished.emit()
+
+    def emit_action_modify_finished(self):
+        self.modify_action_finished.emit()
+
+    def emit_action_add_copy_finished(self):
+        self.add_copy_action_finished.emit()

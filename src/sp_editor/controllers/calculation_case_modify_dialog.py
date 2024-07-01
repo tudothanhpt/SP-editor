@@ -1,4 +1,3 @@
-import os
 import sys
 
 from PySide6 import QtCore as qtc
@@ -6,6 +5,7 @@ from PySide6 import QtGui as qtg
 from PySide6 import QtWidgets as qtw
 from sqlalchemy.engine.base import Engine
 
+<<<<<<< HEAD
 from sp_editor.controllers.calculation_case_dialog import CalculationCase_Dialog
 from sp_editor.core.connect_etabs import show_warning
 from sp_editor.core.find_uniform_bars import get_rebarCoordinates_str
@@ -16,6 +16,11 @@ from sp_editor.crud.cr_load_case import get_sds_section_name, get_concrete_name,
     update_calculation_case, get_concrete_name_from_properties, get_steel_name_from_properties
 from sp_editor.core.global_variables import UnitSystem
 from sp_editor.widgets.load_calculation_case import Ui_calculationCase_dialog
+=======
+from controllers.calculation_case_dialog import CalculationCase_Dialog
+from crud.cr_load_case import create_calculation_case, update_calculation_case, get_concrete_name_from_properties, \
+    get_steel_name_from_properties
+>>>>>>> c925b6a937b86b3d0445237323108d4f6af306b8
 
 
 class CalculationCaseModify_Dialog(CalculationCase_Dialog):
@@ -56,24 +61,46 @@ class CalculationCaseModify_Dialog(CalculationCase_Dialog):
         self.concrete_name = get_concrete_name_from_properties(self.engine, self.material_fc, self.material_Ec)
         self.steel_name = get_steel_name_from_properties(self.engine, self.material_fy, self.material_Es)
         # Manually trigger the slot for the initial current text
+        self.cb_tier.setCurrentText(self.tier_name)
+        self.cb_sectionDesignerShape.setCurrentText(self.sds_name)
+        # self.cb_pierdata.setCurrentText(self.pier_name)
+
         self.update_tier_name(self.tier_name)
         self.update_folder_name(self.is_pier_name, self.folder_name)
         self.update_level_list(self.tier_name)
-        self.update_pier_infor(self.tier_name, self.level_list)
+        self.update_pier_infor(self.pier_name, self.level_list)
         self.update_data_from_concrete(self.concrete_name)
         self.update_data_from_steel(self.steel_name)
         self.update_rebar_and_cover(self.bar_spacing, self.bar_cover)
         self.make_section()
 
+        # restric tier sds and pier names
+        if self.modify:
+            self.cb_tier.setEnabled(False)
+            self.cb_sectionDesignerShape.setEnabled(False)
+            self.cb_pierdata.setEnabled(False)
+            self.checkb_userPierName.setEnabled(False)
+        else:
+            self.cb_tier.setEnabled(True)
+            self.cb_sectionDesignerShape.setEnabled(True)
+            self.cb_pierdata.setEnabled(True)
+            self.checkb_userPierName.setEnabled(True)
+
     def add_calculation_case(self):
+        modify = self.modify
+
         case = [self.tier_name, self.is_pier_name, self.folder_name, self.sds_name, self.pier_name,
                 self.bar_cover, self.bar_no, self.bar_area, self.bar_spacing, self.concrete_Ag, self.sds_total_As,
                 self.rho, self.material_fc, self.material_fy, self.material_Ec, self.material_Es,
                 self.from_story, self.to_story,
                 self.case_path]
+        if modify:
+            cal_case = update_calculation_case(self.engine, case, self.current_id)
+            self.model_modify.emit()
+        else:
+            cal_case = create_calculation_case(self.engine, case)
+            self.model_modify.emit()
 
-        cal_case = update_calculation_case(self.engine, case, self.current_id)
-        self.model_modify.emit()
         return cal_case
 
     def update_folder_name(self, is_pier_name, folder_name):
@@ -88,6 +115,7 @@ class CalculationCaseModify_Dialog(CalculationCase_Dialog):
             self.le_folderName.setText(folder_name)
 
     def update_rebar_and_cover(self, bar_spacing, bar_cover):
+        self.cb_barSize.setCurrentText(self.bar_no)
         self.le_spacing.setText(str(bar_spacing))
         self.le_cover.setText(str(bar_cover))
 
