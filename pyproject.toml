@@ -6,7 +6,7 @@ requires = ["setuptools", "wheel"]  # PEP 508 specifications.
 
 [project]
 name = "sp_editor"
-version = "0.1.0"
+version = "0.1.1"
 authors = [
     { name = "Thanh Tu", email = "tado@thorntontomasetti.com" },
     { name = "Bui Mark", email = "abui@thorntontomasetti.com" },
@@ -22,17 +22,17 @@ classifiers = [
 dependencies = [
     # Packages this project requires
 
-    "pyside6 == 6.7.0",
-    "ezdxf == 1.3.0",
-    "pandas == 2.2.2",
-    "matplotlib==3.8.4",
+    "pyside6 == 6.8.0",
+    "ezdxf == 1.3.4",
+    "pandas == 2.2.3",
+    "matplotlib==3.9.0",
     "seaborn==0.13.2",
     "openpyxl==3.1.2",
     "pyqtgraph == 0.13.7",
     "pyinstaller==6.6.0",
     "comtypes==1.1.14",
-    "shapely==2.0.4",
-    "sqlmodel==0.0.18",
+    "shapely==2.0.6",
+    "sqlmodel==0.0.22",
     "natsort==8.4.0"
 ]
 [project.optional-dependencies]
