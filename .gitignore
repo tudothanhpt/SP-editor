@@ -1,10 +1,1 @@
-.idea
 .venv
-.vscode
-src/sp_editor.egg-info/
-__pycache__
-build
-dist
-.env
-example
-tests

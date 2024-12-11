@@ -4,8 +4,7 @@ Empowering Structural Engineers with Seamless Communication Between SpColumn and
 
 ## Installation
 
-This isn't installed with PIP. Instead,
-checkout the GitHub repository.
+This lib is managed by UV 
 
 After checkout, use the ``pyproject.toml``
 to install the needed development components.
