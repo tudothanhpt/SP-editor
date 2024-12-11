@@ -2,14 +2,19 @@ import sys
 
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
-from PySide6 import QtGui as qtg
 
 from sp_editor.widgets.levelgroup_dialog import Ui_group_dialog
 
-from sp_editor.crud.cr_level_group import (get_level, get_pierlabel_with_level, get_group_level,
-                                 update_group_level, create_level_group,
-                                 check_group_level, return_group_level, get_level_from_group)
-from sp_editor.database.pandas_table_model import PandasModel
+from sp_editor.crud.cr_level_group import (
+    get_level,
+    get_pierlabel_with_level,
+    get_group_level,
+    update_group_level,
+    create_level_group,
+    check_group_level,
+    return_group_level,
+    get_level_from_group,
+)
 from sqlalchemy.engine.base import Engine
 
 
@@ -33,8 +38,11 @@ class Group_Dialog(qtw.QDialog, Ui_group_dialog):
 
         self.setupUi(self)
         self.check_current_db()
-        (self.lview_storyName.selectionModel()
-         .selectionChanged.connect(self.get_piers_from_selection))
+        (
+            self.lview_storyName.selectionModel().selectionChanged.connect(
+                self.get_piers_from_selection
+            )
+        )
         self.pb_addGroup.clicked.connect(self.add_group)
         self.pb_cancel.clicked.connect(self.cancel_all_action)
         self.pb_OK.clicked.connect(self.confirm_action)
@@ -43,8 +51,9 @@ class Group_Dialog(qtw.QDialog, Ui_group_dialog):
     def add_group(self):
         text = self.le_groupName.text()
         if not text or self.select_stories is None:
-            qtw.QMessageBox.warning(self, 'Warning', 'Group Name and'
-                                                     ' Selected Stories cannot be empty')
+            qtw.QMessageBox.warning(
+                self, "Warning", "Group Name and" " Selected Stories cannot be empty"
+            )
         else:
             self.le_groupName.clear()
             groups = update_group_level(self.engine, self.select_stories, text)
@@ -62,7 +71,7 @@ class Group_Dialog(qtw.QDialog, Ui_group_dialog):
             create_level_group(self.engine, self.level_list)
             self.groups_list_before = get_group_level(self.engine, empty_tier=True)
         else:
-            self.level_list = get_level_from_group(self.engine, 'None')
+            self.level_list = get_level_from_group(self.engine, "None")
             self.groups_list_before = get_group_level(self.engine, empty_tier=False)
             self.update_group_list()
         # display level model
@@ -112,10 +121,11 @@ class Group_Dialog(qtw.QDialog, Ui_group_dialog):
     @qtc.Slot()
     def update_level_list(self):
         current_items = self.level_model.stringList()
-        updated_items = [item for item in current_items
-                         if item not in self.select_stories]
+        updated_items = [
+            item for item in current_items if item not in self.select_stories
+        ]
         self.level_model.setStringList(updated_items)
-        if self.level_model is []:
+        if self.level_model == []:
             self.pier_model.setStringList([])
 
     @qtc.Slot()
@@ -129,7 +139,7 @@ class Group_Dialog(qtw.QDialog, Ui_group_dialog):
         self.lview_groupName.setModel(self.group_model)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     group_dialog = Group_Dialog()
     group_dialog.show()

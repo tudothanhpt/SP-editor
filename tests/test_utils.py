@@ -3,6 +3,8 @@ from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex
 from PySide6.QtGui import QColor, QBrush
 from PySide6.QtWidgets import QApplication, QMainWindow, QTableView, QStyledItemDelegate
 
+from sp_editor.crud.cr_mainwindow import fetch_data_from_db
+
 
 class MainWindowModel(QAbstractTableModel):
     """A model to interface a Qt view with pandas DataFrame"""

@@ -1,5 +1,5 @@
 from sqlmodel import Field, Relationship, SQLModel
-from typing import Optional, List, Dict, Any
+from typing import Optional, List
 
 
 class GeneralInfor(SQLModel, table=True):
@@ -15,6 +15,7 @@ class MaterialConcrete(SQLModel, table=True):
     """
     Concrete material properties
     """
+
     id: int | None = Field(default=None, primary_key=True)
     name: Optional[str] = None
     fc: Optional[float] = None
@@ -28,6 +29,7 @@ class MaterialRebar(SQLModel, table=True):
     """
     Steel material properties
     """
+
     id: int | None = Field(default=None, primary_key=True)
     name: Optional[str] = None
     fy: Optional[float] = None
@@ -39,6 +41,7 @@ class BarSet(SQLModel, table=True):
     """
     Bar set material properties
     """
+
     id: int | None = Field(default=None, primary_key=True)
     size: str
     diameter: float
@@ -76,7 +79,9 @@ class PierLabel(SQLModel, table=True):
 class PierForce(SQLModel, table=True):
     index: int | None = Field(default=None, primary_key=True)
 
-    story: str = Field(default=None, foreign_key="pierlabel.story", primary_key=True, max_length=50)
+    story: str = Field(
+        default=None, foreign_key="pierlabel.story", primary_key=True, max_length=50
+    )
     pier: str = Field(default=None, primary_key=True, max_length=50)
     combo: Optional[str] = Field(default=None, max_length=50)
     location: Optional[str] = Field(default=None, max_length=50)
@@ -94,7 +99,9 @@ class GroupLevel(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
     tier: str | None = Field(default=None, primary_key=True)
-    story: str = Field(default=None, foreign_key="pierlabel.story", primary_key=True, max_length=50)
+    story: str = Field(
+        default=None, foreign_key="pierlabel.story", primary_key=True, max_length=50
+    )
 
     pierlabel: PierLabel = Relationship(back_populates="grouplevels")
 
@@ -131,11 +138,29 @@ class CalculationCase(SQLModel, table=True):
 
     def to_list(self):
         return [
-            self.id, self.tier, self.isPierName, self.folder, self.sds, self.pier,
-            self.barCover, self.barNo, self.barArea, self.barSpacing, self.concreteAg,
-            self.sdsAs, self.rho, self.materialFc, self.materialFy, self.materialEc,
-            self.materialEs, self.fromStory, self.toStory, self.casePath,
-            self.spColumnFile, self.forceCombo, self.dcr
+            self.id,
+            self.tier,
+            self.isPierName,
+            self.folder,
+            self.sds,
+            self.pier,
+            self.barCover,
+            self.barNo,
+            self.barArea,
+            self.barSpacing,
+            self.concreteAg,
+            self.sdsAs,
+            self.rho,
+            self.materialFc,
+            self.materialFy,
+            self.materialEc,
+            self.materialEs,
+            self.fromStory,
+            self.toStory,
+            self.casePath,
+            self.spColumnFile,
+            self.forceCombo,
+            self.dcr,
         ]
 
 
@@ -143,6 +168,7 @@ class LoadCombinationsSelection(SQLModel, table=True):
     """
     Bar set material properties
     """
+
     id: int | None = Field(default=None, primary_key=True)
     allloadCombos: Optional[str] = Field(default=None)
     selectedLoadCombos: Optional[str] = Field(default=None)
@@ -152,6 +178,7 @@ class LoadCombinations(SQLModel, table=True):
     """
     Bar set material properties
     """
+
     id: int | None = Field(default=None, primary_key=True)
     uniqueloadCombos: Optional[str] = Field(default=None)
 
@@ -160,6 +187,7 @@ class SDCoordinates_CTI(SQLModel, table=True):
     """
     Bar set material properties
     """
+
     id: int | None = Field(default=None, primary_key=True)
     SDName: Optional[str] = Field(default=None)
     Coordinates: Optional[str] = Field(default=None)

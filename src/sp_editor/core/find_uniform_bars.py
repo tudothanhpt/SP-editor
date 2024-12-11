@@ -1,9 +1,7 @@
 import math
 from typing import List, Tuple, Dict
 
-from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
-from PySide6 import QtGui as qtg
 
 from sp_editor.core.find_pier import restructure_sdshapeDF
 from sp_editor.crud.cr_SD_shape import read_sdsDB
@@ -35,7 +33,7 @@ def plot_polygons(frame: qtw.QFrame, polygons, shapes, rebar_list):
     :param rebar_list: List of rebar coordinates to be plotted.
     """
     # Create or get the canvas
-    if not hasattr(frame, 'canvas'):
+    if not hasattr(frame, "canvas"):
         # Create a Matplotlib figure
         frame.canvas = MplCanvas(frame, width=14, height=12, dpi=100)
         frame.toolbar = NavigationToolbar(frame.canvas, frame)
@@ -56,22 +54,26 @@ def plot_polygons(frame: qtw.QFrame, polygons, shapes, rebar_list):
 
     for shape in shapes:
         x, y = zip(*shape)
-        ax.plot(x, y, color='r', linewidth=1.5)
+        ax.plot(x, y, color="r", linewidth=1.5)
 
     x, y = zip(*rebar_list)
-    ax.scatter(x, y, color='g', s=1)
+    ax.scatter(x, y, color="g", s=1)
 
-    ax.set_title('Cross Section')
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
+    ax.set_title("Cross Section")
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
 
     # Automatically set limits
-    all_x = [coord[0] for polygon in polygons for coord in polygon] + \
-            [coord[0] for shape in shapes for coord in shape] + \
-            [coord[0] for coord in rebar_list]
-    all_y = [coord[1] for polygon in polygons for coord in polygon] + \
-            [coord[1] for shape in shapes for coord in shape] + \
-            [coord[1] for coord in rebar_list]
+    all_x = (
+        [coord[0] for polygon in polygons for coord in polygon]
+        + [coord[0] for shape in shapes for coord in shape]
+        + [coord[0] for coord in rebar_list]
+    )
+    all_y = (
+        [coord[1] for polygon in polygons for coord in polygon]
+        + [coord[1] for shape in shapes for coord in shape]
+        + [coord[1] for coord in rebar_list]
+    )
 
     ax.set_xlim(min(all_x) - 100, max(all_x) + 100)
     ax.set_ylim(min(all_y) - 100, max(all_y) + 100)
@@ -80,7 +82,9 @@ def plot_polygons(frame: qtw.QFrame, polygons, shapes, rebar_list):
     frame.canvas.draw()
 
 
-def offset_sdshapeDF(list_PierSDShape: LST_PIERSDSHAPE, PierSDName: str, offset_distance):
+def offset_sdshapeDF(
+    list_PierSDShape: LST_PIERSDSHAPE, PierSDName: str, offset_distance
+):
     """
     Processes the input DataFrame to extract shapes, apply an offset, and return the modified coordinates.
 
@@ -99,10 +103,13 @@ def offset_sdshapeDF(list_PierSDShape: LST_PIERSDSHAPE, PierSDName: str, offset_
             for shape in shapes:
                 # Create a polygon and apply the offset
                 polygon = Polygon(shape)
-                area += (polygon.area)
+                area += polygon.area
 
                 offset_polygon = polygon.buffer(offset_distance, join_style="mitre")
-                offset_polygon_coords = [(round(x, 2), round(y, 2)) for x, y in offset_polygon.exterior.coords]
+                offset_polygon_coords = [
+                    (round(x, 2), round(y, 2))
+                    for x, y in offset_polygon.exterior.coords
+                ]
                 lst_offsetted_shapes.append(offset_polygon_coords)
 
     return lst_offsetted_shapes
@@ -115,7 +122,7 @@ def calculate_rebarpoints_for_segments(lst_offsetted_shapes, spacing):
     Return Values:
     list_rebarsPts (list) : List of rebars' coordinates based on polyline segments and user-specified spacing
     """
-    # Break polyline into segments 
+    # Break polyline into segments
     segments_shapes = []
     for shape in lst_offsetted_shapes:
         num_points = len(shape)
@@ -128,13 +135,19 @@ def calculate_rebarpoints_for_segments(lst_offsetted_shapes, spacing):
         start_point, end_point = segment
         # Calculate the control points for the current segment
         rounded_distance = math.sqrt(
-            (end_point[0] - start_point[0]) ** 2 + (end_point[1] - start_point[1]) ** 2)
+            (end_point[0] - start_point[0]) ** 2 + (end_point[1] - start_point[1]) ** 2
+        )
         num_points = math.ceil(rounded_distance / spacing)
         num_points = max(num_points, 2)
         x_diff = (end_point[0] - start_point[0]) / (num_points - 1)
         y_diff = (end_point[1] - start_point[1]) / (num_points - 1)
-        control_points = [(round(start_point[0] + i * x_diff, 2), round(start_point[1] + i * y_diff, 2)) for i
-                          in range(num_points)]
+        control_points = [
+            (
+                round(start_point[0] + i * x_diff, 2),
+                round(start_point[1] + i * y_diff, 2),
+            )
+            for i in range(num_points)
+        ]
         # Append the calculated rebars point to the list of unique values
         temp_list_rebarsPts.append(control_points)
 
@@ -161,18 +174,24 @@ def spColumn_CTI_Rebar(list_rebarsPts, rebarArea):
     """
     if isinstance(list_rebarsPts[0], tuple):
         modified_list = [(rebarArea,) + item for item in list_rebarsPts]
-        modified_list = [(f"{area:.6f}", f"{x:.6f}", f"{y:.6f}") for (area, x, y) in modified_list]
+        modified_list = [
+            (f"{area:.6f}", f"{x:.6f}", f"{y:.6f}") for (area, x, y) in modified_list
+        ]
     elif isinstance(list_rebarsPts[0], list):
         modified_list = [[rebarArea] + item for item in list_rebarsPts]
-        modified_list = [(f"{area:.6f}", f"{x:.6f}", f"{y:.6f}") for [area, x, y] in modified_list]
+        modified_list = [
+            (f"{area:.6f}", f"{x:.6f}", f"{y:.6f}") for [area, x, y] in modified_list
+        ]
     else:
         raise TypeError("Unsupported data format. Must be list of tuples or lists.")
 
-    multiline_string_rebarPts = '\n'.join([','.join(map(str, item)) for item in modified_list])
+    multiline_string_rebarPts = "\n".join(
+        [",".join(map(str, item)) for item in modified_list]
+    )
     total_rebar = len(modified_list)
-    multiline_string_rebarPts = str(total_rebar) + '\n' + multiline_string_rebarPts
+    multiline_string_rebarPts = str(total_rebar) + "\n" + multiline_string_rebarPts
 
-    return total_rebar,multiline_string_rebarPts
+    return total_rebar, multiline_string_rebarPts
 
 
 def find_key_index(data_list, key_to_find):
@@ -184,8 +203,14 @@ def find_key_index(data_list, key_to_find):
     return index
 
 
-def get_rebarCoordinates_str(frame: qtw.QFrame, engine: Engine, cover: float, bar_area: float, spacing: float,
-                             SDname: str):
+def get_rebarCoordinates_str(
+    frame: qtw.QFrame,
+    engine: Engine,
+    cover: float,
+    bar_area: float,
+    spacing: float,
+    SDname: str,
+):
     # Calculate bar diameter
     bar_dia = math.sqrt(bar_area / math.pi) * 2
 
@@ -212,7 +237,7 @@ def get_rebarCoordinates_str(frame: qtw.QFrame, engine: Engine, cover: float, ba
     rebar_list = calculate_rebarpoints_for_segments(offsetted_shapes, spacing)
 
     # Generate multiline string rebar points
-    total_rebar,multiline_string_rebarPts = spColumn_CTI_Rebar(rebar_list, rebarArea)
+    total_rebar, multiline_string_rebarPts = spColumn_CTI_Rebar(rebar_list, rebarArea)
 
     # Prepare dictionary for database storage
     sd_rebarcoordinates_dict_todb = {SDname: multiline_string_rebarPts}
@@ -227,8 +252,10 @@ def get_rebarCoordinates_str(frame: qtw.QFrame, engine: Engine, cover: float, ba
     # df_rebar_coordinates.to_sql("rebarcoordinates_CTI", con=engine, if_exists='append', index=False)
     return total_rebar, multiline_string_rebarPts
 
-def get_rebarCoordinates_str2(engine: Engine, cover: float, bar_area: float, spacing: float,
-                             SDname: str):
+
+def get_rebarCoordinates_str2(
+    engine: Engine, cover: float, bar_area: float, spacing: float, SDname: str
+):
     # Calculate bar diameter
     bar_dia = math.sqrt(bar_area / math.pi) * 2
 
@@ -255,7 +282,7 @@ def get_rebarCoordinates_str2(engine: Engine, cover: float, bar_area: float, spa
     rebar_list = calculate_rebarpoints_for_segments(offsetted_shapes, spacing)
 
     # Generate multiline string rebar points
-    total_rebar,multiline_string_rebarPts = spColumn_CTI_Rebar(rebar_list, rebarArea)
+    total_rebar, multiline_string_rebarPts = spColumn_CTI_Rebar(rebar_list, rebarArea)
 
     return total_rebar, multiline_string_rebarPts
 

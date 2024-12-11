@@ -7,7 +7,6 @@ from PySide6 import QtWidgets as qtw
 from sqlalchemy.engine.base import Engine
 
 from sp_editor.core.mainwindow_context_menu import TableContextMenu
-from sp_editor.crud.cr_mainwindow import fetch_data_from_db
 from sp_editor.database.mainWindow_model import MainWindowModel
 from sp_editor.controllers.barest_dialog import BarSet_Dialog
 from sp_editor.controllers.calculation_case_dialog import CalculationCase_Dialog
@@ -21,13 +20,27 @@ from sp_editor.controllers.new_file_dialog import NewFile_Dialog
 from sp_editor.controllers.open_file_dialog import OpenFile_Dialog
 from sp_editor.controllers.batch_processor_dialog import BatchProcessorDialog
 from sp_editor.controllers.about_dialog import AboutDialog
-from sp_editor.core.connect_etabs import get_story_infor, get_pier_label_infor, get_pier_force_infor, \
-    get_loadCombo_df_fromE, get_section_designer_shape_infor, set_global_unit
+from sp_editor.core.connect_etabs import (
+    get_story_infor,
+    get_pier_label_infor,
+    get_pier_force_infor,
+    get_loadCombo_df_fromE,
+    get_section_designer_shape_infor,
+    set_global_unit,
+)
 from sp_editor.core.force_filter import get_pierforces_CTI_todb
 from sp_editor.crud.cr_SD_shape import get_SDCoordinates_CTI_todb
-from sp_editor.crud.cr_level_group import get_level_to_db, get_pier_label_to_db, get_pier_design_force_to_db, \
-    get_sds_to_db
-from sp_editor.crud.cr_load_combo import create_loadComboDB, create_loadComboSelectionDB, read_loadComboSelectionDB
+from sp_editor.crud.cr_level_group import (
+    get_level_to_db,
+    get_pier_label_to_db,
+    get_pier_design_force_to_db,
+    get_sds_to_db,
+)
+from sp_editor.crud.cr_load_combo import (
+    create_loadComboDB,
+    create_loadComboSelectionDB,
+    read_loadComboSelectionDB,
+)
 from sp_editor.widgets.main_window import Ui_mw_Main
 
 
@@ -55,13 +68,17 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.set_active_action(False)
 
         # setup context menu
-        self.context_menu = TableContextMenu(self.table_sumaryResults, self.main_window_model)
+        self.context_menu = TableContextMenu(
+            self.table_sumaryResults, self.main_window_model
+        )
         self.table_sumaryResults.setContextMenuPolicy(qtc.Qt.CustomContextMenu)
-        self.table_sumaryResults.customContextMenuRequested.connect(self.open_context_menu)
+        self.table_sumaryResults.customContextMenuRequested.connect(
+            self.open_context_menu
+        )
         self.context_menu.modify_action_finished.connect(self.update_display_results)
         self.context_menu.add_copy_action_finished.connect(self.update_display_results)
         self.context_menu.delete_action_finished.connect(self.update_display_results)
-        
+
         # Setup action
         self.action_New.triggered.connect(self.new_file)
         self.action_Open.triggered.connect(self.open_file)
@@ -71,7 +88,9 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         self.a_MaterialProp.triggered.connect(self.open_material)
         self.a_Groups.triggered.connect(self.open_groups)
         self.a_Cases.triggered.connect(self.open_calculation_cases)
-        self.actionDesign_Combos_Selection.triggered.connect(self.open_loadComboSelection)
+        self.actionDesign_Combos_Selection.triggered.connect(
+            self.open_loadComboSelection
+        )
         self.a_GetAllForce.triggered.connect(self.get_all_force)
         self.a_MakeSPcolumn.triggered.connect(self.make_spcolumn)
         self.a_BatchProcessor.triggered.connect(self.batch_processor)
@@ -107,8 +126,9 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def open_import_etabs(self):
         self.dialog_import_etabs = ImportEtabs_Dialog()
         self.dialog_import_etabs.attach_etabs()
-        self.dialog_import_etabs.lb_ActiveModel.setText(self.dialog_import_etabs.SapModel.GetModelFilename(
-            IncludePath=False))
+        self.dialog_import_etabs.lb_ActiveModel.setText(
+            self.dialog_import_etabs.SapModel.GetModelFilename(IncludePath=False)
+        )
         self.dialog_import_etabs.exec()
 
         self.sap_model = self.dialog_import_etabs.SapModel
@@ -125,7 +145,9 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         df_pier_label = get_pier_label_infor(self.sap_model, self.etabs_object)
         get_pier_label_to_db(self.current_engine, df_pier_label)
         # get section designer shape into db
-        df_sds_shape = get_section_designer_shape_infor(self.sap_model, self.etabs_object)
+        df_sds_shape = get_section_designer_shape_infor(
+            self.sap_model, self.etabs_object
+        )
         get_sds_to_db(self.current_engine, df_sds_shape)
         get_SDCoordinates_CTI_todb(self.current_engine)
         # get Load combination from API and then put into database
@@ -134,7 +156,9 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
         create_loadComboSelectionDB(self.current_engine, df_LCselection)
         ##############################################
         self.dialog_import_etabs.connected_etabs.connect(self.update_message)
-        self.dialog_import_etabs.connected_etabs.connect(self.a_ImportEtabs.setEnabled(False))
+        self.dialog_import_etabs.connected_etabs.connect(
+            self.a_ImportEtabs.setEnabled(False)
+        )
         self.set_active_action_postEtabs(True)
 
     @qtc.Slot()
@@ -160,7 +184,9 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
 
     @qtc.Slot()
     def open_calculation_cases(self):
-        self.dialog_calculation_case = CalculationCase_Dialog(self.current_engine, self.current_path)
+        self.dialog_calculation_case = CalculationCase_Dialog(
+            self.current_engine, self.current_path
+        )
         self.dialog_calculation_case.case_init.connect(self.update_message)
         self.dialog_calculation_case.case_init.connect(self.update_display_results)
         self.dialog_calculation_case.exec()
@@ -174,9 +200,13 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     @qtc.Slot()
     def get_all_force(self):
         df_combo_selection = read_loadComboSelectionDB(self.current_engine)
-        list_combo_selection = df_combo_selection["selectedLoadCombos"].dropna().unique().tolist()
+        list_combo_selection = (
+            df_combo_selection["selectedLoadCombos"].dropna().unique().tolist()
+        )
         # get pier design force and then put into database
-        df_pier_design_force = get_pier_force_infor(self.sap_model, self.etabs_object, list_combo_selection)
+        df_pier_design_force = get_pier_force_infor(
+            self.sap_model, self.etabs_object, list_combo_selection
+        )
         get_pier_design_force_to_db(self.current_engine, df_pier_design_force)
         get_pierforces_CTI_todb(self.current_engine)
 
@@ -191,9 +221,11 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def batch_processor(self):
         self.dialog_batch_processor = BatchProcessorDialog(self.current_engine)
         self.dialog_batch_processor.read_results_create.connect(self.update_message)
-        self.dialog_batch_processor.read_results_create.connect(self.update_display_results)
+        self.dialog_batch_processor.read_results_create.connect(
+            self.update_display_results
+        )
         self.dialog_batch_processor.exec()
-    
+
     @qtc.Slot()
     def open_about(self):
         self.dialog_about = AboutDialog()
@@ -201,9 +233,19 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
 
     def init_display_table(self):
         # TODO: display infor from database
-        column_headers = ["SPColumn File", "Tier", "From Story", "To Story", "Pier",
-                          "Material Fc", "Material Fy", "Bar No", "Rho", "DCR",
-                          "Force Combo"]
+        column_headers = [
+            "SPColumn File",
+            "Tier",
+            "From Story",
+            "To Story",
+            "Pier",
+            "Material Fc",
+            "Material Fy",
+            "Bar No",
+            "Rho",
+            "DCR",
+            "Force Combo",
+        ]
         df = pd.DataFrame(columns=column_headers)
         self.main_window_model = MainWindowModel(dataframe=df)
         self.table_sumaryResults.setModel(self.main_window_model)
@@ -252,10 +294,12 @@ class MainWindow(qtw.QMainWindow, Ui_mw_Main):
     def open_context_menu(self, position):
         self.context_menu.path = self.current_path
         self.context_menu.engine = self.current_engine
-        self.context_menu.exec(self.table_sumaryResults.viewport().mapToGlobal(position))
+        self.context_menu.exec(
+            self.table_sumaryResults.viewport().mapToGlobal(position)
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     ex = MainWindow()
     ex.show()

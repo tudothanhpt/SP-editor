@@ -1,7 +1,4 @@
-import sys
 from PySide6.QtCore import QAbstractTableModel, QModelIndex, Qt
-from PySide6.QtWidgets import QApplication, QMainWindow, QTableView, QMenu, QMessageBox
-from PySide6.QtGui import QStandardItemModel, QStandardItem, QAction
 import pandas as pd
 from typing import Sequence, Any
 
@@ -13,7 +10,9 @@ from sp_editor.crud.cr_mainwindow import fetch_data_from_db
 class MainWindowModel(QAbstractTableModel):
     """A model to interface a Qt view with pandas DataFrame"""
 
-    def __init__(self, dataframe: pd.DataFrame = pd.DataFrame(), parent=None, headers=None):
+    def __init__(
+        self, dataframe: pd.DataFrame = pd.DataFrame(), parent=None, headers=None
+    ):
         super().__init__(parent)
         self._dataframe = dataframe
         if headers:
@@ -37,7 +36,12 @@ class MainWindowModel(QAbstractTableModel):
 
         return None
 
-    def headerData(self, section: int, orientation: Qt.Orientation, role=Qt.ItemDataRole.DisplayRole):
+    def headerData(
+        self,
+        section: int,
+        orientation: Qt.Orientation,
+        role=Qt.ItemDataRole.DisplayRole,
+    ):
         """Return DataFrame index as vertical header data and columns as horizontal header data"""
         if role == Qt.ItemDataRole.DisplayRole:
             if orientation == Qt.Orientation.Horizontal:
@@ -52,9 +56,19 @@ class MainWindowModel(QAbstractTableModel):
         new_data = fetch_data_from_db(engine=engine)  # Fetch new data from database
         # Prepare data as list of lists (rows)
         # Convert to DataFrame
-        column_headers = ["SPColumn File", "Tier", "From Story", "To Story", "Pier",
-                          "Material Fc", "Material Fy", "Bar No", "Rho", "DCR",
-                          "Force Combo"]
+        column_headers = [
+            "SPColumn File",
+            "Tier",
+            "From Story",
+            "To Story",
+            "Pier",
+            "Material Fc",
+            "Material Fy",
+            "Bar No",
+            "Rho",
+            "DCR",
+            "Force Combo",
+        ]
 
         new_df = new_data.set_axis(column_headers, axis=1)
 

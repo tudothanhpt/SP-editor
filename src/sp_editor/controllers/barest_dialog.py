@@ -1,8 +1,6 @@
 import sys
 
-from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
-from PySide6 import QtGui as qtg
 
 from sqlalchemy.engine.base import Engine
 from sp_editor.crud.cr_barset import get_barset, update_barset
@@ -45,7 +43,7 @@ class BarSet_Dialog(qtw.QDialog, Ui_d_BarSet):
         self.tbview_BarSet.setModel(model)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     barset_dialog = BarSet_Dialog()
     barset_dialog.show()

@@ -7,11 +7,23 @@ from PySide6 import QtWidgets as qtw
 from sqlalchemy.engine.base import Engine
 
 from sp_editor.crud.cr_SD_shape import read_area
-from sp_editor.crud.cr_mainwindow import fetch_data_from_db
 
-from sp_editor.crud.cr_level_group import get_group_level, get_level_from_group, get_pierlabel_with_level
-from sp_editor.crud.cr_load_case import get_sds_section_name, get_concrete_name, get_steel_name, get_rebar_size_name, \
-    get_concrete_fc_Ec, get_steel_fy_Es, get_rebar_area_from_name, create_calculation_case, get_current_unit
+from sp_editor.crud.cr_level_group import (
+    get_group_level,
+    get_level_from_group,
+    get_pierlabel_with_level,
+)
+from sp_editor.crud.cr_load_case import (
+    get_sds_section_name,
+    get_concrete_name,
+    get_steel_name,
+    get_rebar_size_name,
+    get_concrete_fc_Ec,
+    get_steel_fy_Es,
+    get_rebar_area_from_name,
+    create_calculation_case,
+    get_current_unit,
+)
 
 from sp_editor.core.connect_etabs import show_warning
 from sp_editor.core.find_uniform_bars import get_rebarCoordinates_str
@@ -69,7 +81,9 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.update_rebar_size()
 
         self.cb_tier.currentTextChanged.connect(self.update_level_list)
-        self.cb_tier.currentTextChanged.connect(lambda text: self.update_pier_infor(text, self.level_list))
+        self.cb_tier.currentTextChanged.connect(
+            lambda text: self.update_pier_infor(text, self.level_list)
+        )
         self.cb_concrete.currentTextChanged.connect(self.update_data_from_concrete)
         self.cb_steel.currentTextChanged.connect(self.update_data_from_steel)
 
@@ -122,7 +136,9 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
     def update_data_from_concrete(self, text: str):
         concrete_fc, concrete_Ec = get_concrete_fc_Ec(self.engine, text)
         if concrete_fc is None or concrete_Ec is None:
-            qtw.QMessageBox.critical(self, 'Error', "Failed to retrieve concrete properties.")
+            qtw.QMessageBox.critical(
+                self, "Error", "Failed to retrieve concrete properties."
+            )
         else:
             self.material_fc = concrete_fc
             self.material_Ec = concrete_Ec
@@ -141,8 +157,11 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
     def update_data_from_steel(self, text: str):
         steel_fy, steel_Es = get_steel_fy_Es(self.engine, text)
         if steel_fy is None or steel_Es is None:
-            qtw.QMessageBox.critical(self, 'Error', "Failed to retrieve rebar properties.",
-                                     )
+            qtw.QMessageBox.critical(
+                self,
+                "Error",
+                "Failed to retrieve rebar properties.",
+            )
         else:
             self.material_fy = steel_fy
             self.material_Es = steel_Es
@@ -177,9 +196,14 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
             # get all other data need
             self.get_data_for_plot()
             # plot function
-            self.sds_total_bars, self.sds_rebar_list = get_rebarCoordinates_str(self.f_3dview, self.engine,
-                                                                                self.bar_cover, self.bar_area,
-                                                                                self.bar_spacing, self.sds_name)
+            self.sds_total_bars, self.sds_rebar_list = get_rebarCoordinates_str(
+                self.f_3dview,
+                self.engine,
+                self.bar_cover,
+                self.bar_area,
+                self.bar_spacing,
+                self.sds_name,
+            )
 
             self.concrete_Ag = round(read_area(self.engine, self.sds_name), 2)
             self.sds_total_As = round(self.bar_area * self.sds_total_bars, 2)
@@ -217,14 +241,16 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
                 self.check_input()
 
         else:
-            qtw.QMessageBox.warning(self, 'No Input', 'Please open a file first')
+            qtw.QMessageBox.warning(self, "No Input", "Please open a file first")
 
     @qtc.Slot()
     def confirm_action(self):
         try:
             self.create_folder()
             self.calculation_case = self.add_calculation_case()
-            self.case_init.emit(f"Calculation case for {self.tier_name} {self.pier_name} added")
+            self.case_init.emit(
+                f"Calculation case for {self.tier_name} {self.pier_name} added"
+            )
             self.close()
         except ValueError:
             print("Can't not create calculation case")
@@ -251,7 +277,7 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         else:
             self.bar_area = self.le_barArea.text()
             if float(self.bar_area) < 0:
-                error_message = f"Area must be a positive number"
+                error_message = "Area must be a positive number"
                 show_warning(error_message)
         return float(self.bar_area)
 
@@ -261,7 +287,7 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
             self.from_story = self.level_list[-1]
             self.to_story = self.level_list[0]
         except IndexError:
-            error_message = f"<p>No level found please define your Tier first<p>"
+            error_message = "<p>No level found please define your Tier first<p>"
             show_warning(error_message)
 
     def check_input(self):
@@ -275,10 +301,12 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
 
         check_folder_name = {"Folder name": folder_name}
 
-        check_material = {"fc": self.lb_fc.text(),
-                          "fy": self.lb_fy.text(),
-                          "Ec": self.lb_Ec.text(),
-                          "Es": self.lb_Es.text()}
+        check_material = {
+            "fc": self.lb_fc.text(),
+            "fy": self.lb_fy.text(),
+            "Ec": self.lb_Ec.text(),
+            "Es": self.lb_Es.text(),
+        }
         check_geometry = {
             "Cover": self.le_cover.text(),
             "Spacing": self.le_spacing.text(),
@@ -286,10 +314,12 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         for data_check in [check_folder_name, check_material, check_geometry]:
             for key, value in data_check.items():
                 if not value:
-                    error_message = (f"<b>Failed to make section for display.<b> "
-                                     f"<p>PLease make sure: <p>"
-                                     f"<p> 1. Ensure you entered enough data <p>"
-                                     f"<p> Input data: {key} is missing.<p>")
+                    error_message = (
+                        f"<b>Failed to make section for display.<b> "
+                        f"<p>PLease make sure: <p>"
+                        f"<p> 1. Ensure you entered enough data <p>"
+                        f"<p> Input data: {key} is missing.<p>"
+                    )
                     show_warning(error_message)
                     raise ValueError
         try:
@@ -301,10 +331,12 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
             self.material_Ec = float(check_material["Ec"])
             self.material_Es = float(check_material["Es"])
         except ValueError as e:
-            error_message = (f"<b>Failed to make section for display.<b> "
-                             f"<p>Please make sure: <p>"
-                             f"<p>2. Ensure all numerical inputs are valid numbers.<p>"
-                             f"<p>Invalid data: {e}<p>")
+            error_message = (
+                f"<b>Failed to make section for display.<b> "
+                f"<p>Please make sure: <p>"
+                f"<p>2. Ensure all numerical inputs are valid numbers.<p>"
+                f"<p>Invalid data: {e}<p>"
+            )
             show_warning(error_message)
             raise TypeError(f"Invalid data type: {e}")
 
@@ -314,11 +346,27 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
         self.sds_name = self.cb_sectionDesignerShape.currentText()
 
     def add_calculation_case(self):
-        case = [self.tier_name, self.is_pier_name, self.folder_name, self.sds_name, self.pier_name,
-                self.bar_cover, self.bar_no, self.bar_area, self.bar_spacing, self.concrete_Ag, self.sds_total_As,
-                self.rho, self.material_fc, self.material_fy, self.material_Ec, self.material_Es,
-                self.from_story, self.to_story,
-                self.case_path]
+        case = [
+            self.tier_name,
+            self.is_pier_name,
+            self.folder_name,
+            self.sds_name,
+            self.pier_name,
+            self.bar_cover,
+            self.bar_no,
+            self.bar_area,
+            self.bar_spacing,
+            self.concrete_Ag,
+            self.sds_total_As,
+            self.rho,
+            self.material_fc,
+            self.material_fy,
+            self.material_Ec,
+            self.material_Es,
+            self.from_story,
+            self.to_story,
+            self.case_path,
+        ]
 
         cal_case = create_calculation_case(self.engine, case)
         return cal_case
@@ -337,7 +385,7 @@ class CalculationCase_Dialog(qtw.QDialog, Ui_calculationCase_dialog):
             self.lb_unitAs.setText(area)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     calculation_case_dialog = CalculationCase_Dialog()
     calculation_case_dialog.show()

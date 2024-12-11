@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class DesignCode(Enum):
     ACI_318_02 = 0
     CSA_A23_3_94 = 1
@@ -33,7 +34,7 @@ class DesignCode(Enum):
             return "ACI 318-19"
         elif self == DesignCode.CSA_A23_3_19:
             return "CSA A23.3-19"
-    
+
     @classmethod
     def from_string(cls, code_str):
         str_code_map = {

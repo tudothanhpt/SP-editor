@@ -1,8 +1,14 @@
 from sqlalchemy.exc import NoResultFound, MultipleResultsFound
 
 from sqlmodel import Session, select
-from sp_editor.database.models import GroupLevel, PierLabel, Level, SectionDesignerShape, MaterialConcrete, \
-    MaterialRebar, BarSet, CalculationCase, GeneralInfor
+from sp_editor.database.models import (
+    SectionDesignerShape,
+    MaterialConcrete,
+    MaterialRebar,
+    BarSet,
+    CalculationCase,
+    GeneralInfor,
+)
 from sqlalchemy.engine.base import Engine
 
 
@@ -32,7 +38,11 @@ def get_concrete_name(engine: Engine):
 
 def get_concrete_name_from_properties(engine: Engine, fc: str, ec: str):
     with Session(engine) as session:
-        statement = select(MaterialConcrete.name).where(MaterialConcrete.fc == fc).where(MaterialConcrete.Ec == ec)
+        statement = (
+            select(MaterialConcrete.name)
+            .where(MaterialConcrete.fc == fc)
+            .where(MaterialConcrete.Ec == ec)
+        )
         result = session.exec(statement)
         concrete_name = result.one()
         return concrete_name
@@ -40,7 +50,11 @@ def get_concrete_name_from_properties(engine: Engine, fc: str, ec: str):
 
 def get_steel_name_from_properties(engine: Engine, fy: str, es: str):
     with Session(engine) as session:
-        statement = select(MaterialRebar.name).where(MaterialRebar.fy == fy).where(MaterialRebar.Es == es)
+        statement = (
+            select(MaterialRebar.name)
+            .where(MaterialRebar.fy == fy)
+            .where(MaterialRebar.Es == es)
+        )
         result = session.exec(statement)
         steel_name = result.one()
         return steel_name
@@ -49,7 +63,9 @@ def get_steel_name_from_properties(engine: Engine, fy: str, es: str):
 def get_concrete_fc_Ec(engine: Engine, name: str):
     try:
         with Session(engine) as session:
-            statement = select(MaterialConcrete.fc, MaterialConcrete.Ec).where(MaterialConcrete.name == name)
+            statement = select(MaterialConcrete.fc, MaterialConcrete.Ec).where(
+                MaterialConcrete.name == name
+            )
             results = session.exec(statement)
             output = results.one()
             fc, Ec = output
@@ -68,7 +84,9 @@ def get_concrete_fc_Ec(engine: Engine, name: str):
 def get_steel_fy_Es(engine: Engine, name: str):
     try:
         with Session(engine) as session:
-            statement = select(MaterialRebar.fy, MaterialRebar.Es).where(MaterialRebar.name == name)
+            statement = select(MaterialRebar.fy, MaterialRebar.Es).where(
+                MaterialRebar.name == name
+            )
             results = session.exec(statement)
             output = results.one()
             fy, Es = output
@@ -127,8 +145,27 @@ def get_calculation_case(engine: Engine, case_id):
 
 
 def create_calculation_case(engine: Engine, params: list[str | float]):
-    (tier, is_pier_name, folder, sds, pier, bar_cover, bar_no, bar_area, bar_spacing, concrete_ag, sds_as, rho,
-     material_fc, material_fy, material_ec, material_es, from_story, to_story, case_path) = params
+    (
+        tier,
+        is_pier_name,
+        folder,
+        sds,
+        pier,
+        bar_cover,
+        bar_no,
+        bar_area,
+        bar_spacing,
+        concrete_ag,
+        sds_as,
+        rho,
+        material_fc,
+        material_fy,
+        material_ec,
+        material_es,
+        from_story,
+        to_story,
+        case_path,
+    ) = params
 
     with Session(engine) as session:
         calculation_case = CalculationCase(
@@ -148,12 +185,10 @@ def create_calculation_case(engine: Engine, params: list[str | float]):
             materialFy=material_fy,
             materialEc=material_ec,
             materialEs=material_es,
-
             fromStory=from_story,
             toStory=to_story,
-
             casePath=case_path,
-            spColumnFile=None
+            spColumnFile=None,
         )
 
         session.add(calculation_case)
@@ -163,14 +198,33 @@ def create_calculation_case(engine: Engine, params: list[str | float]):
 
 
 def update_calculation_case(engine: Engine, params: list[str | float], case_id: int):
-    (tier, is_pier_name, folder, sds, pier, bar_cover, bar_no, bar_area, bar_spacing, concrete_ag, sds_as, rho,
-     material_fc, material_fy, material_ec, material_es, from_story, to_story, case_path) = params
+    (
+        tier,
+        is_pier_name,
+        folder,
+        sds,
+        pier,
+        bar_cover,
+        bar_no,
+        bar_area,
+        bar_spacing,
+        concrete_ag,
+        sds_as,
+        rho,
+        material_fc,
+        material_fy,
+        material_ec,
+        material_es,
+        from_story,
+        to_story,
+        case_path,
+    ) = params
 
     with Session(engine) as session:
         statement = select(CalculationCase).where(CalculationCase.id == case_id)
         results = session.exec(statement)
         case = results.one()
-        
+
         case.tier = tier
         case.isPierName = is_pier_name
         case.folder = folder
@@ -209,9 +263,13 @@ def delete_calculation_case(engine: Engine, case_id: int):
         session.commit()
 
 
-def update_dcr_by_spcolumnfile(engine: Engine, spColumnFile, new_dcr_value, loadcombo_id):
+def update_dcr_by_spcolumnfile(
+    engine: Engine, spColumnFile, new_dcr_value, loadcombo_id
+):
     with Session(engine) as session:
-        statement = select(CalculationCase).where(CalculationCase.spColumnFile == spColumnFile)
+        statement = select(CalculationCase).where(
+            CalculationCase.spColumnFile == spColumnFile
+        )
         results = session.exec(statement).all()
         print(results)
 

@@ -2,9 +2,8 @@ import os.path
 from typing import List, Any
 
 import pandas as pd
-from sqlmodel import Session, select, SQLModel
-from sp_editor.database.models import GroupLevel, PierLabel, Level, SectionDesignerShape, MaterialConcrete, \
-    MaterialRebar, BarSet, CalculationCase, GeneralInfor, CTISummary
+from sqlmodel import Session, select
+from sp_editor.database.models import CalculationCase, CTISummary
 from sqlalchemy.engine.base import Engine
 
 
@@ -16,7 +15,9 @@ def update_path_after_creation(engine: Engine):
             file_name = os.path.basename(result.pathAfterCreation)
 
             # update table where casePath match
-            update_statement = select(CalculationCase).where(CalculationCase.casePath == result.casePath)
+            update_statement = select(CalculationCase).where(
+                CalculationCase.casePath == result.casePath
+            )
             calculation_entry = session.exec(update_statement).one_or_none()
             if calculation_entry:
                 calculation_entry.spColumnFile = file_name
@@ -32,13 +33,19 @@ def get_column_names(model: Any, attributes: List[str]) -> List[str]:
 
 
 # Usage example
-desired_columns = [CalculationCase.spColumnFile.__str__(), CalculationCase.tier.__str__(),
-                   CalculationCase.fromStory.__str__(),
-                   CalculationCase.toStory.__str__(),
-                   CalculationCase.pier.__str__(), CalculationCase.materialFc.__str__(),
-                   CalculationCase.materialFy.__str__(),
-                   CalculationCase.barNo.__str__(), CalculationCase.rho.__str__(), CalculationCase.dcr.__str__(),
-                   CalculationCase.forceCombo.__str__()]
+desired_columns = [
+    CalculationCase.spColumnFile.__str__(),
+    CalculationCase.tier.__str__(),
+    CalculationCase.fromStory.__str__(),
+    CalculationCase.toStory.__str__(),
+    CalculationCase.pier.__str__(),
+    CalculationCase.materialFc.__str__(),
+    CalculationCase.materialFy.__str__(),
+    CalculationCase.barNo.__str__(),
+    CalculationCase.rho.__str__(),
+    CalculationCase.dcr.__str__(),
+    CalculationCase.forceCombo.__str__(),
+]
 column_desired_names = [column.split(".")[1] for column in desired_columns]
 
 

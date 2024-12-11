@@ -3,11 +3,12 @@ from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from sqlalchemy.engine.base import Engine
 from sp_editor.database.database import connect_db_and_tables
-from sp_editor.database.mainWindow_model import MainWindowModel
 
 
 class OpenFile_Dialog(qtw.QFileDialog):
-    engine_open = qtc.Signal(Engine)  # Define a custom signal that emits an Engine object
+    engine_open = qtc.Signal(
+        Engine
+    )  # Define a custom signal that emits an Engine object
     path_open = qtc.Signal(str)
     current_db = qtc.Signal(Engine)
 
@@ -34,12 +35,22 @@ class OpenFile_Dialog(qtw.QFileDialog):
                 self.current_db.emit(self.engine)
                 self.engine_open.emit(self.engine)  # Emit the signal with the engine
             except FileNotFoundError:
-                qtw.QMessageBox.warning(self.parent, "File not found", "No such file or directory", qtw.QMessageBox.Ok)
+                qtw.QMessageBox.warning(
+                    self.parent,
+                    "File not found",
+                    "No such file or directory",
+                    qtw.QMessageBox.Ok,
+                )
         else:
-            qtw.QMessageBox.warning(self.parent, "File not selected", "No file was selected", qtw.QMessageBox.Ok)
+            qtw.QMessageBox.warning(
+                self.parent,
+                "File not selected",
+                "No file was selected",
+                qtw.QMessageBox.Ok,
+            )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     open_file_dialog = OpenFile_Dialog()
     sys.exit(app.exec())

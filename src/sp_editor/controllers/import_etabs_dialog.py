@@ -1,13 +1,10 @@
 import sys
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
-from PySide6 import QtGui as qtg
 
 from sp_editor.widgets.importEtabs_dialog import Ui_d_ImportEtabs
 from sp_editor.utils import get_open_filename
-from sp_editor.core.connect_etabs import connect_to_etabs, get_story_infor
-
-from typing import Any
+from sp_editor.core.connect_etabs import connect_to_etabs
 
 
 class ImportEtabs_Dialog(qtw.QDialog, Ui_d_ImportEtabs):
@@ -33,8 +30,12 @@ class ImportEtabs_Dialog(qtw.QDialog, Ui_d_ImportEtabs):
     def attach_to_instance(self):
         # TODO: Import and add attach to instance function to connect to etabs
         self.custom_signal_emit()
-        qtw.QMessageBox.information(self, "Etabs Imported", "File imported successfully",
-                                    qtw.QMessageBox.StandardButton.Ok)
+        qtw.QMessageBox.information(
+            self,
+            "Etabs Imported",
+            "File imported successfully",
+            qtw.QMessageBox.StandardButton.Ok,
+        )
         self.close()
 
     @qtc.Slot()
@@ -49,15 +50,19 @@ class ImportEtabs_Dialog(qtw.QDialog, Ui_d_ImportEtabs):
             self.close()
             self.custom_signal_emit()
         except FileNotFoundError:
-            qtw.QMessageBox.warning(self, "File not found", "No such file or directory",
-                                    qtw.QMessageBox.StandardButton.Ok)
+            qtw.QMessageBox.warning(
+                self,
+                "File not found",
+                "No such file or directory",
+                qtw.QMessageBox.StandardButton.Ok,
+            )
 
     def custom_signal_emit(self):
         model_name = self.SapModel.GetModelFilename()
         self.connected_etabs.emit(model_name)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     import_dialog = ImportEtabs_Dialog()
     import_dialog.show()

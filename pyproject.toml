@@ -1,10 +1,12 @@
 [project]
 name = "sp-editor"
 version = "0.1.0"
-description = "Add your description here"
+description = "A shear wall design software that make connection between ETABS and SpColumn"
 readme = "README.md"
 authors = [
-    { name = "Tado", email = "dothanhtupt@gmail.com" }
+    { name = "Tado", email = "dothanhtupt@gmail.com" },
+    { name = "Bui Mark", email = "abui@thorntontomasetti.com" },
+
 ]
 requires-python = ">=3.10, <3.13"
 dependencies = [
@@ -25,3 +27,9 @@ dependencies = [
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+    "ruff>=0.8.2",
+]

@@ -10,7 +10,7 @@ class ListModel(QAbstractListModel):
 
         Args:
             items (list, optional): The initial list of items. Defaults to an empty list.
-            original_order (dict, optional): A dictionary mapping items to their original order. 
+            original_order (dict, optional): A dictionary mapping items to their original order.
                                             Defaults to None.
         """
         super().__init__()
@@ -23,11 +23,7 @@ class ListModel(QAbstractListModel):
         # This is used to preserve the ordering of items when sorting.
         self.original_order = original_order if original_order else {}
 
-    def data(
-            self,
-            index: QModelIndex,
-            role: Qt.ItemDataRole
-    ) -> str | None:
+    def data(self, index: QModelIndex, role: Qt.ItemDataRole) -> str | None:
         """
         Return the data at the given index.
 
@@ -36,7 +32,7 @@ class ListModel(QAbstractListModel):
             role (Qt.ItemDataRole): The role of the data to retrieve.
 
         Returns:
-            str | None: The data at the given index if the role is DisplayRole, 
+            str | None: The data at the given index if the role is DisplayRole,
                         otherwise None.
         """
         if role == Qt.DisplayRole:
@@ -111,6 +107,8 @@ class ListModel(QAbstractListModel):
         Returns:
             List[Tuple[str, int]]: A list of tuples containing the item (str) and its original index (int).
         """
-        current_item: List[Tuple[str, int]] = [(item, self.original_order[item]) for item, _ in
-                                               zip(self.items, self.original_order.values())]
+        current_item: List[Tuple[str, int]] = [
+            (item, self.original_order[item])
+            for item, _ in zip(self.items, self.original_order.values())
+        ]
         return current_item

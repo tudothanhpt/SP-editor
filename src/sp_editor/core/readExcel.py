@@ -15,10 +15,12 @@ def get_SPRequiredData_fromExcel(excel_path: str) -> tuple:
     - acad_paths (list): List of AutoCAD file paths. [3]
     """
     # Specify the sheet name or index (zero-based) containing the data
-    SHEETNAME = 'SPColumnFileManagement'
+    SHEETNAME = "SPColumnFileManagement"
 
     # Read only columns A (1st column) and B (2nd column) from the Excel file
-    df_SPmanagement = pd.read_excel(excel_path, sheet_name=SHEETNAME, skiprows=1, usecols="A:M")
+    df_SPmanagement = pd.read_excel(
+        excel_path, sheet_name=SHEETNAME, skiprows=1, usecols="A:M"
+    )
     df_SPmanagement = df_SPmanagement.dropna()
 
     spcolumn_filenames = df_SPmanagement["SPColumnFile"].tolist()
@@ -29,10 +31,21 @@ def get_SPRequiredData_fromExcel(excel_path: str) -> tuple:
     lst_ec = df_SPmanagement["Ec (ksi)"].tolist()
     lst_fy = df_SPmanagement["fy (ksi)"].tolist()
     lst_es = df_SPmanagement["Es (ksi)"].tolist()
-    return spcolumn_filenames,numForceCombo,forceSet, acad_paths,lst_fc,lst_ec,lst_fy,lst_es
+    return (
+        spcolumn_filenames,
+        numForceCombo,
+        forceSet,
+        acad_paths,
+        lst_fc,
+        lst_ec,
+        lst_fy,
+        lst_es,
+    )
+
 
 def main():
     None
+
 
 if __name__ == "__main__":
     main()

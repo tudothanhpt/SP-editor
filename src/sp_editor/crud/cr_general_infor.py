@@ -1,10 +1,9 @@
 from typing import Type
 
-from sqlmodel import Session, select, create_engine
+from sqlmodel import Session, create_engine
 from sqlalchemy.engine.base import Engine
 
 from sp_editor.database.models import GeneralInfor
-from sp_editor.database.database import create_db_and_tables
 
 
 def create_infor(engine: Engine, params: list[str]) -> GeneralInfor:
@@ -15,7 +14,7 @@ def create_infor(engine: Engine, params: list[str]) -> GeneralInfor:
             unit_system=u_sys,
             bar_set=b_set,
             confinement=confi,
-            section_capacity=s_capacity
+            section_capacity=s_capacity,
         )
         session.add(infor)
         session.commit()
@@ -43,7 +42,6 @@ def get_infor(engine: Engine) -> Type[GeneralInfor] | None:
     with Session(engine) as session:
         infor = session.get(GeneralInfor, 1)
         return infor
-
 
 
 if __name__ == "__main__":

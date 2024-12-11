@@ -1,11 +1,11 @@
 import pandas as pd
-from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex, QPoint
-from PySide6.QtWidgets import QTableView,QAbstractItemView
+from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex
+from PySide6.QtWidgets import QTableView, QAbstractItemView
 
 
 class PandasModelMaterial(QAbstractTableModel):
     """A model to interface a pandas DataFrame with QTableView."""
-    
+
     def __init__(self, df: pd.DataFrame = pd.DataFrame(), parent=None):
         super().__init__(parent)
         self.df = df
@@ -56,11 +56,12 @@ class PandasModelMaterial(QAbstractTableModel):
     def flags(self, index):
         """Returns the item flags for the given index."""
         return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable
-    
+
     def update_data(self, df):
         self.df = df
         self.layoutChanged.emit()
-    
+
+
 class HighlightTableView(QTableView):
     def __init__(self, parent=None):
         super().__init__(parent)

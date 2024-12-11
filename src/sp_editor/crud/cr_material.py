@@ -1,22 +1,19 @@
-import json
 import os
-import sys
-from typing import Type, Literal, Sequence
 
 import pandas as pd
 
-from sqlmodel import Session, select, SQLModel
-from sqlmodel import Field, Session, SQLModel, create_engine, text
+from sqlmodel import Session
+from sqlmodel import create_engine, text
 from typing import Optional
 from sqlalchemy.engine.base import Engine
 
 
 def set_engine(database_path: str) -> Optional[Engine]:
     """Create the SQLite database engine.
-    
+
     Args:
         database_path (str): The file path to the SQLite database.
-    
+
     Returns:
         Optional[Engine]: The created database engine, or None if the database file does not exist.
     """
@@ -42,8 +39,8 @@ def get_df_from_db(engine, table_name):
         result = session.exec(query)
         # Convert result to pandas DataFrame
         df = pd.DataFrame(result.fetchall(), columns=result.keys())
-        if 'id' in df.columns:
-            df = df.drop(columns=['id'])
+        if "id" in df.columns:
+            df = df.drop(columns=["id"])
 
     return df
 
@@ -62,8 +59,10 @@ def update_df_to_db(engine, db_table_name, df):
     """
     try:
         # Write DataFrame to SQL
-        df.to_sql(db_table_name, con=engine, if_exists='replace', index=False)
-        print(f"DataFrame successfully written to table '{db_table_name}' in the database.")
+        df.to_sql(db_table_name, con=engine, if_exists="replace", index=False)
+        print(
+            f"DataFrame successfully written to table '{db_table_name}' in the database."
+        )
 
     except Exception as e:
         print(f"An error occurred: {e}")

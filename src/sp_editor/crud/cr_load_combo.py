@@ -22,11 +22,15 @@ def create_loadComboDB(engine, df: pd.DataFrame):
     try:
         # Write DataFrame to SQL
         # Write DataFrame to SQL
-        df.to_sql(TB_UNIQUECOMBO,  # Table name
-                  con=engine,  # SQLAlchemy engine
-                  if_exists='replace',  # 'replace' if table already exists
-                  index=False)  # Do not write index as a column
-        print(f"DataFrame successfully written to table '{TB_UNIQUECOMBO}' in the database.")
+        df.to_sql(
+            TB_UNIQUECOMBO,  # Table name
+            con=engine,  # SQLAlchemy engine
+            if_exists="replace",  # 'replace' if table already exists
+            index=False,
+        )  # Do not write index as a column
+        print(
+            f"DataFrame successfully written to table '{TB_UNIQUECOMBO}' in the database."
+        )
 
     except Exception as e:
         # If an error occurs, print the error message
@@ -50,8 +54,8 @@ def create_loadComboSelectionDB(engine, df: pd.DataFrame):
         df.to_sql(
             TB_COMBOSELECTION,  # Table name
             con=engine,  # SQLAlchemy engine
-            if_exists='replace',  # 'replace' if table already exists
-            index=False  # Do not write index as a column
+            if_exists="replace",  # 'replace' if table already exists
+            index=False,  # Do not write index as a column
         )
         print(
             f"DataFrame successfully written to table '{TB_COMBOSELECTION}' in the database."
@@ -74,7 +78,7 @@ def read_loadComboDB(engine):
     # Read SQL table into a DataFrame
     df = pd.read_sql_table(
         table_name=TB_UNIQUECOMBO,  # Table name
-        con=engine  # SQLAlchemy engine
+        con=engine,  # SQLAlchemy engine
     )
 
     return df
@@ -93,7 +97,7 @@ def read_loadComboSelectionDB(engine):
     # Read SQL table into a DataFrame
     df = pd.read_sql_table(
         table_name=TB_COMBOSELECTION,  # The table to read
-        con=engine  # The SQLAlchemy engine
+        con=engine,  # The SQLAlchemy engine
     )
 
     return df  # The DataFrame containing the table data

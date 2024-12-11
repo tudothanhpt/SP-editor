@@ -1,9 +1,7 @@
 from PySide6.QtWidgets import QMenu, QMessageBox
-from PySide6.QtCore import QModelIndex, Signal
-from PySide6.QtGui import QStandardItemModel, QStandardItem, QAction
+from PySide6.QtCore import Signal
+from PySide6.QtGui import QAction
 
-import pandas as pd
-from sqlalchemy import Engine
 
 from controllers.calculation_case_modify_dialog import CalculationCaseModify_Dialog
 from crud.cr_load_case import get_calculation_case, delete_calculation_case
@@ -26,9 +24,9 @@ class TableContextMenu(QMenu):
         self.modify_dialog = None
         self.add_copy_dialog = None
         # Create actions
-        self.add_copy_action = QAction('Add Copy of Load Case', self)
-        self.modify_action = QAction('Modify/Show Load Case', self)
-        self.delete_action = QAction('Delete Load Case', self)
+        self.add_copy_action = QAction("Add Copy of Load Case", self)
+        self.modify_action = QAction("Modify/Show Load Case", self)
+        self.delete_action = QAction("Delete Load Case", self)
 
         # Connect actions to slots
         self.add_copy_action.triggered.connect(self.add_copy_row)
@@ -46,8 +44,8 @@ class TableContextMenu(QMenu):
             if indexes:
                 return indexes[0].row()
             return None
-        except Exception as e:
-            QMessageBox.warning(self.table_view, 'Warning', 'No row selected')
+        except Exception:
+            QMessageBox.warning(self.table_view, "Warning", "No row selected")
 
     def modify_row(self):
         modify = True
@@ -56,7 +54,9 @@ class TableContextMenu(QMenu):
             row += 1
             # For simplicity, we update the row with hardcoded values
             self.current_data = get_calculation_case(self.engine, row)
-            self.modify_dialog = CalculationCaseModify_Dialog(self.engine, self.path, self.current_data, row, modify)
+            self.modify_dialog = CalculationCaseModify_Dialog(
+                self.engine, self.path, self.current_data, row, modify
+            )
             self.modify_dialog.model_modify.connect(self.emit_action_modify_finished)
             self.modify_dialog.exec()
 
@@ -67,8 +67,12 @@ class TableContextMenu(QMenu):
             row += 1
             # For simplicity, we update the row with hardcoded values
             self.current_data = get_calculation_case(self.engine, row)
-            self.add_copy_dialog = CalculationCaseModify_Dialog(self.engine, self.path, self.current_data, row, modify)
-            self.add_copy_dialog.model_modify.connect(self.emit_action_add_copy_finished)
+            self.add_copy_dialog = CalculationCaseModify_Dialog(
+                self.engine, self.path, self.current_data, row, modify
+            )
+            self.add_copy_dialog.model_modify.connect(
+                self.emit_action_add_copy_finished
+            )
             self.add_copy_dialog.exec()
 
     def delete_row(self):

@@ -11,19 +11,19 @@ TB_GROUPLEVEL = str(GroupLevel.__name__).lower()
 
 
 def get_level_to_db(engine: Engine, df: DataFrame):
-    df.to_sql("level", con=engine, if_exists='replace')
+    df.to_sql("level", con=engine, if_exists="replace")
 
 
 def get_sds_to_db(engine: Engine, df: DataFrame):
-    df.to_sql("sectiondesignershape", con=engine, if_exists='replace')
+    df.to_sql("sectiondesignershape", con=engine, if_exists="replace")
 
 
 def get_pier_label_to_db(engine: Engine, df: DataFrame):
-    df.to_sql("pierlabel", con=engine, if_exists='replace')
+    df.to_sql("pierlabel", con=engine, if_exists="replace")
 
 
 def get_pier_design_force_to_db(engine: Engine, df: DataFrame):
-    df.to_sql("pierforce", con=engine, if_exists='replace')
+    df.to_sql("pierforce", con=engine, if_exists="replace")
 
 
 def get_pierlabel_with_level(engine: Engine, stories: list[str]):
@@ -73,7 +73,7 @@ def return_group_level(engine: Engine, tier_name: list[str]):
 def get_group_level(engine: Engine, empty_tier: bool = False):
     with Session(engine) as session:
         if empty_tier:
-            statement = select(GroupLevel.tier).where(GroupLevel.tier != 'None')
+            statement = select(GroupLevel.tier).where(GroupLevel.tier != "None")
         else:
             statement = select(GroupLevel.tier)
         results = session.exec(statement)
@@ -98,11 +98,15 @@ def get_level(engine: Engine):
 
 def get_level_from_group(engine: Engine, tier: str):
     with Session(engine) as session:
-        statement = select(GroupLevel.id, GroupLevel.story).where(GroupLevel.tier == tier)
+        statement = select(GroupLevel.id, GroupLevel.story).where(
+            GroupLevel.tier == tier
+        )
         results = session.exec(statement)
         level_detail = results.all()
         level_detail_sorted = sorted(level_detail, key=lambda x: x.id)
-        stories = [story for _, story in level_detail_sorted]  # Extract only the story field
+        stories = [
+            story for _, story in level_detail_sorted
+        ]  # Extract only the story field
         return stories
 
 
@@ -110,12 +114,13 @@ def read_groupDB(engine):
     # Read SQL table into a DataFrame
     df = pd.read_sql_table(
         table_name=TB_GROUPLEVEL,  # The table to read
-        con=engine  # The SQLAlchemy engine
+        con=engine,  # The SQLAlchemy engine
     )
     df = df.rename(columns={"story": "Story"})
     df = df.rename(columns={"tier": "Tier"})
     print(df)
     return df  # The DataFrame containing the table data
+
 
 # def update_tier(engine: Engine, list[Level]):
 #     with Session(engine) as session:

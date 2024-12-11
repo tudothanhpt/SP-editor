@@ -8,6 +8,7 @@ from sqlalchemy.engine import Engine
 
 # ENSURE THE 2 GIVEN DATAFRAMES' HEADERS TO BE ADDRESSED CORRECTLY FOLLOWING THE BELOW CONVENTION
 
+
 def set_units_in_etabs_model(sap_model):
     """
     Set the units in an ETABS model.
@@ -29,7 +30,9 @@ def set_units_in_etabs_model(sap_model):
         return "Error setting units."
 
 
-def create_force_filter_df(df_PierForces: pd.DataFrame, df_Tier: pd.DataFrame) -> pd.DataFrame:
+def create_force_filter_df(
+    df_PierForces: pd.DataFrame, df_Tier: pd.DataFrame
+) -> pd.DataFrame:
     """
     Merge two DataFrames on the 'Story' column, create new columns based on certain operations,
     and return the resulting DataFrame.
@@ -41,23 +44,31 @@ def create_force_filter_df(df_PierForces: pd.DataFrame, df_Tier: pd.DataFrame) -
     Returns:
     df3 (pd.DataFrame: The merged DataFrame with new columns.
     """
-    df_FilteredForces = df_PierForces.merge(df_Tier, on="Story", how='left')
-    df_FilteredForces['Tier'] = df_FilteredForces['Tier'].fillna('')
+    df_FilteredForces = df_PierForces.merge(df_Tier, on="Story", how="left")
+    df_FilteredForces["Tier"] = df_FilteredForces["Tier"].fillna("")
 
-    df_FilteredForces['ID2'] = df_FilteredForces.apply(
-        lambda row: row['Tier'] + '_' + row['Pier'] if row['Tier'] != 'None' else 'None', axis=1)
-
-    df_FilteredForces['ID3'] = (
-            df_FilteredForces["Story"] +
-            df_FilteredForces["Pier"] +
-            df_FilteredForces["Combo"] +
-            df_FilteredForces["Location"]
+    df_FilteredForces["ID2"] = df_FilteredForces.apply(
+        lambda row: row["Tier"] + "_" + row["Pier"]
+        if row["Tier"] != "None"
+        else "None",
+        axis=1,
     )
 
-    df_FilteredForces['P_SPCol'] = np.round(df_FilteredForces['P'], 0).astype(float) * (-1)
-    df_FilteredForces['Mx_SPCol'] = np.round(df_FilteredForces["M2"], 0).astype(float)
-    df_FilteredForces['My_SPCol'] = np.round(df_FilteredForces["M3"], 0).astype(float)
-    df_FilteredForces = df_FilteredForces[['ID2', "Tier", "Pier", 'ID3', 'P_SPCol', 'Mx_SPCol', 'My_SPCol']]
+    df_FilteredForces["ID3"] = (
+        df_FilteredForces["Story"]
+        + df_FilteredForces["Pier"]
+        + df_FilteredForces["Combo"]
+        + df_FilteredForces["Location"]
+    )
+
+    df_FilteredForces["P_SPCol"] = np.round(df_FilteredForces["P"], 0).astype(float) * (
+        -1
+    )
+    df_FilteredForces["Mx_SPCol"] = np.round(df_FilteredForces["M2"], 0).astype(float)
+    df_FilteredForces["My_SPCol"] = np.round(df_FilteredForces["M3"], 0).astype(float)
+    df_FilteredForces = df_FilteredForces[
+        ["ID2", "Tier", "Pier", "ID3", "P_SPCol", "Mx_SPCol", "My_SPCol"]
+    ]
     return df_FilteredForces
 
 
@@ -76,11 +87,11 @@ def force_filter_SPformat(df3: pd.DataFrame, group_value: str) -> tuple:
     """
 
     # Filter rows based on specific conditions
-    filter_cond = (df3["ID2"] == group_value)
-    filter_df = df3.loc[filter_cond, ['P_SPCol', 'Mx_SPCol', 'My_SPCol']]
+    filter_cond = df3["ID2"] == group_value
+    filter_df = df3.loc[filter_cond, ["P_SPCol", "Mx_SPCol", "My_SPCol"]]
 
     # Create the 'Combined_Col' column by concatenating 'P_SPCol', 'Mx_SPCol', 'My_SPCol'
-    filter_df['Combined_Col'] = filter_df.apply(
+    filter_df["Combined_Col"] = filter_df.apply(
         lambda row: f"{row['P_SPCol']},{row['Mx_SPCol']},{row['My_SPCol']}", axis=1
     )
 
@@ -88,10 +99,10 @@ def force_filter_SPformat(df3: pd.DataFrame, group_value: str) -> tuple:
     total_rows = filter_df.shape[0]
 
     # Convert the 'Combined_Col' column values to a list
-    combined_values = filter_df['Combined_Col'].to_list()
+    combined_values = filter_df["Combined_Col"].to_list()
 
     # Join the list into a single string with each value on a new line
-    load_string = '\n'.join(combined_values)
+    load_string = "\n".join(combined_values)
 
     # Create the result string
     result_string = f"{total_rows}\n{load_string}"
@@ -106,7 +117,7 @@ def get_pierforces_CTI_todb(engine: Engine):
     df_FilteredForces = create_force_filter_df(df_PierForces, df_Tier)
 
     list_PierInEachTier = df_FilteredForces["ID2"].unique().tolist()
-    list_PierInEachTier = [item for item in list_PierInEachTier if item != 'None']
+    list_PierInEachTier = [item for item in list_PierInEachTier if item != "None"]
 
     lst_result_string = []
     lst_total_rows = []
@@ -114,17 +125,26 @@ def get_pierforces_CTI_todb(engine: Engine):
     lst_pier = []
 
     for PierInEachTier in list_PierInEachTier:
-        result_string, total_rows = force_filter_SPformat(df_FilteredForces, PierInEachTier)
+        result_string, total_rows = force_filter_SPformat(
+            df_FilteredForces, PierInEachTier
+        )
         tier, pier = PierInEachTier.split("_")
         lst_tier.append(tier)
         lst_pier.append(pier)
         lst_result_string.append(result_string)
         lst_total_rows.append(total_rows)
 
-    dict_pierforces_cti_db = {"ID2": list_PierInEachTier, "Tier": lst_tier, "Pier": lst_pier,
-                              "filteredForces": lst_result_string, "totalCombos": lst_total_rows}
+    dict_pierforces_cti_db = {
+        "ID2": list_PierInEachTier,
+        "Tier": lst_tier,
+        "Pier": lst_pier,
+        "filteredForces": lst_result_string,
+        "totalCombos": lst_total_rows,
+    }
     df_pierforces_cti_db = pd.DataFrame(dict_pierforces_cti_db)
-    df_pierforces_cti_db.to_sql("pierforces_cti", con=engine, if_exists='replace', index=False)
+    df_pierforces_cti_db.to_sql(
+        "pierforces_cti", con=engine, if_exists="replace", index=False
+    )
 
 
 if __name__ == "__main__":

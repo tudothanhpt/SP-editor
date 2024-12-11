@@ -2,11 +2,14 @@ import sys
 from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
-import pandas as pd
 
-from sp_editor.crud.cr_mainwindow import update_path_after_creation, fetch_data_from_db
+from sp_editor.crud.cr_mainwindow import update_path_after_creation
 from sp_editor.widgets.cti_file_making_dialog_ui import Ui_cti_making_dialog
-from sp_editor.core.cti_data_merging import read_summaryCTI_DB, create_cti_summary_df, CTI_creation_from_list
+from sp_editor.core.cti_data_merging import (
+    read_summaryCTI_DB,
+    create_cti_summary_df,
+    CTI_creation_from_list,
+)
 
 from sqlmodel import create_engine
 from typing import *
@@ -27,7 +30,7 @@ class CTIMakingDialog(qtw.QDialog, Ui_cti_making_dialog):
 
             self.df_summaryCTI = read_summaryCTI_DB(engine)
             items = self.df_summaryCTI["ID2"].unique().tolist()
-        except Exception as e:
+        except Exception:
             items = []
 
         self.model = self.create_model(items)
@@ -61,11 +64,13 @@ class CTIMakingDialog(qtw.QDialog, Ui_cti_making_dialog):
             update_path_after_creation(self.engine)
             self.cti_create.emit()
 
-            message = "CTI file created and stored:" + '\n'
+            message = "CTI file created and stored:" + "\n"
             blank = "---------------------------------------------"
 
-            text_with_message = '\n'.join([message + '\n' + path + '\n' + blank for path in lst_CTIfile_fullpath])
-            self.t_action.setText(text_with_message + '\n')
+            text_with_message = "\n".join(
+                [message + "\n" + path + "\n" + blank for path in lst_CTIfile_fullpath]
+            )
+            self.t_action.setText(text_with_message + "\n")
 
     def on_pb_selectall_clicked(self):
         model = self.lview_availCTI.model()
