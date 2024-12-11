@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'about_dialog.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.0
+## Created by: Qt User Interface Compiler version 6.8.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -18,6 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QDialog, QFormLayout, QFrame,
     QGridLayout, QGroupBox, QLabel, QPushButton,
     QSizePolicy, QSpacerItem, QWidget)
+import icons_rc
 
 class Ui_d_About(object):
     def setupUi(self, d_About):
@@ -69,7 +70,7 @@ class Ui_d_About(object):
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(10, 20, 101, 81))
         self.label.setTextFormat(Qt.TextFormat.PlainText)
-        self.label.setPixmap(QPixmap(u"../../../icons/SP-EDITOR_PNG.png"))
+        self.label.setPixmap(QPixmap(u":/image and logo/SP-EDITOR_PNG.png"))
         self.label.setScaledContents(True)
         self.label_2 = QLabel(self.frame)
         self.label_2.setObjectName(u"label_2")

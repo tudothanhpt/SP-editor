@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="Main"/>
+  <qresource prefix="image and logo">
+    <file>icon_spe.png</file>
+    <file>SP-EDITOR_PNG.png</file>
+  </qresource>
   <qresource prefix="Btn">
     <file>selection.png</file>
     <file>material_icon.png</file>

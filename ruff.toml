@@ -29,6 +29,7 @@ exclude = [
     "icons",
     "widgets",
     "tests",
+    "icons_rc.py"
 ]
 
 # Same as Black.

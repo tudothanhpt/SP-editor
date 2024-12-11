@@ -129,7 +129,7 @@
           <enum>Qt::TextFormat::PlainText</enum>
          </property>
          <property name="pixmap">
-          <pixmap>../../../icons/SP-EDITOR_PNG.png</pixmap>
+          <pixmap resource="../../../icons/icons.qrc">:/image and logo/SP-EDITOR_PNG.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -295,6 +295,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../icons/icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
