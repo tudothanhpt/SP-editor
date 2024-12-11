@@ -4,28 +4,24 @@ Empowering Structural Engineers with Seamless Communication Between SpColumn and
 
 ## Installation
 
-This lib is managed by UV 
+This lib is managed by [UV](/docs.astral.sh/uv/#highlights) to manage its dependency and package
 
-After checkout, use the ``pyproject.toml``
+Please install UV in your local machine and run the following command to make use of the ``pyproject.toml``
 to install the needed development components.
 
 ```bash
-python -m pip install -e .
+uv sync
 ```
 
-Or to install via ``requirements-dev.txt``
+If you want to add package to the project
 
 ```bash
-python -m pip install -r requirements-dev.txt
+uv add 'package name'
 ```
-Please add any installed packages to ``pyproject.toml``in **_dependencies[]_** section
-then re-run .
-
-```bash
- pip-compile --extra=dev --output-file=requirements-dev.txt
-```
-
+Please take a look at the uv command so we can make it through on the same procedure.
+[UV documentation](/docs.astral.sh/uv/concepts/projects/)
 Please create your own branch and then merge change with ``main`` branch
+
 ## What is this Software about?
 
 Sp-editor covers the following exciting features:
@@ -37,7 +33,8 @@ Sp-editor covers the following exciting features:
 * Provide complete SpColumn file for detailed design at later phases(ie., 100DD or CD).
 
 ## Demonstration
-
+We got a 2 minutes video demo here in the Youtube [link](/www.youtube.com/watch?v=ujFrALC1rHs) and user interface of the
+software ![image infor](src/sp_editor/example/user_interface.png)
 ## Testing
 
 ## Documentation
