@@ -111,7 +111,7 @@ class Ui_d_material(object):
 
     def retranslateUi(self, d_material):
         _translate = QtCore.QCoreApplication.translate
-        d_material.setWindowTitle(_translate("d_material", "Material Properties"))
+        d_material.setWindowTitle(_translate("d_material", "Materials Properties"))
         self.pb_load.setText(_translate("d_material", "Load Setting"))
         self.pb_delete.setText(_translate("d_material", "Delete"))
         self.lb_name.setText(_translate("d_material", "Name"))

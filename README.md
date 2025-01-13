@@ -13,9 +13,6 @@ to install the needed development components.
 uv sync
 ```
 
-then start the main src/sp_editor/main.py file to run the application
-
-
 If you want to add package to the project
 
 ```bash

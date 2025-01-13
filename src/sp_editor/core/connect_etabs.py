@@ -4,7 +4,7 @@ import sys
 
 from PySide6 import QtWidgets as qtw
 from sqlalchemy.engine.base import Engine
-from sp_editor.crud.cr_general_infor import get_infor
+# from sp_editor.crud.cr_general_infor import get_infor
 
 import comtypes.client
 import pandas as pd

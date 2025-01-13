@@ -328,7 +328,7 @@ class Ui_mw_Main(object):
 #if QT_CONFIG(shortcut)
         self.a_Print.setShortcut(QCoreApplication.translate("mw_Main", u"Ctrl+P", None))
 #endif // QT_CONFIG(shortcut)
-        self.a_MaterialProp.setText(QCoreApplication.translate("mw_Main", u"&Material Properties", None))
+        self.a_MaterialProp.setText(QCoreApplication.translate("mw_Main", u"&Materials Properties", None))
         self.a_BarSet.setText(QCoreApplication.translate("mw_Main", u"Bar Sets", None))
         self.actionDesign_Combos_Selection.setText(QCoreApplication.translate("mw_Main", u"Design Combos Selection", None))
         self.label.setText(QCoreApplication.translate("mw_Main", u"Group", None))

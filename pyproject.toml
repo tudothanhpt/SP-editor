@@ -1,27 +1,25 @@
 [project]
 name = "sp-editor"
 version = "0.1.0"
-description = "A shear wall design software that make connection between ETABS and SpColumn"
+description = "Add your description here"
 readme = "README.md"
 authors = [
-    { name = "Tado", email = "dothanhtupt@gmail.com" },
-    { name = "Bui Mark", email = "abui@thorntontomasetti.com" },
-
+    { name = "Saitoh Chido", email = "dothanhtupt@gmail.com" }
 ]
-requires-python = ">=3.10, <3.13"
+requires-python = ">=3.12, <3.13"
 dependencies = [
     "comtypes==1.1.14",
-    "ezdxf==1.3.4",
-    "matplotlib==3.9.0",
-    "natsort==8.4.0",
-    "openpyxl==3.1.2",
-    "pandas==2.2.3",
-    "pyinstaller==6.6.0",
-    "pyqtgraph==0.13.7",
-    "pyside6==6.8.0",
-    "seaborn==0.13.2",
-    "shapely==2.0.6",
-    "sqlmodel==0.0.22",
+    "dependency-injector>=4.44.0",
+    "ezdxf>=1.3.5",
+    "matplotlib>=3.10.0",
+    "natsort>=8.4.0",
+    "openpyxl>=3.1.5",
+    "pandas>=2.2.3",
+    "pyqtgraph>=0.13.7",
+    "pyside6==6.8.1",
+    "seaborn>=0.13.2",
+    "shapely>=2.0.6",
+    "sqlmodel>=0.0.22",
 ]
 
 [build-system]
@@ -31,5 +29,6 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "pytest>=8.3.4",
-    "ruff>=0.8.2",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.8.4",
 ]
