@@ -1,0 +1,54 @@
+{
+  "conversion_factors": [
+    {
+      "from": "in",
+      "to": "m",
+      "factor": 0.0254
+    },
+    {
+      "from": "ft",
+      "to": "m",
+      "factor": 0.3048
+    },
+    {
+      "from": "lb",
+      "to": "N",
+      "factor": 4.448222
+    },
+    {
+      "from": "kip",
+      "to": "kN",
+      "factor": 4.448222
+    },
+    {
+      "from": "plf",
+      "to": "N/m",
+      "factor": 14.593904
+    },
+    {
+      "from": "psi",
+      "to": "kPa",
+      "factor": 6.894757
+    },
+    {
+      "from": "ksi",
+      "to": "MPa",
+      "factor": 6.894757
+    },
+    {
+      "from": "psf",
+      "to": "N/m^2",
+      "factor": 47.88026
+    },
+    {
+      "from": "pcf",
+      "to": "kg/m^3",
+      "factor": 16.01846
+    },
+    {
+      "from": "ft-kips",
+      "to": "kN×m",
+      "factor": 1.355818
+    }
+  ]
+}

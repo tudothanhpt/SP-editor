@@ -536,7 +536,7 @@ class Ui_calculationCase_dialog(object):
         self.groupBox_3.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Level Information", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Folder Name", None))
         self.checkb_userPierName.setText(QCoreApplication.translate("calculationCase_dialog", u"Use Pier Name", None))
-        self.groupBox_6.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Material", None))
+        self.groupBox_6.setTitle(QCoreApplication.translate("calculationCase_dialog", u"Materials", None))
         self.label_23.setText(QCoreApplication.translate("calculationCase_dialog", u"Ec", None))
         self.lb_Ec.setText("")
         self.label_25.setText(QCoreApplication.translate("calculationCase_dialog", u"Es", None))

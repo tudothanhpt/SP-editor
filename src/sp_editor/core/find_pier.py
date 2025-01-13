@@ -25,12 +25,12 @@ def restructure_sdshapeDF(df: pd.DataFrame) -> LST_PIERSDSHAPE:
     list_SD: LST_PIERSDSHAPE = []
 
     # Group the DataFrame by 'Section Name'
-    for tier, group in df.groupby("SectionName"):
+    for tier, group in df.groupby("sectionName"):
         shapes: List[POLYLINE] = []
         # Further group each tier by 'Shape Name'
-        for shape, sub_group in group.groupby("ShapeName"):
+        for shape, sub_group in group.groupby("shapeName"):
             # Extract the coordinates for each shape
-            temp_coordinates = sub_group[["X", "Y"]].values.tolist()
+            temp_coordinates = sub_group[["x", "y"]].values.tolist()
 
             # Convert list of lists to list of tuples
             coordinates: POLYLINE = [tuple(coord) for coord in temp_coordinates]
