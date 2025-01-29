@@ -2,6 +2,7 @@ from dependency_injector import containers, providers
 
 from sp_editor.containers.service_container import ServiceContainer
 from sp_editor.controllers.barSet_controller import BarSetController
+from sp_editor.controllers.calculationCase_controller import CalculationCaseController
 from sp_editor.controllers.generalInfor_controller import GeneralInforController
 from sp_editor.controllers.groupLevel_controller import GroupLevelController
 from sp_editor.controllers.mainWindow_controller import MainWindowController
@@ -53,6 +54,10 @@ class AppContainer(containers.DeclarativeContainer):
         GroupLevelController, service_container.groupLevel_service
     )
 
+    calculationCase_controller = providers.Factory(
+        CalculationCaseController, service_container.calculationCase_service
+    )
+
     # main window provides function
     mainWindow_controller = providers.Factory(
         MainWindowController,
@@ -63,4 +68,5 @@ class AppContainer(containers.DeclarativeContainer):
         barset_controller,
         material_controller,
         groupLevel_controller,
+        calculationCase_controller,
     )

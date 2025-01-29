@@ -1,6 +1,7 @@
 from dependency_injector import containers, providers
 
 from sp_editor.repositories.barSet_repository import BarsetRepository
+from sp_editor.repositories.calculationCase_repository import CalculationCaseRepository
 from sp_editor.repositories.etabsLoadCombos_repository import EtabsLoadCombosRepository
 from sp_editor.repositories.etabsPierLabel_repository import EtabsPierLabelRepository
 from sp_editor.repositories.etabsStory_repository import EtabsStoryRepository
@@ -12,6 +13,7 @@ from sp_editor.repositories.material_repository import MaterialRepository
 
 from sp_editor.services import file_service
 from sp_editor.services.barset_service import BarsetService
+from sp_editor.services.calculationCase_service import CalculationCaseService
 from sp_editor.services.etabsConnection_service import EtabsConnectionService
 from sp_editor.services.etabsDataImport_service import EtabsDataImportService
 from sp_editor.services.generalInfor_service import GeneralInforService
@@ -91,3 +93,20 @@ class ServiceContainer(containers.DeclarativeContainer):
         etabsSectionDesignerShape_repository=etabsSectionDesignerShape_repository,
         etabsLoadCombos_repository=etabsLoadCombos_repository,
     )
+
+    # calculation case
+    calculationCase_repository = providers.Factory(
+        CalculationCaseRepository, session_factory=file_service.provided.session
+    )
+    calculationCase_service = providers.Factory(
+        CalculationCaseService,
+        generalInfor_repository=generalInfor_repository,
+        etabsStory_repository=etabsStory_repository,
+        etabsSectionDesignerShape_repository=etabsSectionDesignerShape_repository,
+        material_repository=material_repository,
+        barset_repository=barset_repository,
+        calculationCase_repository=calculationCase_repository,
+
+    )
+
+

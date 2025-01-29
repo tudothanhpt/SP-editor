@@ -1,7 +1,7 @@
 from contextlib import AbstractContextManager
 from typing import Callable, Optional, List, Sequence, Any
 from sqlmodel import select, Session
-from sqlmodel.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError
 from sp_editor.models.models import CalculationCase
 
 

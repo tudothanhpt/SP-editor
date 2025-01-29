@@ -129,3 +129,19 @@ class EtabsStoryRepository:
                 print(f"Error removing tier: {e}")
                 session.rollback()
                 return 0
+
+    def get_distinct_tiers(self) -> List[str]:
+        """Retrieve distinct tier names directly from the database."""
+        with self.session_factory() as session:
+            result = session.exec(select(Level.tier).distinct()).all()
+            return [tier for tier in result if tier]  # Filter out None values
+
+    def get_levels_by_tier(self, tier_name: str) -> List[str]:
+        """
+        Retrieve all levels (stories) for a given tier.
+        :param tier_name: The name of the tier.
+        :return: List of level (story) names.
+        """
+        with self.session_factory() as session:
+            result = session.exec(select(Level.story).where(Level.tier == tier_name)).all()
+            return [story for story in result if story]  # Ensure story is not None

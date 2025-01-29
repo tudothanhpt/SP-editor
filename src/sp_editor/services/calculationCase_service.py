@@ -1,5 +1,7 @@
 from typing import Type
 from sqlmodel import SQLModel
+
+from sp_editor.models.models import MaterialConcrete, MaterialRebar
 from sp_editor.repositories.barSet_repository import BarsetRepository
 from sp_editor.repositories.calculationCase_repository import CalculationCaseRepository
 from sp_editor.repositories.etabsSectionDesignerShape_repository import EtabsSectionDesignerShapeRepository
@@ -10,13 +12,13 @@ from sp_editor.repositories.material_repository import MaterialRepository
 
 class CalculationCaseService:
     def __init__(
-        self,
-        generalInfor_repository: GeneralInforRepository,
-        etabsStory_repository: EtabsStoryRepository,
-        etabsSectionDesignerShape_repository: EtabsSectionDesignerShapeRepository,
-        material_repository: MaterialRepository,
-        barset_repository: BarsetRepository,
-        calculationCase_repository: CalculationCaseRepository,
+            self,
+            generalInfor_repository: GeneralInforRepository,
+            etabsStory_repository: EtabsStoryRepository,
+            etabsSectionDesignerShape_repository: EtabsSectionDesignerShapeRepository,
+            material_repository: MaterialRepository,
+            barset_repository: BarsetRepository,
+            calculationCase_repository: CalculationCaseRepository,
     ):
         self.generalInfor_repository = generalInfor_repository
         self.etabsStory_repository = etabsStory_repository
@@ -34,15 +36,25 @@ class CalculationCaseService:
         except Exception as e:
             raise RuntimeError(f"Error fetching current unit: {e}")
 
-    def get_sds_section(self):
+    def get_all_sds_sections(self):
         try:
-            return self.etabSectionDesignerShape_repository.get_all_sds()
+            return self.etabSectionDesignerShape_repository.get_distinct_section_names()
         except Exception as e:
             raise RuntimeError(f"Error fetching SDS sections: {e}")
 
-    def get_material(self, model_class: Type[SQLModel]):
+    def get_all_material_names(self):
         try:
-            return self.material_repository.get_all(model_class)
+            """
+                Retrieve a list of all material names from both Concrete and Rebar tables.
+                :return: List of material names.
+                """
+            concrete_materials = self.material_repository.get_all(MaterialConcrete)
+            rebar_materials = self.material_repository.get_all(MaterialRebar)
+
+            concrete_names = [mat.name for mat in concrete_materials if mat.name]
+            rebar_names = [mat.name for mat in rebar_materials if mat.name]
+
+            return concrete_names, rebar_names
         except Exception as e:
             raise RuntimeError(f"Error fetching materials: {e}")
 

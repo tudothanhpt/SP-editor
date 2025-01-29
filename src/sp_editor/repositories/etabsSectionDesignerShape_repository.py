@@ -115,6 +115,12 @@ class EtabsSectionDesignerShapeRepository:
         with self.session_factory() as session:
             return session.exec(select(SectionDesignerShape)).all()
 
+    def get_distinct_section_names(self) -> List[str]:
+        """Retrieve distinct section names directly from the database."""
+        with self.session_factory() as session:
+            result = session.exec(select(SectionDesignerShape.sectionName).distinct()).all()
+            return [name for name in result if name]  # Filter out None values
+
     def add(self, params: list):
         """
         Adds a new SectionDesignerShape record to the database.

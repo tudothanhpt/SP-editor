@@ -44,3 +44,16 @@ class GroupLevelService:
         """Retrieve all distinct tier names."""
         levels = self.etabsStory_repository.get_all_levels()
         return list(set(level.tier for level in levels if level.tier))
+
+    def get_all_distinct_tiers(self):
+        """Get unique tier names from database"""
+        return self.etabsStory_repository.get_distinct_tiers()
+
+    def get_levels_by_tier(self, tier_name):
+        """
+            Retrieve a list of level (story) names for the given tier.
+            :param tier_name: The tier name to filter levels by.
+            :return: List of level names.
+            """
+        return self.etabsStory_repository.get_levels_by_tier(tier_name)
+
