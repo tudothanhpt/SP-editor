@@ -9,19 +9,22 @@ from sp_editor.core.connect_etabs import show_warning
 from sp_editor.core.global_variables import UnitSystem
 from sp_editor.services.calculationCase_service import CalculationCaseService
 from sp_editor.services.groupLevel_service import GroupLevelService
+from sp_editor.services.rebar_service import RebarService
 from sp_editor.widgets.load_calculation_case import Ui_calculationCase_dialog
 
 
 class CalculationCaseController(qtw.QDialog, Ui_calculationCase_dialog):
-    def __init__(self, calculationCase_service: CalculationCaseService,
+    def __init__(self, rebar_service: RebarService,
+                 calculationCase_service: CalculationCaseService,
                  groupLevel_service: GroupLevelService):
         super().__init__()
 
-        self.level_list_model = None
-        self.level_list = None
         self.calculationCase_service = calculationCase_service
         self.groupLevel_service = groupLevel_service
+        self.rebar_service = rebar_service
 
+        self.level_list_model = None
+        self.level_list = None
         self.groups_list = None
         self.sds_list = None
 
@@ -85,48 +88,65 @@ class CalculationCaseController(qtw.QDialog, Ui_calculationCase_dialog):
         self.cb_steel.clear()
         self.cb_steel.addItems(steel_list)
 
-    def update_data_from_concrete(self, concrete_name):
-        # TODO: continue from here
-        concrete_fc, concrete_Ec = self.calculationCase_service.get_concrete_properties(concrete_name)
-        if concrete_fc is None or concrete_Ec is None:
-            qtw.QMessageBox.critical(self, "Error", "Failed to retrieve concrete properties.")
-        else:
-            self.material_fc, self.material_Ec = concrete_fc, concrete_Ec
-            self.lb_fc.setText(str(self.material_fc))
-            self.lb_Ec.setText(str(self.material_Ec))
+    def update_material_properties(self, material_type: str, material_name: str):
+        """
+        Update material properties (Concrete or Steel) based on the selected material name.
 
-    def update_data_from_steel(self, steel_name):
-        steel_fy, steel_Es = self.calculationCase_service.get_steel_properties(steel_name)
-        if steel_fy is None or steel_Es is None:
-            qtw.QMessageBox.critical(self, "Error", "Failed to retrieve steel properties.")
+        :param material_type: Type of material ("concrete" or "steel").
+        :param material_name: Selected material name.
+        """
+        if material_type == "concrete":
+            concrete_fc, concrete_Ec = self.calculationCase_service.get_concrete_properties(material_name)
+
+            if concrete_fc is None or concrete_Ec is None:
+                qtw.QMessageBox.critical(self, "Error", "Failed to retrieve concrete properties.")
+            else:
+                self.lb_fc.setText(str(concrete_fc))
+                self.lb_Ec.setText(str(concrete_Ec))
+
+        elif material_type == "steel":
+            steel_fy, steel_Es = self.calculationCase_service.get_steel_properties(material_name)
+
+            if steel_fy is None or steel_Es is None:
+                qtw.QMessageBox.critical(self, "Error", "Failed to retrieve steel properties.")
+            else:
+                self.lb_fy.setText(str(steel_fy))
+                self.lb_Es.setText(str(steel_Es))
+
         else:
-            self.material_fy, self.material_Es = steel_fy, steel_Es
-            self.lb_fy.setText(str(self.material_fy))
-            self.lb_Es.setText(str(self.material_Es))
+            qtw.QMessageBox.critical(self, "Error", "Invalid material type.")
 
     def update_rebar_size(self):
-        self.rebar_list = self.calculationCase_service.get_rebar_sizes()
+        rebar_list = self.calculationCase_service.get_rebar_size_name()
         self.cb_barSize.clear()
-        self.cb_barSize.addItems(self.rebar_list)
+        self.cb_barSize.addItems(rebar_list)
 
     def update_pier_infor(self):
-        self.piers_list = self.calculationCase_service.get_piers_with_levels(self.level_list)
-        unique_piers = self.get_unique_items(self.piers_list)
+        unique_piers = self.calculationCase_service.get_unique_pier_names_by_tier(self.level_list)
         self.cb_pierdata.clear()
         self.cb_pierdata.addItems(unique_piers)
 
     def make_section(self):
         try:
             self.check_input()
-            self.bar_area = self.calculationCase_service.get_rebar_area(self.cb_barSize.currentText())
-            self.concrete_Ag, self.sds_total_As, self.rho = self.calculationCase_service.get_section_properties(
+            cover = self.le_cover.text()
+            spacing = self.le_spacing.text()
+            SDname = self.cb_sectionDesignerShape.currentText()
+            # get bar area from selected bar number
+            bar_area = self.calculationCase_service.get_rebar_area_by_size(self.cb_barSize.currentText())
+            # get total rebar and rebar str for plotting
+            total_rebar, rebar_str = self.rebar_service.calculate_rebar_coordinates(cover, bar_area, spacing, SDname)
+            # calling plotting function to display shape
+
+            # TODO: Section desinger shape and total_rebar to calculate this
+            concrete_Ag, sds_total_As, rho = self.calculationCase_service.get_SDS_properties(
                 self.cb_sectionDesignerShape.currentText()
             )
 
-            self.lb_quantities.setText(str(self.sds_total_As))
-            self.lb_As.setText(str(self.sds_total_As))
-            self.lb_Ag.setText(str(self.concrete_Ag))
-            self.lb_Rho.setText(str(self.rho))
+            self.lb_quantities.setText(str(sds_total_As))
+            self.lb_As.setText(str(sds_total_As))
+            self.lb_Ag.setText(str(concrete_Ag))
+            self.lb_Rho.setText(str(rho))
 
         except ValueError as ve:
             show_warning(f"ValueError in make_section: {ve}")

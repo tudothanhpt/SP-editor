@@ -1,6 +1,6 @@
 from sqlmodel import Session, select, SQLModel, delete
 from contextlib import AbstractContextManager
-from typing import Callable, Sequence, Type
+from typing import Callable, Sequence, Type, Optional
 
 
 class MaterialRepository:
@@ -64,6 +64,17 @@ class MaterialRepository:
         """
         with self.session_factory() as session:
             return session.exec(select(model_class)).all()
+
+    def get_by_name(self, model_class: Type[SQLModel], name: str) -> Optional[SQLModel]:
+        """
+        Retrieve a record by name from the given model class.
+
+        :param model_class: The SQLModel class to query.
+        :param name: The name of the record to retrieve.
+        :return: A single model instance or None if not found.
+        """
+        with self.session_factory() as session:
+            return session.exec(select(model_class).where(model_class.name == name)).first()
 
     def import_data(self, model_class: Type[SQLModel], data: list[dict]):
         """

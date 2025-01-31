@@ -2,9 +2,9 @@ from contextlib import AbstractContextManager
 from typing import Callable
 
 import pandas as pd
-from sqlmodel import Session, delete
+from sqlmodel import Session, delete, select
 
-from sp_editor.models.models import PierLabel
+from sp_editor.models.models import PierLabel, Level
 
 
 class EtabsPierLabelRepository:
@@ -58,3 +58,29 @@ class EtabsPierLabelRepository:
             # Use bulk_save_objects for faster insertions
             session.bulk_save_objects(pier_label_objects)
             session.commit()
+
+    def get_unique_pier_names_by_tier(self, tier_name: str) -> List[str]:
+        """
+        Retrieve unique pier names for a given tier name.
+
+        :param tier_name: The name of the tier.
+        :return: A list of unique pier names.
+        """
+        with self.session_factory() as session:
+            # Get all levels associated with the given tier name
+            levels = session.exec(select(Level).where(Level.tier == tier_name)).all()
+
+            # Extract the story names from the levels
+            story_names = [level.story for level in levels]
+
+            if not story_names:
+                return []  # Return empty list if no levels found for the tier
+
+            # Get all pier labels where the story is in the filtered stories
+            pier_labels = session.exec(
+                select(PierLabel.piername)
+                .where(PierLabel.story.in_(story_names))
+                .distinct()
+            ).all()
+
+            return [pier.piername for pier in pier_labels if pier.piername]

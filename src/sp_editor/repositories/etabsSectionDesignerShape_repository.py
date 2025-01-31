@@ -121,6 +121,14 @@ class EtabsSectionDesignerShapeRepository:
             result = session.exec(select(SectionDesignerShape.sectionName).distinct()).all()
             return [name for name in result if name]  # Filter out None values
 
+    def read_sds_db(self) -> pd.DataFrame:
+        """
+        Reads the SDS database table and returns a DataFrame.
+        """
+        with self.session_factory() as session:
+            query = session.exec(select(SectionDesignerShape)).all()
+            df = pd.DataFrame([shape.dict() for shape in query])  # Convert SQLModel objects to DataFrame
+        return df
     def add(self, params: list):
         """
         Adds a new SectionDesignerShape record to the database.

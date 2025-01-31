@@ -1,9 +1,10 @@
-from typing import Type
+from typing import Type, Optional, Tuple, List
 from sqlmodel import SQLModel
 
 from sp_editor.models.models import MaterialConcrete, MaterialRebar
 from sp_editor.repositories.barSet_repository import BarsetRepository
 from sp_editor.repositories.calculationCase_repository import CalculationCaseRepository
+from sp_editor.repositories.etabsPierLabel_repository import EtabsPierLabelRepository
 from sp_editor.repositories.etabsSectionDesignerShape_repository import EtabsSectionDesignerShapeRepository
 from sp_editor.repositories.etabsStory_repository import EtabsStoryRepository
 from sp_editor.repositories.generalInfor_repository import GeneralInforRepository
@@ -18,6 +19,7 @@ class CalculationCaseService:
             etabsSectionDesignerShape_repository: EtabsSectionDesignerShapeRepository,
             material_repository: MaterialRepository,
             barset_repository: BarsetRepository,
+            etabsPierLabel_repository: EtabsPierLabelRepository,
             calculationCase_repository: CalculationCaseRepository,
     ):
         self.generalInfor_repository = generalInfor_repository
@@ -25,6 +27,7 @@ class CalculationCaseService:
         self.etabSectionDesignerShape_repository = etabsSectionDesignerShape_repository
         self.material_repository = material_repository
         self.barset_repository = barset_repository
+        self.etabsPierLabel_repository = etabsPierLabel_repository
         self.calculationCase_repository = calculationCase_repository
 
     def get_current_unit(self):
@@ -58,6 +61,36 @@ class CalculationCaseService:
         except Exception as e:
             raise RuntimeError(f"Error fetching materials: {e}")
 
+    def get_concrete_properties(self, concrete_name: str) -> Optional[Tuple[float, float]]:
+        """
+        Retrieve concrete properties (fc, Ec) by name.
+
+        :param concrete_name: The name of the concrete material.
+        :return: A tuple (fc, Ec) or None if not found.
+        """
+        try:
+            concrete = self.material_repository.get_by_name(MaterialConcrete, concrete_name)
+            if concrete:
+                return concrete.fc, concrete.Ec
+            return None
+        except Exception as e:
+            raise RuntimeError(f"Error fetching concrete properties: {e}")
+
+    def get_steel_properties(self, steel_name: str) -> Optional[Tuple[float, float]]:
+        """
+        Retrieve steel properties (fy, Es) by name.
+
+        :param steel_name: The name of the steel material.
+        :return: A tuple (fy, Es) or None if not found.
+        """
+        try:
+            steel = self.material_repository.get_by_name(MaterialRebar, steel_name)
+            if steel:
+                return steel.fy, steel.Es
+            return None
+        except Exception as e:
+            raise RuntimeError(f"Error fetching steel properties: {e}")
+
     def get_rebar_size_name(self):
         try:
             return self.barset_repository.get_all_barset_name()
@@ -72,6 +105,14 @@ class CalculationCaseService:
             return result
         except Exception as e:
             raise RuntimeError(f"Error fetching rebar area for size {bar_size}: {e}")
+
+    def get_unique_pier_names_by_tier(self, tier_name: str) -> List[str]:
+        """get list of unique pier label name based on tier name"""
+        return self.etabsPierLabel_repository.get_unique_pier_names_by_tier(tier_name)
+
+    def get_SDS_properties(self, param):
+        # TODO: get properties from section designer shape ( Ag, As, rho)
+        pass
 
     def create_calculation_case(self, params):
         try:

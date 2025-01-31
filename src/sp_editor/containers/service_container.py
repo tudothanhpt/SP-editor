@@ -19,6 +19,7 @@ from sp_editor.services.etabsDataImport_service import EtabsDataImportService
 from sp_editor.services.generalInfor_service import GeneralInforService
 from sp_editor.services.groupLevel_service import GroupLevelService
 from sp_editor.services.material_service import MaterialService
+from sp_editor.services.rebar_service import RebarService
 
 
 class ServiceContainer(containers.DeclarativeContainer):
@@ -94,6 +95,13 @@ class ServiceContainer(containers.DeclarativeContainer):
         etabsLoadCombos_repository=etabsLoadCombos_repository,
     )
 
+    # rebar service with sds shape repository
+    rebar_service = providers.Factory(
+        RebarService,
+        etabsSectionDesignerShape_repository=etabsSectionDesignerShape_repository,
+
+    )
+
     # calculation case
     calculationCase_repository = providers.Factory(
         CalculationCaseRepository, session_factory=file_service.provided.session
@@ -105,6 +113,7 @@ class ServiceContainer(containers.DeclarativeContainer):
         etabsSectionDesignerShape_repository=etabsSectionDesignerShape_repository,
         material_repository=material_repository,
         barset_repository=barset_repository,
+        etabsPierLabel_repository=etabsPierLabel_repository,
         calculationCase_repository=calculationCase_repository,
 
     )
