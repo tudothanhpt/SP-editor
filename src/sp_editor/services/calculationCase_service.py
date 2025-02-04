@@ -30,6 +30,15 @@ class CalculationCaseService:
         self.etabsPierLabel_repository = etabsPierLabel_repository
         self.calculationCase_repository = calculationCase_repository
 
+    def get_current_file_path(self):
+        try:
+            result = self.generalInfor_repository.get_file_path()
+            if not result:
+                raise ValueError("General information with file path can not found.")
+            return result
+        except Exception as e:
+            raise RuntimeError(f"Error fetching current filepath: {e}")
+
     def get_current_unit(self):
         try:
             result = self.generalInfor_repository.get_by_id(1)
@@ -102,7 +111,7 @@ class CalculationCaseService:
             result = self.barset_repository.get_by_size(bar_size)
             if not result:
                 raise ValueError(f"No rebar found with size {bar_size}.")
-            return result
+            return result.area
         except Exception as e:
             raise RuntimeError(f"Error fetching rebar area for size {bar_size}: {e}")
 
@@ -110,9 +119,11 @@ class CalculationCaseService:
         """get list of unique pier label name based on tier name"""
         return self.etabsPierLabel_repository.get_unique_pier_names_by_tier(tier_name)
 
-    def get_SDS_properties(self, param):
+    def get_SDS_properties(self, sds_name):
         # TODO: get properties from section designer shape ( Ag, As, rho)
-        pass
+        df_SD = self.etabSectionDesignerShape_repository.read_sds_db()
+        area = float(df_SD.loc[df_SD["SDName"] == sds_name, "Area"].values[0])
+        return area
 
     def create_calculation_case(self, params):
         try:

@@ -129,6 +129,7 @@ class EtabsSectionDesignerShapeRepository:
             query = session.exec(select(SectionDesignerShape)).all()
             df = pd.DataFrame([shape.dict() for shape in query])  # Convert SQLModel objects to DataFrame
         return df
+
     def add(self, params: list):
         """
         Adds a new SectionDesignerShape record to the database.

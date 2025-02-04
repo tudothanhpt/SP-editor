@@ -18,12 +18,12 @@ from sp_editor.containers.service_container import ServiceContainer
 class NewFileController(qtw.QDialog, Ui_d_GeneralInfor):
     @inject
     def __init__(
-        self,
-        file_service: FileService = Provide[ServiceContainer.file_service],
-        generalInfor_service: GeneralInforService = Provide[
-            ServiceContainer.generalInfor_service
-        ],
-        barset_service: BarsetService = Provide[ServiceContainer.barset_service],
+            self,
+            file_service: FileService = Provide[ServiceContainer.file_service],
+            generalInfor_service: GeneralInforService = Provide[
+                ServiceContainer.generalInfor_service
+            ],
+            barset_service: BarsetService = Provide[ServiceContainer.barset_service],
     ):
         super().__init__()
 
@@ -67,7 +67,7 @@ class NewFileController(qtw.QDialog, Ui_d_GeneralInfor):
         if file_path:
             if self.file_service.new_database(file_path):  # Create also opens
                 # adding along service when new file
-                self._generalInfor_init()
+                self._generalInfor_init(file_path)
                 self._barsets_init()
                 self.close()
                 qtw.QMessageBox.information(
@@ -76,8 +76,8 @@ class NewFileController(qtw.QDialog, Ui_d_GeneralInfor):
             else:
                 qtw.QMessageBox.critical(self, "Error", "Failed to create database.")
 
-    def _generalInfor_init(self):
-        """Init general infor in database"""
+    def _generalInfor_init(self, file_path):
+        """Init general infor in a database"""
         data_list = [
             self.cb_DesignCode.currentText(),
             self.cb_UnitSystem.currentText(),
@@ -85,7 +85,7 @@ class NewFileController(qtw.QDialog, Ui_d_GeneralInfor):
             self.cb_Confinement.currentText(),
             self.cb_SectionCapacity.currentText(),
         ]
-        infor = self.generalInfor_service.add_generalInfor(data_list)
+        infor = self.generalInfor_service.add_generalInfor(data_list, file_path)
 
     def _barsets_init(self):
         """Init barsets in database"""

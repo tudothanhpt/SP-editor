@@ -13,8 +13,7 @@ class CalculationCaseRepository:
         try:
             (
                 tier, is_pier_name, folder, sds, pier, bar_cover, bar_no, bar_area, bar_spacing, concrete_ag, sds_as,
-                rho,
-                material_fc, material_fy, material_ec, material_es, from_story, to_story, case_path
+                rho, material_fc, material_fy, material_ec, material_es, from_story, to_story, case_path
             ) = params
 
             with self.session_factory() as session:

@@ -1,7 +1,7 @@
 ﻿import math
 
 from sp_editor.repositories.etabsSectionDesignerShape_repository import EtabsSectionDesignerShapeRepository
-from typing import Tuple, List, Dict
+from typing import Tuple, List, Dict, Any
 from shapely.geometry import Polygon
 from sp_editor.core.find_pier import restructure_sdshapeDF
 
@@ -14,7 +14,7 @@ class RebarService:
 
     def calculate_rebar_coordinates(
             self, cover: float, bar_area: float, spacing: float, sd_name: str
-    ) -> Tuple[int, str]:
+    ) -> tuple[int, str, list[list[tuple[Any, Any]]], list[list[tuple[float, float]]], list[tuple[Any, Any]]]:
         """
         Computes rebar coordinates based on input parameters.
 
@@ -34,7 +34,7 @@ class RebarService:
         rebar_list = self.calculate_rebarpoints_for_segments(offsetted_shapes, spacing)
 
         total_rebar, multiline_string_rebarPts = self.spColumn_CTI_Rebar(rebar_list, bar_area)
-        return total_rebar, multiline_string_rebarPts
+        return total_rebar, multiline_string_rebarPts,offsetted_shapes, PierSDShape[sd_name], rebar_list
 
     def offset_sdshapeDF(self, list_PierSDShape, PierSDName, offset_distance):
         lst_offsetted_shapes = []

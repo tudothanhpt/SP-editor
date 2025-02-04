@@ -1,7 +1,8 @@
 from contextlib import AbstractContextManager
-from typing import Callable
+from typing import Callable, List, Any, Sequence
 
 import pandas as pd
+from sqlalchemy import Row, RowMapping
 from sqlmodel import Session, delete, select
 
 from sp_editor.models.models import PierLabel, Level
@@ -59,7 +60,7 @@ class EtabsPierLabelRepository:
             session.bulk_save_objects(pier_label_objects)
             session.commit()
 
-    def get_unique_pier_names_by_tier(self, tier_name: str) -> List[str]:
+    def get_unique_pier_names_by_tier(self, tier_name: str) -> Sequence[Row[Any] | RowMapping | Any]:
         """
         Retrieve unique pier names for a given tier name.
 
@@ -74,7 +75,7 @@ class EtabsPierLabelRepository:
             story_names = [level.story for level in levels]
 
             if not story_names:
-                return []  # Return empty list if no levels found for the tier
+                return []  # Return an empty list if no levels found for the tier
 
             # Get all pier labels where the story is in the filtered stories
             pier_labels = session.exec(
@@ -83,4 +84,4 @@ class EtabsPierLabelRepository:
                 .distinct()
             ).all()
 
-            return [pier.piername for pier in pier_labels if pier.piername]
+            return pier_labels

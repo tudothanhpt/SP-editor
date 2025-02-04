@@ -55,9 +55,10 @@ class AppContainer(containers.DeclarativeContainer):
     )
 
     calculationCase_controller = providers.Factory(
-        CalculationCaseController, service_container.calculationCase_service,
-        service_container.groupLevel_service,
-        service_container.rebar_service,
+        CalculationCaseController,
+        rebar_service=service_container.rebar_service,
+        calculationCase_service=service_container.calculationCase_service,
+        groupLevel_service=service_container.groupLevel_service,
     )
 
     # main window provides function

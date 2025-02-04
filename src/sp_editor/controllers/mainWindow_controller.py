@@ -2,6 +2,7 @@ from dependency_injector.wiring import inject, Provide
 from PySide6 import QtWidgets as qtw
 
 from sp_editor.controllers.barSet_controller import BarSetController
+from sp_editor.controllers.calculationCase_controller import CalculationCaseController
 from sp_editor.controllers.etabsImport_controller import EtabsImportController
 from sp_editor.controllers.generalInfor_controller import GeneralInforController
 from sp_editor.controllers.groupLevel_controller import GroupLevelController
@@ -34,6 +35,9 @@ class MainWindowController(qtw.QMainWindow, Ui_mw_Main):
         groupLevelController: GroupLevelController = Provide[
             "AppContainer.groupLevelController"
         ],
+        calculationCaseController: CalculationCaseController = Provide[
+                "AppContainer.calculationCaseController"
+        ],
     ):
         super().__init__()
 
@@ -44,6 +48,7 @@ class MainWindowController(qtw.QMainWindow, Ui_mw_Main):
         self.barSet_controller = barsetController
         self.material_controller = materialController
         self.groupLevel_controller = groupLevelController
+        self.calculationCase_controller = calculationCaseController
 
         self.setupUi(self)
 
@@ -55,6 +60,7 @@ class MainWindowController(qtw.QMainWindow, Ui_mw_Main):
         self.a_BarSet.triggered.connect(self.edit_barset)
         self.a_MaterialProp.triggered.connect(self.edit_material)
         self.a_Groups.triggered.connect(self.edit_group)
+        self.a_Cases.triggered.connect(self.edit_calculationCase)
 
     def new_file(self):
         self.newFile_controller.show()
@@ -82,3 +88,7 @@ class MainWindowController(qtw.QMainWindow, Ui_mw_Main):
     def edit_group(self):
         self.groupLevel_controller.get_groupLevel_infor_and_display()
         self.groupLevel_controller.show()
+
+    def edit_calculationCase(self):
+        self.calculationCase_controller.get_calculationCase_and_display()
+        self.calculationCase_controller.show()

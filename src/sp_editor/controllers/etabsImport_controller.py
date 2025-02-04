@@ -103,5 +103,7 @@ class EtabsImportController(qtw.QDialog, Ui_d_ImportEtabs):
         self.etabsDataImport_service.import_etabs_pierLabel_infor()
         # Section Designer Shape information
         self.etabsDataImport_service.import_etabs_sectionDesignerShape_infor()
+        # TODO: get_SDCoordinates_CTI_todb
+
         # Load combos and load combos selection information
         self.etabsDataImport_service.import_etabs_loadCombos_infor()

@@ -13,6 +13,7 @@ class GeneralInfor(SQLModel, table=True):
     bar_set: str
     confinement: str
     section_capacity: str
+    file_path: str
 
 
 class MaterialConcrete(SQLModel, table=True):

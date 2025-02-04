@@ -8,24 +8,26 @@ class GeneralInforService:
     def __init__(self, generalInfor_repository: GeneralInforRepository):
         self.repository = generalInfor_repository
 
-    def add_generalInfor(self, params: List[str]) -> GeneralInfor:
+    def add_generalInfor(self, params: List[str], file_path: str) -> GeneralInfor:
         """
         Add a new GeneralInfor record.
 
         Args:
             params (List[str]): A list containing the fields for GeneralInfor.
+            file_path (str): The file path where the project is stored.
 
         Returns:
             GeneralInfor: The created GeneralInfor instance.
         """
-        return self.repository.add(params)
+        return self.repository.add(params, file_path)
 
-    def update_generalInfor(self, params: List[str]) -> Type[GeneralInfor] | None:
+    def update_generalInfor(self, params: List[str], file_path: str) -> Type[GeneralInfor] | None:
         """
         Update the GeneralInfor record with the given parameters if there are changes.
 
         Args:
             params (List[str]): A list containing the updated fields for GeneralInfor.
+            file_path (str): The updated file path.
 
         Returns:
             GeneralInfor: The updated GeneralInfor instance, or None if no update was necessary.
@@ -43,14 +45,17 @@ class GeneralInforService:
             current_infor.bar_set,
             current_infor.confinement,
             current_infor.section_capacity,
+            current_infor.file_path,
         ]
 
-        if current_data == params:
+        new_data = params + [file_path]
+
+        if current_data == new_data:
             # No changes detected
             return None
 
         # Perform the update since changes are detected
-        return self.repository.update(params)
+        return self.repository.update(params, file_path)
 
     def get_generalInfor(self, infor_id: int = 1) -> GeneralInfor:
         """
@@ -63,3 +68,14 @@ class GeneralInforService:
             GeneralInfor: The retrieved GeneralInfor instance.
         """
         return self.repository.get_by_id(infor_id)
+
+    def get_file_path(self) -> str | None:
+        """
+        Retrieve the currently stored file path.
+
+        Returns:
+            str | None: The file path if available, otherwise None.
+        """
+        return self.repository.get_file_path()
+
+

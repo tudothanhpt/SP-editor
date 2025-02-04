@@ -4,7 +4,7 @@ from typing import List, Tuple, Dict
 from PySide6 import QtWidgets as qtw
 
 from sp_editor.core.find_pier import restructure_sdshapeDF
-from sp_editor.crud.cr_SD_shape import read_sdsDB
+# from sp_editor.crud.cr_SD_shape import read_sdsDB
 from shapely.geometry import Polygon
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 import seaborn as sns
