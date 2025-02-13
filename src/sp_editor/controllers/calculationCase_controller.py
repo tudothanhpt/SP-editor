@@ -17,6 +17,8 @@ from sp_editor.widgets.load_calculation_case import Ui_calculationCase_dialog
 
 
 class CalculationCaseController(qtw.QDialog, Ui_calculationCase_dialog):
+    case_init = qtc.Signal(str)
+
     @inject
     def __init__(self,
                  rebar_service: RebarService = Provide[

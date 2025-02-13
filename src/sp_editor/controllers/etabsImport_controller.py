@@ -4,24 +4,29 @@ from PySide6 import QtWidgets as qtw
 from sp_editor.containers.service_container import ServiceContainer
 from sp_editor.services.etabsConnection_service import EtabsConnectionService
 from sp_editor.services.etabsDataImport_service import EtabsDataImportService
+from sp_editor.services.generalInfor_service import GeneralInforService
 from sp_editor.widgets.importEtabs_dialog import Ui_d_ImportEtabs
 
 
 class EtabsImportController(qtw.QDialog, Ui_d_ImportEtabs):
     @inject
     def __init__(
-        self,
-        etabsConnection_service: EtabsConnectionService = Provide[
-            ServiceContainer.etabsConnection_service
-        ],
-        etabsDataImport_service: EtabsDataImportService = Provide[
-            ServiceContainer.etabsDataImport_service
-        ],
+            self,
+            etabsConnection_service: EtabsConnectionService = Provide[
+                ServiceContainer.etabsConnection_service
+            ],
+            etabsDataImport_service: EtabsDataImportService = Provide[
+                ServiceContainer.etabsDataImport_service
+            ],
+            generalInfor_service: GeneralInforService = Provide[
+                ServiceContainer.generalInfor_service
+            ],
     ):
         super().__init__()
 
         self.etabsConnection_service = etabsConnection_service
         self.etabsDataImport_service = etabsDataImport_service
+        self.generalInfor_service = generalInfor_service
 
         self.setupUi(self)
 
@@ -97,13 +102,16 @@ class EtabsImportController(qtw.QDialog, Ui_d_ImportEtabs):
         """
         Calling the necessary service to get required information from the ETABS model
         """
+        # checking the current unit in the database
+        infor = self.generalInfor_service.get_generalInfor()
+        unit = infor.unit_system if infor else None
+        # change that current unit if needed compare to the current unit in etabs
+        self.etabsDataImport_service.update_etabs_current_unit(unit)
         # story information
         self.etabsDataImport_service.import_etabs_stories_infor()
         # Pier label information
         self.etabsDataImport_service.import_etabs_pierLabel_infor()
         # Section Designer Shape information
         self.etabsDataImport_service.import_etabs_sectionDesignerShape_infor()
-        # TODO: get_SDCoordinates_CTI_todb
-
         # Load combos and load combos selection information
         self.etabsDataImport_service.import_etabs_loadCombos_infor()

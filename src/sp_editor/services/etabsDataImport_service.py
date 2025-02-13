@@ -18,28 +18,38 @@ from sp_editor.services.etabsConnection_service import EtabsConnectionService
 class EtabsDataImportService:
     @inject
     def __init__(
-        self,
-        etabsConnection_service: EtabsConnectionService = Provide[
-            "ServiceContainer.etabsConnectionService"
-        ],
-        etabsStory_repository: EtabsStoryRepository = Provide[
-            "ServiceContainer.etabsStoryRepository"
-        ],
-        etabsPierLabel_repository: EtabsPierLabelRepository = Provide[
-            "ServiceContainer.etabsPierLabelRepository"
-        ],
-        etabsSectionDesignerShape_repository: EtabsSectionDesignerShapeRepository = Provide[
-            "ServiceContainer.etabsSectionDesignerShapeRepository"
-        ],
-        etabsLoadCombos_repository: EtabsLoadCombosRepository = Provide[
-            "ServiceContainer.etabsLoadCombosRepository"
-        ],
+            self,
+            etabsConnection_service: EtabsConnectionService = Provide[
+                "ServiceContainer.etabsConnectionService"
+            ],
+            etabsStory_repository: EtabsStoryRepository = Provide[
+                "ServiceContainer.etabsStoryRepository"
+            ],
+            etabsPierLabel_repository: EtabsPierLabelRepository = Provide[
+                "ServiceContainer.etabsPierLabelRepository"
+            ],
+            etabsSectionDesignerShape_repository: EtabsSectionDesignerShapeRepository = Provide[
+                "ServiceContainer.etabsSectionDesignerShapeRepository"
+            ],
+            etabsLoadCombos_repository: EtabsLoadCombosRepository = Provide[
+                "ServiceContainer.etabsLoadCombosRepository"
+            ],
     ):
         self.etabsConnection_service = etabsConnection_service
         self.etabsStory_repository = etabsStory_repository
         self.etabsPierLabel_repository = etabsPierLabel_repository
         self.etabsSectionDesignerShape_repository = etabsSectionDesignerShape_repository
         self.etabsLoadCombos_repository = etabsLoadCombos_repository
+
+    def update_etabs_current_unit(self, cti_unit: str):
+        # Retrieve ETABS API objects
+        sap_model = self.etabsConnection_service.sap_model
+
+        # Set up the unit inside etabs model
+        if cti_unit == "English Unit":
+            sap_model.SetPresentUnits(1)
+        elif cti_unit == "Metric Units":
+            sap_model.SetPresentUnits(5)
 
     def import_etabs_stories_infor(self):
         """

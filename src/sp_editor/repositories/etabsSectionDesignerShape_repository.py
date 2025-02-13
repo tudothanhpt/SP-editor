@@ -1,4 +1,6 @@
 from typing import List, Callable
+
+from sqlalchemy import ScalarResult
 from sqlmodel import select, Session
 import pandas as pd
 from contextlib import AbstractContextManager
@@ -130,6 +132,15 @@ class EtabsSectionDesignerShapeRepository:
             df = pd.DataFrame([shape.dict() for shape in query])  # Convert SQLModel objects to DataFrame
         return df
 
+    def read_sds_cti_db(self):
+        """
+        Reads the SDS coordinate CTI database table and return a DataFrame
+        """
+        with self.session_factory() as session:
+            query = session.exec(select(SDCoordinates_CTI)).all()
+            df = pd.DataFrame([shape.dict() for shape in query])  # Convert SQLModel objects to DataFrame
+        return df
+
     def add(self, params: list):
         """
         Adds a new SectionDesignerShape record to the database.
@@ -150,7 +161,7 @@ class EtabsSectionDesignerShapeRepository:
             session.refresh(shape)
             return shape
 
-    def get_by_section_name(self, section_name: str) -> List[SectionDesignerShape]:
+    def get_by_section_name(self, section_name: str) -> ScalarResult[SectionDesignerShape]:
         """
         Retrieves SectionDesignerShape records by sectionName.
         :param section_name: The section name to filter by.

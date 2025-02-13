@@ -1,4 +1,6 @@
-from typing import Type, Optional, Tuple, List
+from typing import Type, Optional, Tuple, List, Any, Sequence
+
+from sqlalchemy import Row, RowMapping
 from sqlmodel import SQLModel
 
 from sp_editor.models.models import MaterialConcrete, MaterialRebar
@@ -115,13 +117,13 @@ class CalculationCaseService:
         except Exception as e:
             raise RuntimeError(f"Error fetching rebar area for size {bar_size}: {e}")
 
-    def get_unique_pier_names_by_tier(self, tier_name: str) -> List[str]:
-        """get list of unique pier label name based on tier name"""
+    def get_unique_pier_names_by_tier(self, tier_name: str) -> Sequence[Row[Any] | RowMapping | Any]:
+        """get a list of unique pier label name based on tier name"""
         return self.etabsPierLabel_repository.get_unique_pier_names_by_tier(tier_name)
 
     def get_SDS_properties(self, sds_name):
         # TODO: get properties from section designer shape ( Ag, As, rho)
-        df_SD = self.etabSectionDesignerShape_repository.read_sds_db()
+        df_SD = self.etabSectionDesignerShape_repository.read_sds_cti_db()
         area = float(df_SD.loc[df_SD["SDName"] == sds_name, "Area"].values[0])
         return area
 

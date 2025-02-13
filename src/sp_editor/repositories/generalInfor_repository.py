@@ -54,3 +54,4 @@ class GeneralInforRepository:
         with self.session_factory() as session:
             infor = session.get(GeneralInfor, 1)
             return infor.file_path if infor else None
+

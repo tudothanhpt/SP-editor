@@ -32,6 +32,7 @@ class AppContainer(containers.DeclarativeContainer):
         EtabsImportController,
         etabsConnection_service=service_container.etabsConnection_service,
         etabsDataImport_service=service_container.etabsDataImport_service,
+        generalInfor_service=service_container.generalInfor_service,
     )
 
     generalInfor_controller = providers.Factory(
