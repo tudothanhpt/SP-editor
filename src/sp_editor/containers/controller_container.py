@@ -5,6 +5,7 @@ from sp_editor.controllers.barSet_controller import BarSetController
 from sp_editor.controllers.calculationCase_controller import CalculationCaseController
 from sp_editor.controllers.generalInfor_controller import GeneralInforController
 from sp_editor.controllers.groupLevel_controller import GroupLevelController
+from sp_editor.controllers.loadCombos_controller import LoadCombosController
 from sp_editor.controllers.mainWindow_controller import MainWindowController
 from sp_editor.controllers.material_controller import MaterialController
 from sp_editor.controllers.newFile_controller import NewFileController
@@ -62,6 +63,12 @@ class AppContainer(containers.DeclarativeContainer):
         groupLevel_service=service_container.groupLevel_service,
     )
 
+    loadCombos_controller = providers.Factory(
+        LoadCombosController,
+        loadCombos_service=service_container.loadCombos_service,
+
+    )
+
     # main window provides function
     mainWindow_controller = providers.Factory(
         MainWindowController,
@@ -73,4 +80,5 @@ class AppContainer(containers.DeclarativeContainer):
         material_controller,
         groupLevel_controller,
         calculationCase_controller,
+        loadCombos_controller,
     )

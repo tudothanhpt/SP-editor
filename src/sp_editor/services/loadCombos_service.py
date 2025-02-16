@@ -4,9 +4,11 @@ from typing import Tuple, List
 from sp_editor.models.models import LoadCombinationsSelection
 from sp_editor.repositories.etabsLoadCombos_repository import EtabsLoadCombosRepository
 
-class LoadComboService:
+
+class LoadCombosService:
     def __init__(self,
                  etabsLoadCombos_repository: EtabsLoadCombosRepository):
+
         self.etabsLoadCombos_repository = etabsLoadCombos_repository
 
     def get_load_combo_lists(self) -> Tuple[List[str], List[str]]:
@@ -20,13 +22,8 @@ class LoadComboService:
         selection_data = self.etabsLoadCombos_repository.get_all_load_combo_selections()  # List[dict]
 
         # Extract the "uniqueloadCombos" values, filtering out None values
-        unique_combos = [
-            row.get("uniqueloadCombos") for row in unique_data if row.get("uniqueloadCombos") is not None
-        ]
-        # Extract the "selectedLoadCombos" values, filtering out None values
-        selected_combos = [
-            row.get("selectedLoadCombos") for row in selection_data if row.get("selectedLoadCombos") is not None
-        ]
+        unique_combos = unique_data["uniqueloadCombos"].dropna().tolist()
+        selected_combos = selection_data["selectedLoadCombos"].dropna().tolist()
 
         return unique_combos, selected_combos
 
@@ -43,8 +40,8 @@ class LoadComboService:
             orig = unique_combos[i] if i < len(unique_combos) else None
             selected = selected_combos[i] if i < len(selected_combos) else None
             data.append({
-                LoadCombinationsSelection.allloadCombos: orig,
-                LoadCombinationsSelection.selectedLoadCombos: selected
+                "allloadCombos": orig,
+                "selectedLoadCombos": selected
             })
 
         # Now, call the repository function with the list of dictionaries

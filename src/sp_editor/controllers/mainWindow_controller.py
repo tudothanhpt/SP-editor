@@ -6,6 +6,7 @@ from sp_editor.controllers.calculationCase_controller import CalculationCaseCont
 from sp_editor.controllers.etabsImport_controller import EtabsImportController
 from sp_editor.controllers.generalInfor_controller import GeneralInforController
 from sp_editor.controllers.groupLevel_controller import GroupLevelController
+from sp_editor.controllers.loadCombos_controller import LoadCombosController
 from sp_editor.controllers.material_controller import MaterialController
 from sp_editor.controllers.newFile_controller import NewFileController
 from sp_editor.controllers.openFile_controller import OpenFileController
@@ -38,6 +39,9 @@ class MainWindowController(qtw.QMainWindow, Ui_mw_Main):
         calculationCaseController: CalculationCaseController = Provide[
                 "AppContainer.calculationCaseController"
         ],
+        loadCombosController:LoadCombosController = Provide[
+            "AppContainer.loadCombosController"
+        ]
     ):
         super().__init__()
 
@@ -49,6 +53,7 @@ class MainWindowController(qtw.QMainWindow, Ui_mw_Main):
         self.material_controller = materialController
         self.groupLevel_controller = groupLevelController
         self.calculationCase_controller = calculationCaseController
+        self.loadCombos_controller = loadCombosController
 
         self.setupUi(self)
 
@@ -61,6 +66,7 @@ class MainWindowController(qtw.QMainWindow, Ui_mw_Main):
         self.a_MaterialProp.triggered.connect(self.edit_material)
         self.a_Groups.triggered.connect(self.edit_group)
         self.a_Cases.triggered.connect(self.edit_calculationCase)
+        self.actionDesign_Combos_Selection.triggered.connect(self.edit_loadCombosSelection)
 
     def new_file(self):
         self.newFile_controller.show()
@@ -92,3 +98,7 @@ class MainWindowController(qtw.QMainWindow, Ui_mw_Main):
     def edit_calculationCase(self):
         self.calculationCase_controller.get_calculationCase_and_display()
         self.calculationCase_controller.show()
+
+    def edit_loadCombosSelection(self):
+        self.loadCombos_controller.get_loadCombos_and_display()
+        self.loadCombos_controller.show()

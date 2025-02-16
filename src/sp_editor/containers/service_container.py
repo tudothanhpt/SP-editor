@@ -18,6 +18,7 @@ from sp_editor.services.etabsConnection_service import EtabsConnectionService
 from sp_editor.services.etabsDataImport_service import EtabsDataImportService
 from sp_editor.services.generalInfor_service import GeneralInforService
 from sp_editor.services.groupLevel_service import GroupLevelService
+from sp_editor.services.loadCombos_service import LoadCombosService
 from sp_editor.services.material_service import MaterialService
 from sp_editor.services.rebar_service import RebarService
 
@@ -115,6 +116,12 @@ class ServiceContainer(containers.DeclarativeContainer):
         barset_repository=barset_repository,
         etabsPierLabel_repository=etabsPierLabel_repository,
         calculationCase_repository=calculationCase_repository,
+
+    )
+
+    loadCombos_service =providers.Factory(
+        LoadCombosService,
+        etabsLoadCombos_repository=etabsLoadCombos_repository,
 
     )
 
