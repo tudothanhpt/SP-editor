@@ -66,7 +66,7 @@ class CalculationCaseController(qtw.QDialog, Ui_calculationCase_dialog):
         # UI setup
         self.setupUi(self)
 
-        # s  # Initial load of all data
+        # Initial load of all data
 
     def get_calculationCase_and_display(self):
         self.reload_data()
@@ -298,18 +298,17 @@ class CalculationCaseController(qtw.QDialog, Ui_calculationCase_dialog):
     def create_folder(self):
         if self.current_path:
             # Extract the directory from the file path
-            # base_dir = os.path.dirname(self.current_path)
+            base_dir = os.path.dirname(self.current_path)
 
             if self.folder_name and self.tier_name:
                 # Define the new folders to be created
-                case_dir_name = [self.tier_name, self.folder_name]
-
-                self.case_path = os.path.join(*case_dir_name)
-                # try:
-                #     # Create the new directories
-                #     os.makedirs(self.case_path, exist_ok=True)
-                # except Exception as e:
-                #     qtw.QMessageBox.critical(self, 'Error', f'An error occurred: {str(e)}')
+                self.case_path = os.path.join(base_dir,self.tier_name, self.folder_name)
+                self.case_path = os.path.normpath(self.case_path)
+                try:
+                    # Create the new directories
+                    os.makedirs(self.case_path, exist_ok=True)
+                except Exception as e:
+                    qtw.QMessageBox.critical(self, 'Error', f'An error occurred: {str(e)}')
             else:
                 self.check_input()
 

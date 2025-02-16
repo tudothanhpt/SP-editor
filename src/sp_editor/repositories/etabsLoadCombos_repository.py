@@ -1,5 +1,5 @@
 from contextlib import AbstractContextManager
-from typing import Callable
+from typing import Callable, List
 
 import pandas as pd
 from sqlmodel import select, Session, delete
@@ -83,3 +83,22 @@ class EtabsLoadCombosRepository:
             except SQLAlchemyError as e:
                 print(f"Error while retrieving load combination selections: {e}")
                 return pd.DataFrame()
+
+    def update_combo_selections(self, data: List[dict]) -> None:
+        """
+        Writes the updated load combination selection data back to the database.
+
+        :param data: List of dictionaries representing load combination selection records.
+        """
+        with self.session_factory() as session:
+            try:
+                # Clear existing records in the table
+                session.exec(delete(LoadCombinationsSelection))
+                session.commit()
+
+                # Bulk insert new records
+                session.bulk_insert_mappings(LoadCombinationsSelection, data)
+                session.commit()
+            except SQLAlchemyError as e:
+                session.rollback()
+                raise RuntimeError(f"Error while updating load combination selections: {e}")
