@@ -30,7 +30,7 @@ class DesignForceService:
         """
         return self.loadCombos_repository.get_all_load_combo_selections()
 
-    def import_etabs_pier_design_force(self,selectedCombos:list[str] ):
+    def import_etabs_pier_design_force(self, selectedCombos: list[str]):
         #TODO: We might need to import only active pier design force here not all of them
         """
         Import ETABS pier design force
@@ -42,5 +42,7 @@ class DesignForceService:
         etabs_object = self.etabsConnection_service.etabs_object
 
         # Call helper function to get pier design force information from ETABS
-        pier_design_force = get_pier_force_infor(sap_model,etabs_object,selectedCombos)
+        pier_design_force = get_pier_force_infor(sap_model, etabs_object, selectedCombos)
 
+        # Store the pier design force into the database
+        self.
